@@ -1,0 +1,24 @@
+{
+  "name": "scores",
+  "version": "1.0.0",
+  "description": "Discord bot that keeps track of users scores",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lechkulina/Scores.git"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "scores"
+  ],
+  "author": "Lech Kulina",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/lechkulina/Scores/issues"
+  },
+  "homepage": "https://github.com/lechkulina/Scores#readme"
+}
