@@ -22,12 +22,16 @@ class InteractionHandlersManager {
     return this.registerCommands();
   }
 
-  acquireInteractionHandler(interaction) {
+  findInteractionHandler(interaction) {
+    return this.interactionHandlers.get(interaction.member.id);
+  }
+
+  removeInteractionHandler(interactionHandler) {
+    this.interactionHandlers.delete(interactionHandler.getId());
+  }
+
+  createInteractionHandler(interaction) {
     const interactionHandlerId = interaction.member.id;
-    const interactionHandler = this.interactionHandlers.get(interactionHandlerId);
-    if (interactionHandler) {
-      return interactionHandler;
-    }
     const commandName = interaction.data.name;
     const command = this.commands.findCommand(commandName);
     if (!command) {
@@ -50,22 +54,32 @@ class InteractionHandlersManager {
   }
   
   handleCommandInteraction(interaction) {
-    const interactionHandler = this.acquireInteractionHandler(interaction);
+    const interruptedInteractionHandler = this.findInteractionHandler(interaction);
+    if (interruptedInteractionHandler) {
+      console.warn('Detected interrupted interaction - removing it');
+      this.removeInteractionHandler(interruptedInteractionHandler);
+    }
+    const interactionHandler = this.createInteractionHandler(interaction);
     return interactionHandler.handleCommandInteraction(interaction, this.dataModel)
       .finally(result => {
         if (interactionHandler.isDone()) {
-          this.interactionHandlers.delete(interactionHandler.getId());
+          this.removeInteractionHandler(interactionHandler);
         }
         return result;
       })
   }
 
   handleComponentInteraction(interaction) {
-    const interactionHandler = this.acquireInteractionHandler(interaction);
+    const interactionHandler = this.findInteractionHandler(interaction);
+    if (!interactionHandler) {
+      console.warn('Unexcepted component interaction - ignoring it');
+      interaction.acknowledge();
+      return;
+    }
     return interactionHandler.handleComponentInteraction(interaction, this.dataModel)
       .finally(result => {
         if (interactionHandler.isDone()) {
-          this.interactionHandlers.delete(interactionHandler.getId());
+          this.removeInteractionHandler(interactionHandler);
         }
         return result;
       })
