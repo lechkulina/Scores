@@ -1,6 +1,6 @@
 const {CommandInteraction, AutocompleteInteraction, ComponentInteraction} = require('eris');
 const commands = require('./commands');
-const {discord: discordConfig} = require('../config.js');
+const config = require('../config.js');
 
 class InteractionHandlersManager {
   constructor(client, dataModel) {
@@ -28,13 +28,12 @@ class InteractionHandlersManager {
   }
 
   handleAutocompleteInteraction(interaction) {
-    const commandName = interaction.data.name;
-    const focusedOptionName = interaction.data.options.find(option => option.focused)?.name;
-    const option = commands.findOption(commandName, focusedOptionName);
+    const focusedOption = interaction.data.options.find(option => option.focused);
+    const option = commands.findOption(interaction.data.name, focusedOption?.name);
     if (!option) {
       return interaction.result([]);
     }
-    return option.getAutoCompeteResults(interaction, this.dataModel);
+    return option.getAutoCompeteResults(interaction, this.dataModel, focusedOption?.value || '');
   }
   
   handleCommandInteraction(interaction) {
@@ -75,8 +74,8 @@ class InteractionHandlersManager {
 
   registerCommands() {
     const commandsConfigs = commands.getConfig();
-    return discordConfig.guildId
-      ? this.client.bulkEditGuildCommands(discordConfig.guildId, commandsConfigs)
+    return config.discord.guildId
+      ? this.client.bulkEditGuildCommands(config.discord.guildId, commandsConfigs)
       : this.client.bulkEditCommands(commandsConfigs);
   }
 }

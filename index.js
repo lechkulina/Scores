@@ -3,7 +3,6 @@ const {discord: discordCredentials} = require('./credentials.js');
 const DataModel = require('./src/DataModel');
 const InteractionHandlersManager = require('./src/InteractionHandlersManager');
 
-
 const client = new CommandClient(discordCredentials.token);
 const dataModel = new DataModel(client);
 const interactionHandlersManager = new InteractionHandlersManager(client, dataModel);
@@ -11,7 +10,8 @@ const interactionHandlersManager = new InteractionHandlersManager(client, dataMo
 async function onClientReady() {
   console.info('Client is ready');
   await interactionHandlersManager.registerCommands();
-  console.info('Commands are regiestered');
+  await dataModel.initialize();
+  console.info('Bot is ready');
 };
 
 function onClientError(error) {
@@ -26,12 +26,4 @@ client.on('ready', onClientReady);
 client.on('error', onClientError);
 client.on("interactionCreate", onInteractionCreate);
 
-async function init() {
-  console.info('initializing data model');
-  await dataModel.initialize();
-  console.info('Connecting...');
-  await client.connect();
-  console.info('Connected');
-}
-
-init();
+client.connect();

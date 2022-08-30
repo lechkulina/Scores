@@ -3,14 +3,14 @@ const Option = require('./Option');
 
 class UserOption extends Option {
   constructor(name, description, required, autocomplete) {
-    super(name, description, ApplicationCommandOptionTypes.NUMBER, required, autocomplete);
+    super(name, description, ApplicationCommandOptionTypes.STRING, required, autocomplete);
   }
 
-  async getAutoCompeteResults(interaction, dataModel) {
-    const users = await dataModel.getUsers();
-    const response = users.map(user => ({
-      name: user.discriminator,
-      value: user.id,
+  async getAutoCompeteResults(interaction, dataModel, value) {
+    const users = await dataModel.searchUsers(interaction.guildID, value, 20);
+    const response = users.map(({name, discriminator, id}) => ({
+      name: `${name}#${discriminator}`,
+      value: id,
     }));
     return interaction.result(response);
   }
