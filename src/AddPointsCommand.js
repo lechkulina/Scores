@@ -1,9 +1,11 @@
 const {Constants: {ApplicationCommandTypes, ComponentTypes, ButtonStyles}} = require('eris');
 const UserOption = require('./UserOption');
+const ReasonOption = require('./ReasonOption');
 const Command = require('./Command');
 const InteractionHandler = require('./InteractionHandler');
 
 const userOptionName = 'user';
+const reasonOptionName = 'reason';
 
 class AddScoreInteractionHandler extends InteractionHandler {
   constructor(id, optionValues) {
@@ -52,6 +54,7 @@ class AddPointsCommand extends Command {
 
   async initialize(dataModel) {
     this.addOption(new UserOption(userOptionName, 'User name for which points points should be added', true));
+    this.addOption(new ReasonOption(reasonOptionName, 'Reason why points are being added', true));
   }
 
   createInteractionHandler(id, optionValues) {

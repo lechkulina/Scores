@@ -6,6 +6,7 @@ class DataModel {
     this.client = client;
     this.guilds = new Map();
     this.users = new Map();
+    this.reasons = new Map();
   }
 
   createSchema() {
@@ -108,11 +109,40 @@ class DataModel {
     return usersArray;
   }
 
+  async getReasonsFromDatabase() {
+    const reasons = new Map();
+    const reasonsArray = await this.database.all('SELECT id, name, min, max FROM Reason;');
+    reasonsArray.forEach((reason) => reasons.set(reason.id, reason));
+    return reasons;
+  }
+
+  addReasonsArrayToDatabase(reasonsArray) {
+    const values = reasonsArray.map(
+      ({name, min, max}) => `("${name}", ${min}, ${max})`
+    );
+    return this.database.run(`INSERT INTO Reason(name, min, max) VALUES ${values.join(', ')};`);
+  }
+
+  async initializeReasons() {
+    // temporary data
+    await this.addReasonsArrayToDatabase([
+      {name: 'Subject of the day', min: 1, max: 5},
+      {name: 'Shared a link', min: 1, max: 5},
+      {name: 'Looks like Mr. Spock', min: 3, max: 12},
+    ]);
+    this.reasons = await this.getReasonsFromDatabase();
+  }
+
+  getReasonsArray() {
+    return Array.from(this.reasons.values());
+  }
+
   async initialize() {
     await this.database.open();
     await this.createSchema();
     await this.initializeGuilds();
-    return this.initializeUsers();
+    await this.initializeUsers();
+    return this.initializeReasons();
   }
 
   uninitialize() {
