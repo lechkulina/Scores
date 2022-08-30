@@ -1,12 +1,9 @@
 class Command {
-  constructor(name, description, type, options = []) {
+  constructor(name, description, type) {
     this.name = name;
     this.description = description;
     this.type = type;
     this.options = new Map();
-    options.forEach(option => {
-      this.options.set(option.name, option);
-    });
   }
 
   getConfig() {
@@ -19,6 +16,18 @@ class Command {
       type: this.type,
       options,
     };
+  }
+
+  setName(name) {
+    this.name = name;
+  }
+
+  setDescription(description) {
+    this.description = description;
+  }
+
+  setType(type) {
+    this.type = type;
   }
 
   addOption(option) {
@@ -36,6 +45,10 @@ class Command {
       optionsValues.set(name, option.processValue(value));
     });
     return optionsValues;
+  }
+
+  initialize(dataModel) {
+    throw new Error('initialize not implemented');
   }
 
   createInteractionHandler(id, optionsValues) {

@@ -1,12 +1,25 @@
 const {CommandInteraction, AutocompleteInteraction, ComponentInteraction} = require('eris');
-const commands = require('./commands');
+const CommandsCollection = require('./CommandsCollection');
 const config = require('../config.js');
 
 class InteractionHandlersManager {
   constructor(client, dataModel) {
     this.client = client;
     this.dataModel = dataModel;
+    this.commands = new CommandsCollection(require('./supportedCommands').map(ctor => new ctor()));
     this.interactionHandlers = new Map();
+  }
+
+  registerCommands() {
+    const commandsConfigs = this.commands.getConfig();
+    return config.discord.guildId
+      ? this.client.bulkEditGuildCommands(config.discord.guildId, commandsConfigs)
+      : this.client.bulkEditCommands(commandsConfigs);
+  }
+
+  async initialize() {
+    await this.commands.initialize(this.dataModel);
+    return this.registerCommands();
   }
 
   acquireInteractionHandler(interaction) {
@@ -16,7 +29,7 @@ class InteractionHandlersManager {
       return interactionHandler;
     }
     const commandName = interaction.data.name;
-    const command = commands.findCommand(commandName);
+    const command = this.commands.findCommand(commandName);
     if (!command) {
       console.error(`Unable to handle interaction of unsupported command ${commandName}`);
       return interaction.acknowledge();
@@ -29,7 +42,7 @@ class InteractionHandlersManager {
 
   handleAutocompleteInteraction(interaction) {
     const focusedOption = interaction.data.options.find(option => option.focused);
-    const option = commands.findOption(interaction.data.name, focusedOption?.name);
+    const option = this.commands.findOption(interaction.data.name, focusedOption?.name);
     if (!option) {
       return interaction.result([]);
     }
@@ -70,13 +83,6 @@ class InteractionHandlersManager {
     }
     console.warn('Got unsupported type of interaction - ignoring it');
     return interaction.acknowledge();
-  }
-
-  registerCommands() {
-    const commandsConfigs = commands.getConfig();
-    return config.discord.guildId
-      ? this.client.bulkEditGuildCommands(config.discord.guildId, commandsConfigs)
-      : this.client.bulkEditCommands(commandsConfigs);
   }
 }
 

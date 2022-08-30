@@ -5,7 +5,7 @@ const InteractionHandler = require('./InteractionHandler');
 
 const userOptionName = 'user';
 
-class AddPointsInteractionHandler extends InteractionHandler {
+class AddScoreInteractionHandler extends InteractionHandler {
   constructor(id, optionValues) {
     super(id, optionValues);
   }
@@ -14,7 +14,7 @@ class AddPointsInteractionHandler extends InteractionHandler {
     const user = this.getOptionValue(userOptionName);
     // temporary form
     return interaction.createMessage({
-      content: "Points have been added. Would you like to notify the user about this?" + user,
+      content: "Points have been added. Would you like to notify the user about this?",
       components: [
           {
               type: ComponentTypes.ACTION_ROW,
@@ -47,13 +47,15 @@ class AddPointsInteractionHandler extends InteractionHandler {
 
 class AddPointsCommand extends Command {
   constructor() {
-    super('addpoints', 'Adds points to a user', ApplicationCommandTypes.CHAT_INPUT, [
-      new UserOption(userOptionName, 'User name for which points should be added', true, true),
-    ]);
+    super('add-points', 'Adds points to a user', ApplicationCommandTypes.CHAT_INPUT);
+  }
+
+  async initialize(dataModel) {
+    this.addOption(new UserOption(userOptionName, 'User name for which points points should be added', true));
   }
 
   createInteractionHandler(id, optionValues) {
-    return new AddPointsInteractionHandler(id, optionValues);
+    return new AddScoreInteractionHandler(id, optionValues);
   }
 }
 

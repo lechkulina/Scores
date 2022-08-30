@@ -23,6 +23,11 @@ class CommandsCollection {
   findOption(commandName, optionName) {
     return this.findCommand(commandName)?.findOption(optionName);
   }
+
+  initialize(dataModel) {
+    const commandsArray = Array.from(this.commands.values());
+    return Promise.all(commandsArray.map(command => command.initialize(dataModel)));
+  }
 }
 
 module.exports = CommandsCollection;

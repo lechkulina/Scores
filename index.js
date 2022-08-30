@@ -9,8 +9,8 @@ const interactionHandlersManager = new InteractionHandlersManager(client, dataMo
 
 async function onClientReady() {
   console.info('Client is ready');
-  await interactionHandlersManager.registerCommands();
   await dataModel.initialize();
+  await interactionHandlersManager.initialize();
   console.info('Bot is ready');
 };
 
