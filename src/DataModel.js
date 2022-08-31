@@ -68,6 +68,16 @@ class DataModel {
     }));
   }
 
+  async addNewUsers(users) {
+    const newUsers = users.filter(({id}) => !this.usersCache.has(id));
+    if (newUsers.length === 0) {
+      return;
+    }
+    console.info(`Got ${newUsers.length} new users`);
+    this.addUsersToCache(newUsers);
+    return this.addUsersToDatabase(newUsers);
+  }
+
   async searchUsersAtDiscord(guildId, query, limit) {
     if (!query || query.length < 1) {
       return [];
@@ -90,6 +100,19 @@ class DataModel {
     }));
   }
 
+  async addInteractionAuthor(interaction) {
+    if (!interaction?.member) {
+      return;
+    }
+    const {guild: {id: guildId}, user: {id, username, discriminator}} = interaction.member;
+    return this.addNewUsers([{
+      id,
+      name: username,
+      discriminator,
+      guild: this.guildsCache.get(guildId),
+    }]);
+  }
+
   async initializeUsersCache() {
     this.addUsersToCache(await this.getUsersFromDatabase());
   }
@@ -107,12 +130,7 @@ class DataModel {
     if (users.length === 0) {
       return this.getUsers();
     }
-    const newUsers = users.filter(({id}) => !this.usersCache.has(id));
-    if (newUsers.length > 0) {
-      console.info(`Got ${newUsers.length} new users`);
-      this.addUsersToCache(newUsers);
-      await this.addUsersToDatabase(newUsers);
-    }
+    await this.addNewUsers(users);
     return users;
   }
 
@@ -158,9 +176,9 @@ class DataModel {
   
   addScores(scores) {
     const values = scores.map(
-      ({points, user, reason, comment = ''}) => `(${points}, "${comment}", "${user.id}", ${reason.id})`
+      ({points, user, giver, reason, comment = ''}) => `(${points}, "${comment}", "${user.id}", "${giver.id}", ${reason.id})`
     );
-    return this.database.run(`INSERT INTO Score(points, comment, userId, reasonId) VALUES ${values.join(', ')};`);
+    return this.database.run(`INSERT INTO Score(points, comment, userId, giverId, reasonId) VALUES ${values.join(', ')};`);
   }
 
   async initialize() {

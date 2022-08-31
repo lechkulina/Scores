@@ -53,12 +53,13 @@ class InteractionHandlersManager {
     return option.getAutoCompeteResults(interaction, this.dataModel, focusedOption?.value || '');
   }
   
-  handleCommandInteraction(interaction) {
+  async handleCommandInteraction(interaction) {
     const interruptedInteractionHandler = this.findInteractionHandler(interaction);
     if (interruptedInteractionHandler) {
       console.warn('Detected interrupted interaction - removing it');
       this.removeInteractionHandler(interruptedInteractionHandler);
     }
+    await this.dataModel.addInteractionAuthor(interaction);
     const interactionHandler = this.createInteractionHandler(interaction);
     return interactionHandler.handleCommandInteraction(interaction, this.dataModel)
       .finally(result => {

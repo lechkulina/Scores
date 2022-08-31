@@ -16,12 +16,13 @@ CREATE TABLE IF NOT EXISTS Reason(
     min INTEGER NOT NULL CHECK (min > 0),
     max INTEGER NOT NULL CHECK (max > 0)
 );
-CREATE TABLE IF NOT EXISTS Scores(
+CREATE TABLE IF NOT EXISTS Score(
     id INTEGER PRIMARY KEY,
-    score INTEGER CHECK (score > 0),
+    points INTEGER CHECK (points > 0),
     acquireDate INTEGER DEFAULT CURRENT_TIMESTAMP,
     comment TEXT,
     userId TEXT NOT NULL REFERENCES User(id),
+    giverId TEXT NOT NULL REFERENCES User(id),
     reasonId NOT NULL REFERENCES Reason(id)
 );
 CREATE TABLE IF NOT EXISTS Contest(
