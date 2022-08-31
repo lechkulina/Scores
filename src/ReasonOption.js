@@ -7,8 +7,8 @@ class ReasonOption extends Option {
   }
 
   async getAutoCompeteResults(interaction, dataModel, value) {
-    const reasonsArray = await dataModel.getReasonsArray();
-    const response = reasonsArray.map(({name, id}) => ({
+    const reasons = await dataModel.getReasons();
+    const response = reasons.map(({name, id}) => ({
       name,
       value: id,
     }));

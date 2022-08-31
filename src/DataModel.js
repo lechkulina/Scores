@@ -4,70 +4,71 @@ class DataModel {
   constructor(client) {
     this.database = new Database();
     this.client = client;
-    this.guilds = new Map();
-    this.users = new Map();
-    this.reasons = new Map();
+    // guidlds, user and reasons are cached for autocompete
+    this.guildsCache = new Map();
+    this.usersCache = new Map();
+    this.reasonsCache = new Map();
   }
 
   createSchema() {
     return this.database.exec(require('./schema.js'));
   }
 
-  async getGuildsFromDatabase() {
-    const guilds = new Map();
-    const guildsArray = await this.database.all('SELECT id, name FROM Guild;');
-    guildsArray.forEach(({id, name}) => guilds.set(id, {id, name}));
-    return guilds;
+  addGuildsToDatabase(guilds) {
+    const values = guilds.map(({id, name}) => `("${id}", "${name}")`);
+    return this.database.run(`INSERT INTO Guild VALUES ${values.join(', ')};`);
   }
 
-  getGuildsArrayFromDiscord() {
+  addGuildsToCache(guilds) {
+    guilds.forEach(guild => this.guildsCache.set(guild.id, guild));
+  }
+
+  async getGuildsFromDatabase() {
+    return await this.database.all('SELECT id, name FROM Guild;');
+  }
+
+  getGuildsFromDiscord() {
     return this.client.guilds.map(({id, name}) => ({
       id, name,
     }));
   }
 
-  addGuildsArrayToDatabase(guildsArray) {
-    const values = guildsArray.map(({id, name}) => `("${id}", "${name}")`);
-    return this.database.run(`INSERT INTO Guild VALUES ${values.join(', ')};`);
-  }
-
-  async initializeGuilds() {
-    this.guilds = await this.getGuildsFromDatabase();
-    if (this.guilds.size > 0) {
+  async initializeGuildsCache() {
+    let guilds = await this.getGuildsFromDatabase();
+    if (guilds.length > 0) {
+      this.addGuildsToCache(guilds);
       return;
     }
-    const newGuildsArray = this.getGuildsArrayFromDiscord();
-    if (newGuildsArray.length > 0) {
-      console.info(`Got ${newGuildsArray.length} new guilds`);
-      newGuildsArray.forEach(newGuild => {
-        this.guilds.set(newGuild.id, newGuild);
-      });
-      await this.addGuildsArrayToDatabase(newGuildsArray);
+    guilds = this.getGuildsFromDiscord();
+    if (guilds.length > 0) {
+      console.info(`Got ${guilds.length} new guilds`);
+      this.addGuildsToCache(guilds);
+      await this.addGuildsToDatabase(guilds);
     }
   }
 
-  async getUsersFromDatabase() {
-    const users = new Map();
-    const usersArray = await this.database.all('SELECT id, name, discriminator, guildId FROM User;');
-    usersArray.forEach(({id, name, discriminator, guildId}) => {
-      users.set(id, {
-        id,
-        name,
-        discriminator,
-        guild: this.guilds.get(guildId),
-      });
-    });
-    return users;
-  }
-
-  addUsersArrayToDatabase(usersArray) {
-    const values = usersArray.map(
+  addUsersToDatabase(users) {
+    const values = users.map(
       ({id, name, discriminator, guild}) => `("${id}", "${name}", "${discriminator}", "${guild.id}")`
     );
     return this.database.run(`INSERT INTO User VALUES ${values.join(', ')};`);
   }
 
-  async searchUsersArrayFromDiscord(guildId, query, limit) {
+  addUsersToCache(users) {
+    users.forEach(user => this.usersCache.set(user.id, user));
+  }
+
+  async getUsersFromDatabase() {
+    const items = await this.database.all('SELECT id, name, discriminator, guildId FROM User;');
+    return items.map(({id, name, discriminator, guildId}) => ({
+      id,
+      name,
+      discriminator,
+      guild: this.guildsCache.get(guildId),
+    }));
+  }
+
+  async searchUsersAtDiscord(guildId, query, limit) {
     if (!query || query.length < 1) {
       return [];
     }
@@ -85,64 +86,89 @@ class DataModel {
       id,
       name: username,
       discriminator,
-      guild: this.guilds.get(guildId),
+      guild: this.guildsCache.get(guildId),
     }));
   }
 
-  async initializeUsers() {
-    this.users = await this.getUsersFromDatabase();
+  async initializeUsersCache() {
+    this.addUsersToCache(await this.getUsersFromDatabase());
+  }
+
+  getUsers() {
+    return Array.from(this.usersCache.values());
+  }
+
+  getUser(userId) {
+    return this.usersCache.get(userId);
   }
 
   async searchUsers(guildId, query, limit) {
-    const usersArray = await this.searchUsersArrayFromDiscord(guildId, query, limit);
-    if (usersArray.length === 0) {
-      return Array.from(this.users.values());
+    const users = await this.searchUsersAtDiscord(guildId, query, limit);
+    if (users.length === 0) {
+      return this.getUsers();
     }
-    const newUsersArray = usersArray.filter(({id}) => !this.users.has(id));
-    if (newUsersArray.length > 0) {
-      console.info(`Got ${newUsersArray.length} new users`);
-      newUsersArray.forEach(newUser => {
-        this.users.set(newUser.id, newUser);
-      });
-      await this.addUsersArrayToDatabase(newUsersArray);
+    const newUsers = users.filter(({id}) => !this.usersCache.has(id));
+    if (newUsers.length > 0) {
+      console.info(`Got ${newUsers.length} new users`);
+      this.addUsersToCache(newUsers);
+      await this.addUsersToDatabase(newUsers);
     }
-    return usersArray;
+    return users;
   }
 
-  async getReasonsFromDatabase() {
-    const reasons = new Map();
-    const reasonsArray = await this.database.all('SELECT id, name, min, max FROM Reason;');
-    reasonsArray.forEach((reason) => reasons.set(reason.id, reason));
-    return reasons;
-  }
-
-  addReasonsArrayToDatabase(reasonsArray) {
-    const values = reasonsArray.map(
+  addReasonsToDatabase(reasons) {
+    const values = reasons.map(
       ({name, min, max}) => `("${name}", ${min}, ${max})`
     );
     return this.database.run(`INSERT INTO Reason(name, min, max) VALUES ${values.join(', ')};`);
   }
 
-  async initializeReasons() {
+  addReasonsToCache(reasons) {
+    reasons.forEach(reason => this.reasonsCache.set(reason.id, reason));
+  }
+
+  async getReasonsFromDatabase() {
+    return await this.database.all('SELECT id, name, min, max FROM Reason;');
+  }
+
+  addReasonsToDatabase(reasons) {
+    const values = reasons.map(
+      ({name, min, max}) => `("${name}", ${min}, ${max})`
+    );
+    return this.database.run(`INSERT INTO Reason(name, min, max) VALUES ${values.join(', ')};`);
+  }
+
+  async initializeReasonsCache() {
     // temporary data
-    await this.addReasonsArrayToDatabase([
+    await this.addReasonsToDatabase([
       {name: 'Subject of the day', min: 1, max: 5},
       {name: 'Shared a link', min: 1, max: 5},
       {name: 'Looks like Mr. Spock', min: 3, max: 12},
     ]);
-    this.reasons = await this.getReasonsFromDatabase();
+    this.addReasonsToCache(await this.getReasonsFromDatabase());
   }
 
-  getReasonsArray() {
-    return Array.from(this.reasons.values());
+  getReasons() {
+    return Array.from(this.reasonsCache.values());
+  }
+
+  getReason(reasonId) {
+    return this.reasonsCache.get(reasonId);
+  }
+  
+  addScores(scores) {
+    const values = scores.map(
+      ({points, user, reason, comment = ''}) => `(${points}, "${comment}", "${user.id}", ${reason.id})`
+    );
+    return this.database.run(`INSERT INTO Score(points, comment, userId, reasonId) VALUES ${values.join(', ')};`);
   }
 
   async initialize() {
     await this.database.open();
     await this.createSchema();
-    await this.initializeGuilds();
-    await this.initializeUsers();
-    return this.initializeReasons();
+    await this.initializeGuildsCache();
+    await this.initializeUsersCache();
+    return this.initializeReasonsCache();
   }
 
   uninitialize() {
