@@ -1,16 +1,16 @@
 const {CommandClient} = require('eris');
 const {discord: discordCredentials} = require('./credentials.js');
 const DataModel = require('./src/DataModel');
-const InteractionHandlersManager = require('./src/InteractionHandlersManager');
+const InteractionManager = require('./src/InteractionManager');
 
 const client = new CommandClient(discordCredentials.token);
 const dataModel = new DataModel(client);
-const interactionHandlersManager = new InteractionHandlersManager(client, dataModel);
+const interactionManager = new InteractionManager(client, dataModel);
 
 async function onClientReady() {
   console.info('Client is ready');
   await dataModel.initialize();
-  await interactionHandlersManager.initialize();
+  await interactionManager.initialize();
   console.info('Bot is ready');
 };
 
@@ -19,7 +19,7 @@ function onClientError(error) {
 };
 
 function onInteractionCreate(interaction) {
-  return interactionHandlersManager.handleInteraction(interaction);
+  return interactionManager.handleInteraction(interaction);
 }
 
 client.on('ready', onClientReady);

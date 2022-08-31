@@ -1,6 +1,5 @@
 class InteractionHandler {
-  constructor(id, optionsValues) {
-    this.id = id;
+  constructor(optionsValues) {
     this.optionsValues = optionsValues;
     this.done = false;
   }
@@ -21,11 +20,11 @@ class InteractionHandler {
     this.done = true;
   }
 
-  async handleCommandInteraction(interaction, dataModel) {
+  async handleCommandInteraction(commandInteraction, dataModel) {
     throw new Error('handleCommandInteraction not implemented');
   }
 
-  async handleComponentInteraction(interaction, dataModel) {
+  async handleComponentInteraction(componentInteraction, dataModel) {
     throw new Error('handleComponentInteraction not implemented');
   }
 }

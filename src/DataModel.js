@@ -100,11 +100,11 @@ class DataModel {
     }));
   }
 
-  async addInteractionAuthor(interaction) {
-    if (!interaction?.member) {
+  async addInteractionAuthor(commandInteraction) {
+    if (!commandInteraction?.member) {
       return;
     }
-    const {guild: {id: guildId}, user: {id, username, discriminator}} = interaction.member;
+    const {guild: {id: guildId}, user: {id, username, discriminator}} = commandInteraction.member;
     return this.addNewUsers([{
       id,
       name: username,
@@ -179,6 +179,10 @@ class DataModel {
       ({points, user, giver, reason, comment = ''}) => `(${points}, "${comment}", "${user.id}", "${giver.id}", ${reason.id})`
     );
     return this.database.run(`INSERT INTO Score(points, comment, userId, giverId, reasonId) VALUES ${values.join(', ')};`);
+  }
+
+  getScore(userId) {
+    return this.database.run(`SELECT SUM(points) FROM Score WHERE userId = ${userId}`);
   }
 
   async initialize() {

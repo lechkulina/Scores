@@ -1,22 +1,37 @@
-const {Constants: {ApplicationCommandTypes, ComponentTypes, ButtonStyles}} = require('eris');
+const {Constants: {ApplicationCommandTypes, ApplicationCommandOptionTypes, ComponentTypes, ButtonStyles}} = require('eris');
 const UserOption = require('./UserOption');
 const ReasonOption = require('./ReasonOption');
+const Option = require('./Option');
 const Command = require('./Command');
 const InteractionHandler = require('./InteractionHandler');
 
 const userOptionName = 'user';
 const reasonOptionName = 'reason';
+const pointsOptionName = 'points';
+const commentOptionName = 'comment';
 
 class AddScoreInteractionHandler extends InteractionHandler {
-  constructor(id, optionValues) {
-    super(id, optionValues);
+  constructor(optionValues) {
+    super(optionValues);
   }
 
-  async handleCommandInteraction(interaction, dataModel) {
-    const user = this.getOptionValue(userOptionName);
+  async handleCommandInteraction(commandInteraction, dataModel) {
+    const user = dataModel.getUser(this.getOptionValue(userOptionName));
+    const giver = dataModel.getUser(commandInteraction.member.user.id);
+    const reason = dataModel.getReason(this.getOptionValue(reasonOptionName));
+    const points = this.getOptionValue(pointsOptionName);
+    const comment = this.getOptionValue(commentOptionName);
+    await dataModel.addScores([{
+      user,
+      giver,
+      reason,
+      points,
+      comment
+    }]);
     // temporary form
-    return interaction.createMessage({
-      content: "Points have been added. Would you like to notify the user about this?",
+    return commandInteraction.createMessage({
+      // content: "Points have been added. Would you like to notify the user about this?",
+      content: `You have added ${points} points to user ${user.name}#${user.discriminator} for ${reason.name}`,
       components: [
           {
               type: ComponentTypes.ACTION_ROW,
@@ -41,9 +56,9 @@ class AddScoreInteractionHandler extends InteractionHandler {
     })
   }
 
-  async handleComponentInteraction(interaction, dataModel) {
+  async handleComponentInteraction(componentInteraction, dataModel) {
     this.markAsDone();
-    return interaction.createMessage('All done!');
+    return componentInteraction.createMessage('All done!');
   }
 }
 
@@ -55,10 +70,12 @@ class AddPointsCommand extends Command {
   async initialize(dataModel) {
     this.addOption(new UserOption(userOptionName, 'User name for which points points should be added', true));
     this.addOption(new ReasonOption(reasonOptionName, 'Reason why points are being added', true));
+    this.addOption(new Option(pointsOptionName, 'Number of points to add', ApplicationCommandOptionTypes.NUMBER, true, false));
+    this.addOption(new Option(commentOptionName, 'Comment', ApplicationCommandOptionTypes.STRING, false, false));
   }
 
-  createInteractionHandler(id, optionValues) {
-    return new AddScoreInteractionHandler(id, optionValues);
+  createInteractionHandler(optionValues) {
+    return new AddScoreInteractionHandler(optionValues);
   }
 }
 
