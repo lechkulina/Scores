@@ -77,7 +77,7 @@ class Database {
         resolve();
         return;
       }
-      this.database.all(sql, params, (error, row) => {
+      this.database.get(sql, params, (error, row) => {
         if (error) {
           console.error(`Failed to execute get query - got error ${error.name} - ${error.message}`);
           reject(error);
