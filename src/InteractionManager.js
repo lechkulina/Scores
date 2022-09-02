@@ -27,7 +27,16 @@ class InteractionManager {
     }
     const optionsValues = command.createOptionsValues(interaction);
     const translate = await this.translatorsFactory.createTranslator(interaction);
-    return command.createInteractionHandler(this.client, this.dataModel, this.settings, translate, optionsValues);
+    const interactionHandler = command.createInteractionHandler(this.client, this.dataModel, this.settings, translate, optionsValues);
+    await interactionHandler.initialize();
+    this.interactionHandlers.set(interaction.id, interactionHandler);
+    return interactionHandler;
+  }
+
+  removeInteractionHandler(interaction, interactionHandler) {
+    if (interactionHandler.isDone()) {
+      this.interactionHandlers.delete(interaction.id);
+    }
   }
 
   async handleAutocompleteInteraction(interaction) {
@@ -45,9 +54,7 @@ class InteractionManager {
     this.interactionHandlers.set(interaction.id, interactionHandler);
     return interactionHandler.handleCommandInteraction(interaction)
       .finally(result => {
-        if (interactionHandler.isDone()) {
-          this.interactionHandlers.delete(interaction.id);
-        }
+        this.removeInteractionHandler(interaction, interactionHandler);
         return result;
       });
   }
@@ -62,9 +69,7 @@ class InteractionManager {
     }
     return interactionHandler.handleComponentInteraction(interaction)
       .finally(result => {
-        if (interactionHandler.isDone()) {
-          this.interactionHandlers.delete(commandInteraction.id);
-        }
+        this.removeInteractionHandler(interaction, interactionHandler);
         return result;
       });
   }

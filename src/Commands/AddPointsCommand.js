@@ -18,10 +18,14 @@ const doBothButtonId = 'doBothButtonId';
 class AddScoreInteractionHandler extends InteractionHandler {
   constructor(client, dataModel, settings, translate, optionsValues) {
     super(client, dataModel, settings, translate, optionsValues);
+  }
+
+  initialize() {
     this.user = this.dataModel.getUser(this.getOptionValue(userOptionName));
     this.reason = this.dataModel.getReason(this.getOptionValue(reasonOptionName));
     this.points = this.getOptionValue(pointsOptionName);
     this.comment = this.getOptionValue(commentOptionName);
+    return Promise.resolve();
   }
 
   async handleCommandInteraction(interaction) {
