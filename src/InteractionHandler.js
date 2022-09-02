@@ -1,8 +1,9 @@
 class InteractionHandler {
-  constructor(client, dataModel, settings, optionsValues) {
+  constructor(client, dataModel, settings, translate, optionsValues) {
     this.client = client;
     this.dataModel = dataModel;
     this.settings = settings;
+    this.translate = translate;
     this.optionsValues = optionsValues;
     this.done = false;
   }

@@ -1,46 +1,38 @@
 const {CommandInteraction, AutocompleteInteraction, ComponentInteraction} = require('eris');
-const CommandsCollection = require('./CommandsCollection');
 const Settings = require('./Settings');
-const config = require('../config.js');
+const TranslatorsFactory = require('./TranslatorsFactory');
+const CommandsManager = require('./CommandsManager');
 
 class InteractionManager {
   constructor(client, dataModel) {
     this.client = client;
     this.dataModel = dataModel;
-    this.settings = new Settings(dataModel);
-    this.commands = new CommandsCollection(require('./supportedCommands').map(ctor => new ctor()));
+    this.settings = new Settings(this.dataModel);
+    this.translatorsFactory = new TranslatorsFactory(this.settings);
+    this.commandsManager = new CommandsManager(this.client, this.translatorsFactory);
     this.interactionHandlers = new Map();
   }
 
-  registerCommands() {
-    const commandsConfigs = this.commands.getConfig();
-    return config.discord.guildId
-      ? this.client.bulkEditGuildCommands(config.discord.guildId, commandsConfigs)
-      : this.client.bulkEditCommands(commandsConfigs);
+  async initialize() {
+    await this.settings.initialize();
+    await this.commandsManager.initialize();
   }
 
-  initialize() {
-    return Promise.all([
-      this.settings.initialize(),
-      this.commands.initialize(this.dataModel),
-      this.registerCommands(),
-    ]);
-  }
-
-  createInteractionHandler(interaction) {
+  async createInteractionHandler(interaction) {
     const commandName = interaction.data.name;
-    const command = this.commands.findCommand(commandName);
+    const command = this.commandsManager.findCommand(commandName);
     if (!command) {
       console.error(`Unable to handle interaction of unsupported command ${commandName}`);
       return;
     }
     const optionsValues = command.createOptionsValues(interaction);
-    return command.createInteractionHandler(this.client, this.dataModel, this.settings, optionsValues);
+    const translate = await this.translatorsFactory.createTranslator(interaction);
+    return command.createInteractionHandler(this.client, this.dataModel, this.settings, translate, optionsValues);
   }
 
-  handleAutocompleteInteraction(interaction) {
+  async handleAutocompleteInteraction(interaction) {
     const focusedOption = interaction.data.options.find(option => option.focused);
-    const option = this.commands.findOption(interaction.data.name, focusedOption?.name);
+    const option = this.commandsManager.findOption(interaction.data.name, focusedOption?.name);
     if (!option) {
       return interaction.result([]);
     }
@@ -49,10 +41,8 @@ class InteractionManager {
   
   async handleCommandInteraction(interaction) {
     await this.dataModel.addInteractionAuthor(interaction);
-
-    const interactionHandler = this.createInteractionHandler(interaction);
+    const interactionHandler = await this.createInteractionHandler(interaction);
     this.interactionHandlers.set(interaction.id, interactionHandler);
-
     return interactionHandler.handleCommandInteraction(interaction)
       .finally(result => {
         if (interactionHandler.isDone()) {

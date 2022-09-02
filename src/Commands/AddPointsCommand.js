@@ -1,9 +1,9 @@
 const {Constants: {ApplicationCommandTypes, ApplicationCommandOptionTypes, ComponentTypes, ButtonStyles}} = require('eris');
-const UserOption = require('./UserOption');
-const ReasonOption = require('./ReasonOption');
-const Option = require('./Option');
-const Command = require('./Command');
-const InteractionHandler = require('./InteractionHandler');
+const UserOption = require('../UserOption');
+const ReasonOption = require('../ReasonOption');
+const Option = require('../Option');
+const Command = require('../Command');
+const InteractionHandler = require('../InteractionHandler');
 
 const userOptionName = 'user';
 const reasonOptionName = 'reason';
@@ -16,8 +16,8 @@ const createPublicMessageButtonId = 'createPublicMessageButtonId';
 const doBothButtonId = 'doBothButtonId';
 
 class AddScoreInteractionHandler extends InteractionHandler {
-  constructor(client, dataModel, settings, optionsValues) {
-    super(client, dataModel, settings, optionsValues);
+  constructor(client, dataModel, settings, translate, optionsValues) {
+    super(client, dataModel, settings, translate, optionsValues);
     this.user = this.dataModel.getUser(this.getOptionValue(userOptionName));
     this.reason = this.dataModel.getReason(this.getOptionValue(reasonOptionName));
     this.points = this.getOptionValue(pointsOptionName);
@@ -111,19 +111,20 @@ class AddScoreInteractionHandler extends InteractionHandler {
 }
 
 class AddPointsCommand extends Command {
-  constructor() {
-    super('add-points', 'Adds points to a user', ApplicationCommandTypes.CHAT_INPUT);
+  constructor(translate) {
+    super(translate, 'add-points', ApplicationCommandTypes.CHAT_INPUT);
   }
 
   async initialize() {
+    this.setDescription('Adds points to a user');
     this.addOption(new UserOption(userOptionName, 'User name for which points points should be added', true));
     this.addOption(new ReasonOption(reasonOptionName, 'Reason why points are being added', true));
     this.addOption(new Option(pointsOptionName, 'Number of points to add', ApplicationCommandOptionTypes.NUMBER, true, false));
     this.addOption(new Option(commentOptionName, 'Comment', ApplicationCommandOptionTypes.STRING, false, false));
   }
 
-  createInteractionHandler(client, dataModel, settings, optionsValues) {
-    return new AddScoreInteractionHandler(client, dataModel, settings, optionsValues);
+  createInteractionHandler(client, dataModel, settings, translate, optionsValues) {
+    return new AddScoreInteractionHandler(client, dataModel, settings, translate, optionsValues);
   }
 }
 

@@ -6,13 +6,13 @@ class ReasonOption extends Option {
     super(name, description, ApplicationCommandOptionTypes.NUMBER, required, true);
   }
 
-  async getAutoCompeteResults(autocompleteInteraction, dataModel, value) {
+  async getAutoCompeteResults(interaction, dataModel, value) {
     const reasons = await dataModel.getReasons();
     const response = reasons.map(({name, id}) => ({
       name,
       value: id,
     }));
-    return autocompleteInteraction.result(response);
+    return interaction.result(response);
   }
 }
 

@@ -1,8 +1,9 @@
 class Command {
-  constructor(name, description, type) {
+  constructor(translate, name, type) {
+    this.translate = translate;
     this.name = name;
-    this.description = description;
     this.type = type;
+    this.description = '';
     this.options = new Map();
   }
 
@@ -18,16 +19,8 @@ class Command {
     };
   }
 
-  setName(name) {
-    this.name = name;
-  }
-
   setDescription(description) {
     this.description = description;
-  }
-
-  setType(type) {
-    this.type = type;
   }
 
   addOption(option) {
@@ -47,11 +40,11 @@ class Command {
     return optionsValues;
   }
 
-  initialize(dataModel) {
+  initialize() {
     throw new Error('initialize not implemented');
   }
 
-  createInteractionHandler(client, dataModel, optionsValues) {
+  createInteractionHandler(client, dataModel, settings, translate, optionsValues) {
     throw new Error('createInteractionHandler not implemented');
   }
 };

@@ -6,13 +6,13 @@ class UserOption extends Option {
     super(name, description, ApplicationCommandOptionTypes.STRING, required, true);
   }
 
-  async getAutoCompeteResults(autocompleteInteraction, dataModel, value) {
-    const users = await dataModel.searchUsers(autocompleteInteraction.guildID, value, 20);
+  async getAutoCompeteResults(interaction, dataModel, value) {
+    const users = await dataModel.searchUsers(interaction.guildID, value, 20);
     const response = users.map(({name, discriminator, id}) => ({
       name: `${name}#${discriminator}`,
       value: id,
     }));
-    return autocompleteInteraction.result(response);
+    return interaction.result(response);
   }
 }
 
