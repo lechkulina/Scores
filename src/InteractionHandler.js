@@ -49,16 +49,16 @@ class InteractionHandler {
     return guild.channels.find(channel => channel.id === publicChannelId);
   }
 
-  async initialize() {
-    throw new Error('initialize not implemented');
+  initialize() {
+    return Promise.resolve();
   }
 
-  async handleCommandInteraction(interaction) {
-    throw new Error('handleCommandInteraction not implemented');
+  handleCommandInteraction(interaction) {
+    return Promise.resolve();
   }
 
-  async handleComponentInteraction(interaction) {
-    throw new Error('handleComponentInteraction not implemented');
+  handleComponentInteraction(interaction) {
+    return Promise.resolve();
   }
 }
 

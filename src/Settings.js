@@ -17,6 +17,7 @@ const converters = {
   publicChannelId: StringConverter,
   preferredLocale: StringConverter,
   useGuildLocale: BooleanConverter,
+  recentPointsLimit: NumberConverter,
 };
 
 class Settings {
@@ -29,8 +30,9 @@ class Settings {
     // temporary settings
     return Promise.all([
       this.set('publicChannelId', '1014636769989369938'),
-      this.set('preferredLocale', 'en'),
-      this.set('useGuildLocale', true),
+      this.set('preferredLocale', 'pl'),
+      this.set('useGuildLocale', false),
+      this.set('recentPointsLimit', 6),
     ]);
   }
 

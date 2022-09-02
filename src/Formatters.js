@@ -4,6 +4,7 @@ const newLine = '\n';
 const verticalSeparator = '║';
 const jointSeparator = '╬';
 const horizontalSeparator = '═';
+const ellipsis = '...';
 
 const defaultRoundWidthTo = 8;
 
@@ -60,9 +61,19 @@ function formatMessageTable({message, ...props}) {
   return `${message}${newLine}${formatTable(props)}`;
 }
 
+function formatEllipsis(text, limit) {
+  const ellipsisLength = ellipsis.length;
+  const textLengthLimit = limit - ellipsisLength;
+  if (text.length < textLengthLimit) {
+    return text;
+  }
+  return text.slice(0, textLengthLimit) + ellipsis;
+}
+
 module.exports = {
   noFormat,
   newLine,
   formatTable,
   formatMessageTable,
+  formatEllipsis,
 };

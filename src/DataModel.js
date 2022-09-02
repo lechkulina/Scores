@@ -174,24 +174,63 @@ class DataModel {
     return this.reasonsCache.get(reasonId);
   }
   
-  addScores(scores) {
-    const values = scores.map(
-      ({points, user, giver, reason, comment = ''}) => `(${points}, "${comment}", "${user.id}", "${giver.id}", ${reason.id})`
-    );
-    return this.database.run(`INSERT INTO Score(points, comment, userId, giverId, reasonId) VALUES ${values.join(', ')};`);
+  addPoints(points, comment, userId, giverId, reasonId) {
+    return this.database.run(`
+      INSERT INTO Points(points, comment, userId, giverId, reasonId)
+      VALUES (${points}, "${comment}", "${userId}", "${giverId}", ${reasonId});
+    `);
   }
 
-  getScore(userId) {
-    return this.database.run(`SELECT SUM(points) FROM Score WHERE userId = ${userId}`);
+  getPointsSummary(userId) {
+    return this.database.get(`
+      SELECT SUM(points) AS points, COUNT(1) as pointsCount, MIN(acquireDate) AS minAcquireDate, MAX(acquireDate) AS maxAcquireDate
+      FROM (
+        SELECT points, acquireDate
+        FROM Points
+        WHERE userId="${userId}"
+      );
+    `);
+  }
+
+  getRecentPoints(userId, limit) {
+    return this.database.all(`
+      SELECT Points.points as points, Points.acquireDate as acquireDate, Giver.name AS giverName, Reason.name AS reasonName, Points.comment as comment
+      FROM Points
+      INNER JOIN User AS Giver ON Giver.id = giverId
+      INNER JOIN Reason ON Reason.id = Points.reasonId
+      WHERE Points.userId="${userId}"
+      ORDER BY Points.acquireDate DESC
+      LIMIT ${limit};
+    `);
+  }
+
+  getRankingPositions(userId) {
+    return this.database.all(`
+      SELECT COUNT(sumPointsPerReason) + 1 as rankingPosition, SUM(D.points) as points, Reason.name AS reasonName
+      FROM Points as D
+      INNER JOIN Reason ON Reason.id = D.reasonId
+      LEFT JOIN (
+        SELECT SUM(B.points) as sumPointsPerReason, B.userId, B.reasonId, (
+            SELECT SUM(A.points)
+            FROM Points AS A
+            WHERE A.userId = "${userId}" AND A.reasonId = B.reasonId
+          ) as userPoints
+          FROM Points AS B
+          GROUP BY B.userId, B.reasonId
+          HAVING sumPointsPerReason > userPoints
+      ) AS C ON C.reasonId = D.reasonId
+      WHERE D.userId = "${userId}"
+      GROUP BY D.reasonId
+      ORDER BY rankingPosition ASC;
+    `);
   }
 
   setSetting(key, value) {
-    return this.database.run(`INSERT OR REPLACE INTO Setting(key, value) VALUES ("${key}", "${value}");`);
+    return this.database.run(`INSERT OR REPLACE INTO Settings(key, value) VALUES ("${key}", "${value}");`);
   }
 
   async getSetting(key) {
-    const data =  await this.database.all(`SELECT value FROM Setting WHERE key="${key}" LIMIT 1;`);
-    return data.length > 0 ? data[0].value : undefined;
+    return await this.database.get(`SELECT value FROM Settings WHERE key="${key}" LIMIT 1;`)?.value;
   }
 
   async initialize() {

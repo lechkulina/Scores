@@ -31,9 +31,9 @@ class Command {
     return this.options.get(optionName);
   }
 
-  createOptionsValues(commandInteraction) {
+  createOptionsValues(interaction) {
     const optionsValues = new Map();
-    commandInteraction.data.options.forEach(({name, value}) => {
+    (interaction.data.options ?? []).forEach(({name, value}) => {
       const option = this.findOption(name);
       optionsValues.set(name, option.processValue(value));
     });
@@ -41,11 +41,11 @@ class Command {
   }
 
   initialize() {
-    throw new Error('initialize not implemented');
+    return Promise.resolve();
   }
 
   createInteractionHandler(client, dataModel, settings, translate, optionsValues) {
-    throw new Error('createInteractionHandler not implemented');
+    return Promise.resolve();
   }
 };
 

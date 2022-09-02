@@ -15,7 +15,7 @@ const sendDirectMessageButtonId = 'sendDirectMessageButtonId';
 const createPublicMessageButtonId = 'createPublicMessageButtonId';
 const doBothButtonId = 'doBothButtonId';
 
-class AddScoreInteractionHandler extends InteractionHandler {
+class AddPointsInteractionHandler extends InteractionHandler {
   constructor(client, dataModel, settings, translate, optionsValues) {
     super(client, dataModel, settings, translate, optionsValues);
   }
@@ -24,24 +24,22 @@ class AddScoreInteractionHandler extends InteractionHandler {
     this.user = this.dataModel.getUser(this.getOptionValue(userOptionName));
     this.reason = this.dataModel.getReason(this.getOptionValue(reasonOptionName));
     this.points = this.getOptionValue(pointsOptionName);
-    this.comment = this.getOptionValue(commentOptionName);
+    this.comment = this.getOptionValue(commentOptionName) ?? '';
     return Promise.resolve();
   }
 
   async handleCommandInteraction(interaction) {
     if (this.points < this.reason.min || this.points > this.reason.max) {
       this.markAsDone();
-      return interaction.createMessage(this.translate('commands.addPoints.errors.invalidRange', this.reason));
+      return interaction.createMessage(this.translate('commands.addPoints.errors.invalidRange', {
+        reasonName: this.reason.name,
+        min: this.reason.min,
+        max: this.reason.max,
+      }));
     }
     const giver = this.dataModel.getUser(interaction.member.user.id);
     try {
-      await this.dataModel.addScores([{
-        user: this.user,
-        giver,
-        reason: this.reason,
-        points: this.points,
-        comment: this.comment,
-      }]);
+      await this.dataModel.addPoints(this.points, this.comment, this.user.id, giver.id, this.reason.id);
     } catch (error) {
       this.markAsDone();
       return interaction.createMessage(this.translate('commands.addPoints.errors.genericFailure', {
@@ -138,16 +136,17 @@ class AddPointsCommand extends Command {
     super(translate, 'add-points', ApplicationCommandTypes.CHAT_INPUT);
   }
 
-  async initialize() {
+  initialize() {
     this.setDescription(this.translate('commands.addPoints.description'));
     this.addOption(new UserOption(userOptionName, this.translate('commands.addPoints.options.user'), true));
     this.addOption(new ReasonOption(reasonOptionName, this.translate('commands.addPoints.options.reason'), true));
     this.addOption(new Option(pointsOptionName, this.translate('commands.addPoints.options.points'), ApplicationCommandOptionTypes.NUMBER, true, false));
     this.addOption(new Option(commentOptionName, this.translate('commands.addPoints.options.comment'), ApplicationCommandOptionTypes.STRING, false, false));
+    return Promise.resolve();
   }
 
   createInteractionHandler(client, dataModel, settings, translate, optionsValues) {
-    return new AddScoreInteractionHandler(client, dataModel, settings, translate, optionsValues);
+    return new AddPointsInteractionHandler(client, dataModel, settings, translate, optionsValues);
   }
 }
 
