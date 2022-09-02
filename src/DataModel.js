@@ -8,8 +8,6 @@ class DataModel {
     this.guildsCache = new Map();
     this.usersCache = new Map();
     this.reasonsCache = new Map();
-
-    this.settingsCache = new Map();
   }
 
   createSchema() {
@@ -187,38 +185,19 @@ class DataModel {
     return this.database.run(`SELECT SUM(points) FROM Score WHERE userId = ${userId}`);
   }
 
-  addSettingsToDatabase(settings) {
-    const values = settings.map(
-      ({name, value}) => `("${name}", "${value}")`
-    );
-    return this.database.run(`INSERT INTO Setting(name, value) VALUES ${values.join(', ')};`);
+  setSetting(key, value) {
+    return this.database.run(`INSERT OR REPLACE INTO Setting(key, value) VALUES ("${key}", "${value}");`);
   }
 
-  addSettingsToCache(settings) {
-    settings.forEach(({name, value}) => this.settingsCache.set(name, `${value}`));
-  }
-
-  getSettingsFromDatabase() {
-    return this.database.all('SELECT name, value FROM Setting;');
-  }
-
-  async initializeSettingsCache() {
-    // temporary data
-    await this.addSettingsToDatabase([
-      {name: 'publicChannelId', value: '1014636769989369938'},
-    ]);
-    this.addSettingsToCache(await this.getSettingsFromDatabase());
-  }
-
-  getSetting(name) {
-    return this.settingsCache.get(name);
+  async getSetting(key) {
+    const data =  await this.database.all(`SELECT value FROM Setting WHERE key="${key}" LIMIT 1;`);
+    return data.length > 0 ? data[0].value : undefined;
   }
 
   async initialize() {
     return Promise.all([
       this.database.open(),
       this.createSchema(),
-      this.initializeSettingsCache(),
       this.initializeGuildsCache(),
       this.initializeUsersCache(),
       this.initializeReasonsCache(),

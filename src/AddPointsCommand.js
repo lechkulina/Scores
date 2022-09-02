@@ -16,8 +16,8 @@ const createPublicMessageButtonId = 'createPublicMessageButtonId';
 const doBothButtonId = 'doBothButtonId';
 
 class AddScoreInteractionHandler extends InteractionHandler {
-  constructor(client, dataModel, optionsValues) {
-    super(client, dataModel, optionsValues);
+  constructor(client, dataModel, settings, optionsValues) {
+    super(client, dataModel, settings, optionsValues);
     this.user = this.dataModel.getUser(this.getOptionValue(userOptionName));
     this.reason = this.dataModel.getReason(this.getOptionValue(reasonOptionName));
     this.points = this.getOptionValue(pointsOptionName);
@@ -79,7 +79,7 @@ class AddScoreInteractionHandler extends InteractionHandler {
   }
 
   async createPublicMessage(interaction) {
-    const channel = this.findPublicChannel(interaction.guildID);
+    const channel = await this.findPublicChannel(interaction.guildID);
     if (!channel) {
       console.error('Unable to send public message - public channel is missing');
       return;
@@ -115,15 +115,15 @@ class AddPointsCommand extends Command {
     super('add-points', 'Adds points to a user', ApplicationCommandTypes.CHAT_INPUT);
   }
 
-  async initialize(dataModel) {
+  async initialize() {
     this.addOption(new UserOption(userOptionName, 'User name for which points points should be added', true));
     this.addOption(new ReasonOption(reasonOptionName, 'Reason why points are being added', true));
     this.addOption(new Option(pointsOptionName, 'Number of points to add', ApplicationCommandOptionTypes.NUMBER, true, false));
     this.addOption(new Option(commentOptionName, 'Comment', ApplicationCommandOptionTypes.STRING, false, false));
   }
 
-  createInteractionHandler(client, dataModel, optionsValues) {
-    return new AddScoreInteractionHandler(client, dataModel, optionsValues);
+  createInteractionHandler(client, dataModel, settings, optionsValues) {
+    return new AddScoreInteractionHandler(client, dataModel, settings, optionsValues);
   }
 }
 

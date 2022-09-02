@@ -1,7 +1,8 @@
 class InteractionHandler {
-  constructor(client, dataModel, optionsValues) {
+  constructor(client, dataModel, settings, optionsValues) {
     this.client = client;
     this.dataModel = dataModel;
+    this.settings = settings;
     this.optionsValues = optionsValues;
     this.done = false;
   }
@@ -37,21 +38,21 @@ class InteractionHandler {
     return user.getDMChannel();
   }
 
-  findPublicChannel(guildId) {
+  async findPublicChannel(guildId) {
     const guild = this.client.guilds.find(({id}) => id === guildId);
     if (!guild) {
       console.error(`Unable to get public channel - unknown guild id ${guildId}`);
       return;
     }
-    const publicChannelId = this.dataModel.getSetting('publicChannelId');
+    const publicChannelId = await this.settings.get('publicChannelId');
     return guild.channels.find(channel => channel.id === publicChannelId);
   }
 
-  async handleCommandInteraction(commandInteraction) {
+  async handleCommandInteraction(interaction) {
     throw new Error('handleCommandInteraction not implemented');
   }
 
-  async handleComponentInteraction(componentInteraction) {
+  async handleComponentInteraction(interaction) {
     throw new Error('handleComponentInteraction not implemented');
   }
 }
