@@ -51,7 +51,7 @@ class Command {
     throw new Error('initialize not implemented');
   }
 
-  createInteractionHandler(optionsValues) {
+  createInteractionHandler(client, dataModel, optionsValues) {
     throw new Error('createInteractionHandler not implemented');
   }
 };

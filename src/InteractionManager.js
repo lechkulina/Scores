@@ -30,7 +30,7 @@ class InteractionManager {
       return;
     }
     const optionsValues = command.createOptionsValues(commandInteraction);
-    return command.createInteractionHandler(optionsValues);
+    return command.createInteractionHandler(this.client, this.dataModel, optionsValues);
   }
 
   handleAutocompleteInteraction(autocompleteInteraction) {
@@ -48,7 +48,7 @@ class InteractionManager {
     const interactionHandler = this.createInteractionHandler(commandInteraction);
     this.interactionHandlers.set(commandInteraction.id, interactionHandler);
 
-    return interactionHandler.handleCommandInteraction(commandInteraction, this.dataModel)
+    return interactionHandler.handleCommandInteraction(commandInteraction)
       .finally(result => {
         if (interactionHandler.isDone()) {
           this.interactionHandlers.delete(commandInteraction.id);
@@ -65,7 +65,7 @@ class InteractionManager {
       componentInteraction.acknowledge();
       return;
     }
-    return interactionHandler.handleComponentInteraction(componentInteraction, this.dataModel)
+    return interactionHandler.handleComponentInteraction(componentInteraction)
       .finally(result => {
         if (interactionHandler.isDone()) {
           this.interactionHandlers.delete(commandInteraction.id);
