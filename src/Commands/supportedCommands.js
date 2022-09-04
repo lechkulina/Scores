@@ -5,4 +5,5 @@ module.exports = [
   require('./AddPointsCommand'),
   require('./ShowPointsCommand'),
   require('./AddReasonCommand'),
+  require('./RemoveReasonCommand'),
 ];

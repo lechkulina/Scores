@@ -1,13 +1,15 @@
 module.exports = {
   common: {
     no: 'Nie',
+    yes: 'Tak',
     done: 'Zrobiono',
+    canceled: 'Anulowano',
     rankingPosition: 'Pozycja w rankingu',
     acquireDate: 'Data przyznania',
     points: 'Punkty',
     giverName: 'Osoba przynająca',
     reasonName: 'Powód przyznania',
-    comment: 'Komentarz'
+    comment: 'Komentarz',
   },
   buttons: {
     sendHimDirectMessage: 'Wyślij mu prywatną wiadomość',
@@ -60,6 +62,19 @@ module.exports = {
       },
       messages: {
         successStatus: (params) => `✅ Dodano nowy powód do przynawania punktów **${params.reasonName}**`,
+      }
+    },
+    removeReason: {
+      description: 'Usuwa istniejący powód do przyznawania punktów',
+      options: {
+        reason: 'Powód dodania punktów',
+      },
+      errors: {
+        genericFailure: (params) => `❗ Nie udało się usunąć powodu do przyznawania punktów **${params.reasonName}**`,
+      },
+      messages: {
+        confirmation: (params) => `❓ Czy na pewno chcesz usunąć powód do przyznania punktów **${params.reasonName}**`,
+        success: (params) => `✅ Usunięto powód przyznania punktów **${params.reasonName}**`,
       }
     }
   }

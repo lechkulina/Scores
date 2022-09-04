@@ -1,7 +1,9 @@
 module.exports = {
   common: {
     no: 'No',
+    yes: 'Yes',
     done: 'Done',
+    canceled: 'Canceled',
     rankingPosition: 'Ranking position',
     acquireDate: 'Acquired date',
     points: 'Points',

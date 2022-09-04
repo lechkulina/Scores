@@ -142,6 +142,14 @@ class DataModel {
     this.reasonsCache.clear();
   }
 
+  async removeReason(reasonId) {
+    await this.database.run(`
+      DELETE FROM Reason
+      WHERE id = ${reasonId};
+    `);
+    this.reasonsCache.delete(reasonId);
+  }
+
   async getReasons() {
     if (this.reasonsCache.size > 0) {
       return Array.from(this.reasonsCache.values());
