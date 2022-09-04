@@ -45,6 +45,22 @@ module.exports = {
         recentPoints: (params) => `⬇ ${params.pointsCount} ostatnio przyznane punkty`,
         rankingPositions: '⬇ Pozycje w rankingu',
       }
+    },
+    addReason: {
+      description: 'Dodaje nowy powód do przyznawania punktów',
+      options: {
+        name: 'Nazwa',
+        min: 'Minimalna liczba punktów jaką mozna przyznać',
+        max: 'Maksymalna liczba punktów jaką mozna przyznać',
+      },
+      errors: {
+        invalidName: '❗ Nazwa powodu do przyznawania punktów nie moze być pusta.',
+        invalidRange: (params) => `❗ Nieprawidłowy zakres punktów - wartość minimalna ${params.min} nie moze byc wieksza lub równa wartości maksymalnej ${params.max}`,
+        genericFailure: '❗ Nie udało się dodać nowego powodu do przyznawania punktów.',
+      },
+      messages: {
+        successStatus: (params) => `✅ Dodano nowy powód do przynawania punktów **${params.reasonName}**`,
+      }
     }
   }
 };

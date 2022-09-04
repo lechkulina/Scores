@@ -20,12 +20,11 @@ class AddPointsInteractionHandler extends InteractionHandler {
     super(client, dataModel, settings, translate, optionsValues);
   }
 
-  initialize() {
+  async initialize() {
     this.user = this.dataModel.getUser(this.getOptionValue(userOptionName));
-    this.reason = this.dataModel.getReason(this.getOptionValue(reasonOptionName));
+    this.reason = await this.dataModel.getReason(this.getOptionValue(reasonOptionName));
     this.points = this.getOptionValue(pointsOptionName);
     this.comment = this.getOptionValue(commentOptionName) ?? '';
-    return Promise.resolve();
   }
 
   async handleCommandInteraction(interaction) {

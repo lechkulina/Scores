@@ -134,44 +134,39 @@ class DataModel {
     return users;
   }
 
-  addReasonsToDatabase(reasons) {
-    const values = reasons.map(
-      ({name, min, max}) => `("${name}", ${min}, ${max})`
-    );
-    return this.database.run(`INSERT INTO Reason(name, min, max) VALUES ${values.join(', ')};`);
+  async addReason(name, min, max) {
+    await this.database.run(`
+      INSERT INTO Reason(name, min, max)
+      VALUES ("${name}", ${min}, ${max});
+    `);
+    this.reasonsCache.clear();
   }
 
-  addReasonsToCache(reasons) {
+  async getReasons() {
+    if (this.reasonsCache.size > 0) {
+      return Array.from(this.reasonsCache.values());
+    }
+    const reasons = await this.database.all(`
+      SELECT id, name, min, max
+      FROM Reason;
+    `);
     reasons.forEach(reason => this.reasonsCache.set(reason.id, reason));
+    return reasons;
   }
 
-  async getReasonsFromDatabase() {
-    return await this.database.all('SELECT id, name, min, max FROM Reason;');
-  }
-
-  addReasonsToDatabase(reasons) {
-    const values = reasons.map(
-      ({name, min, max}) => `("${name}", ${min}, ${max})`
-    );
-    return this.database.run(`INSERT INTO Reason(name, min, max) VALUES ${values.join(', ')};`);
-  }
-
-  async initializeReasonsCache() {
-    // temporary data
-    await this.addReasonsToDatabase([
-      {name: 'Subject of the day', min: 1, max: 5},
-      {name: 'Shared a link', min: 1, max: 5},
-      {name: 'Looks like Mr. Spock', min: 3, max: 12},
-    ]);
-    this.addReasonsToCache(await this.getReasonsFromDatabase());
-  }
-
-  getReasons() {
-    return Array.from(this.reasonsCache.values());
-  }
-
-  getReason(reasonId) {
-    return this.reasonsCache.get(reasonId);
+  async getReason(reasonId) {
+    if (this.reasonsCache.size > 0) {
+      return this.reasonsCache.get(reasonId);
+    }
+    const reason = await this.database.get(`
+      SELECT id, name, min, max
+      FROM Reason
+      WHERE id = ${reasonId};
+    `);
+    if (reason) {
+      this.reasonsCache.set(reason.id, reason);
+    }
+    return reason;
   }
   
   addPoints(points, comment, userId, giverId, reasonId) {
@@ -226,11 +221,19 @@ class DataModel {
   }
 
   setSetting(key, value) {
-    return this.database.run(`INSERT OR REPLACE INTO Settings(key, value) VALUES ("${key}", "${value}");`);
+    return this.database.run(`
+      INSERT OR REPLACE INTO Settings(key, value)
+      VALUES ("${key}", "${value}");
+    `);
   }
 
   async getSetting(key) {
-    return await this.database.get(`SELECT value FROM Settings WHERE key="${key}" LIMIT 1;`)?.value;
+    return await this.database.get(`
+      SELECT value
+      FROM Settings
+      WHERE key="${key}"
+      LIMIT 1;
+    `)?.value;
   }
 
   async initialize() {
@@ -239,7 +242,6 @@ class DataModel {
       this.createSchema(),
       this.initializeGuildsCache(),
       this.initializeUsersCache(),
-      this.initializeReasonsCache(),
     ]);
   }
 

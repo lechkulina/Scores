@@ -45,6 +45,22 @@ module.exports = {
         recentPoints: (params) => `⬇ ${params.pointsCount} most recently given points`,
         rankingPositions: '⬇ Ranking positions',
       }
+    },
+    addReason: {
+      description: 'Adds points add reason',
+      options: {
+        name: 'Name of a points add reason',
+        min: 'Minimal number of points that can be added for this reason',
+        max: 'Maximum number of points that can be added for this reason',
+      },
+      errors: {
+        invalidName: '❗ Name of a points add reason can not be empty.',
+        invalidRange: (params) => `❗ Invalid points range - minimal value ${params.min} can not be greater or equal to maximum value ${params.max}`,
+        genericFailure: '❗ Failed to add points add reason.',
+      },
+      messages: {
+        successStatus: (params) => `✅ Added new points add reason **${params.reasonName}**`,
+      }
     }
   }
 };
