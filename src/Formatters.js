@@ -1,10 +1,11 @@
-const noFormat = '```';
-const newLine = '\n';
-
-const verticalSeparator = '║';
-const jointSeparator = '╬';
-const horizontalSeparator = '═';
-const ellipsis = '...';
+const Entities = {
+  NoFormat: '```',
+  NewLine: '\n',
+  VerticalSeparator: '║',
+  JointSeparator: '╬',
+  HorizontalSeparator: '═',
+  Ellipsis: '...',
+};
 
 const defaultRoundWidthTo = 8;
 
@@ -38,41 +39,40 @@ function formatTable({
   };
   const header = columnsOrder.map(name => (
     fixed(columnsWidths[name], columnsLabels[name])
-  )).join(` ${verticalSeparator}`);
+  )).join(` ${Entities.VerticalSeparator}`);
   const separator = columnsOrder.map(name => (
-    horizontalSeparator.repeat(columnsWidths[name])
-  )).join(`${horizontalSeparator}${jointSeparator}`);
+    Entities.HorizontalSeparator.repeat(columnsWidths[name])
+  )).join(`${Entities.HorizontalSeparator}${Entities.JointSeparator}`);
   const content = rows.map(row => (
     columnsOrder.map(name => {
       const value = row[name];
       return fixed(columnsWidths[name], `${value}`);
-    }).join(` ${verticalSeparator}`)
-  )).join(newLine);
+    }).join(` ${Entities.VerticalSeparator}`)
+  )).join(Entities.NewLine);
   return [
-    noFormat,
+    Entities.NoFormat,
     header,
     separator,
     content,
-    noFormat
-  ].join(newLine);
+    Entities.NoFormat,
+  ].join(Entities.NewLine);
 }
 
 function formatMessageTable({message, ...props}) {
-  return `${message}${newLine}${formatTable(props)}`;
+  return `${message}${Entities.NewLine}${formatTable(props)}`;
 }
 
 function formatEllipsis(text, limit) {
-  const ellipsisLength = ellipsis.length;
+  const ellipsisLength = Entities.Ellipsis.length;
   const textLengthLimit = limit - ellipsisLength;
   if (text.length < textLengthLimit) {
     return text;
   }
-  return text.slice(0, textLengthLimit) + ellipsis;
+  return text.slice(0, textLengthLimit) + Entities.Ellipsis;
 }
 
 module.exports = {
-  noFormat,
-  newLine,
+  Entities,
   formatTable,
   formatMessageTable,
   formatEllipsis,

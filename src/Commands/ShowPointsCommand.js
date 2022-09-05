@@ -1,7 +1,7 @@
 const {Constants: {ApplicationCommandTypes}} = require('eris');
 const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
-const {formatMessageTable, formatEllipsis, newLine} = require('../Formatters');
+const {Entities, formatMessageTable} = require('../Formatters');
 
 class ShowPointsInteractionHandler extends InteractionHandler {
   constructor(client, dataModel, settings, translate, optionsValues) {
@@ -49,7 +49,7 @@ class ShowPointsInteractionHandler extends InteractionHandler {
               pointsCount: summary.pointsCount,
             }),
           }),
-        ].join(newLine)
+        ].join(Entities.NewLine),
       });
     } catch (error) {
       this.markAsDone();

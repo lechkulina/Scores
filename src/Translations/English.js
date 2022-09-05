@@ -58,10 +58,10 @@ module.exports = {
       errors: {
         invalidName: '❗ Name of a points add reason can not be empty.',
         invalidRange: (params) => `❗ Invalid points range - minimal value ${params.min} can not be greater or equal to maximum value ${params.max}`,
-        genericFailure: '❗ Failed to add points add reason.',
+        failure: '❗ Failed to add points add reason.',
       },
       messages: {
-        successStatus: (params) => `✅ Added new points add reason **${params.reasonName}**`,
+        success: (params) => `✅ Added new points add reason **${params.reasonName}**`,
       }
     }
   }

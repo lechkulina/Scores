@@ -1,19 +1,16 @@
-const {Constants: {ApplicationCommandTypes, ApplicationCommandOptionTypes, ComponentTypes, ButtonStyles}} = require('eris');
+const {Constants: {ApplicationCommandTypes, ApplicationCommandOptionTypes}} = require('eris');
 const UserOption = require('../UserOption');
 const ReasonOption = require('../ReasonOption');
 const Option = require('../Option');
 const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
+const {ButtonId, actionRow, button} = require('../Components');
+const {Entities} = require('../Formatters');
 
 const userOptionName = 'user';
 const reasonOptionName = 'reason';
 const pointsOptionName = 'points';
 const commentOptionName = 'comment';
-
-const noButtonId = 'noButtonId';
-const sendDirectMessageButtonId = 'sendDirectMessageButtonId';
-const createPublicMessageButtonId = 'createPublicMessageButtonId';
-const doBothButtonId = 'doBothButtonId';
 
 class AddPointsInteractionHandler extends InteractionHandler {
   constructor(client, dataModel, settings, translate, optionsValues) {
@@ -52,30 +49,14 @@ class AddPointsInteractionHandler extends InteractionHandler {
         userName: this.user.name,
         reasonName: this.reason.name,
       }),
-      components: [{
-        type: ComponentTypes.ACTION_ROW,
-        components: [{
-          type: ComponentTypes.BUTTON,
-          style: ButtonStyles.PRIMARY,
-          custom_id: noButtonId,
-          label: this.translate('common.no'),
-        }, {
-          type: ComponentTypes.BUTTON,
-          style: ButtonStyles.PRIMARY,
-          custom_id: sendDirectMessageButtonId,
-          label: this.translate('buttons.sendHimDirectMessage'),
-        }, {
-          type: ComponentTypes.BUTTON,
-          style: ButtonStyles.PRIMARY,
-          custom_id: createPublicMessageButtonId,
-          label: this.translate('buttons.createPublicMessage'),
-        }, {
-          type: ComponentTypes.BUTTON,
-          style: ButtonStyles.PRIMARY,
-          custom_id: doBothButtonId,
-          label: this.translate('buttons.doBoth'),
-        }],
-      }],
+      components: [
+        actionRow([
+          button(ButtonId.No, this.translate('common.no')),
+          button(ButtonId.SendDirectMessage, this.translate('buttons.sendHimDirectMessage')),
+          button(ButtonId.CreatePublicMessage, this.translate('buttons.createPublicMessage')),
+          button(ButtonId.DoBoth, this.translate('buttons.doBoth')),
+        ]),
+      ],
     });
   }
 
@@ -109,23 +90,23 @@ class AddPointsInteractionHandler extends InteractionHandler {
   }
 
   async handleComponentInteraction(interaction) {
+    this.markAsDone();
     const content = await (() => {
       const buttonId = interaction.data.custom_id;
       switch (buttonId) {
-        case noButtonId:
+        case ButtonId.No:
           return Promise.resolve(this.translate('common.done'));
-        case sendDirectMessageButtonId:
+        case ButtonId.SendDirectMessage:
           return this.sendDirectMessage(interaction);
-        case createPublicMessageButtonId:
+        case ButtonId.CreatePublicMessage:
           return this.createPublicMessage(interaction);
-        case doBothButtonId:
+        case ButtonId.DoBoth:
           return Promise.all([
             this.sendDirectMessage(interaction),
             this.createPublicMessage(interaction),
-          ]).then(status => status.join('\n'));
+          ]).then(status => status.join(Entities.NewLIne));
       }
     })();
-    this.markAsDone();
     return interaction.createMessage(content);
   }
 }

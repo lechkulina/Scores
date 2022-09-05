@@ -58,10 +58,10 @@ module.exports = {
       errors: {
         invalidName: '❗ Nazwa powodu do przyznawania punktów nie moze być pusta.',
         invalidRange: (params) => `❗ Nieprawidłowy zakres punktów - wartość minimalna ${params.min} nie moze byc wieksza lub równa wartości maksymalnej ${params.max}`,
-        genericFailure: '❗ Nie udało się dodać nowego powodu do przyznawania punktów.',
+        failure: '❗ Nie udało się dodać nowego powodu do przyznawania punktów.',
       },
       messages: {
-        successStatus: (params) => `✅ Dodano nowy powód do przynawania punktów **${params.reasonName}**`,
+        success: (params) => `✅ Dodano nowy powód do przynawania punktów **${params.reasonName}**`,
       }
     },
     removeReason: {

@@ -20,12 +20,11 @@ class AddReasonInteractionHandler extends InteractionHandler {
   }
 
   async handleCommandInteraction(interaction) {
+    this.markAsDone();
     if (this.name === '') {
-      this.markAsDone();
       return interaction.createMessage(this.translate('commands.addReason.errors.invalidName'));
     }
     if (this.min >= this.max) {
-      this.markAsDone();
       return interaction.createMessage(this.translate('commands.addReason.errors.invalidRange', {
         min: this.min,
         max: this.max,
@@ -34,11 +33,10 @@ class AddReasonInteractionHandler extends InteractionHandler {
     try {
       await this.dataModel.addReason(this.name, this.min, this.max);
     } catch (error) {
-      this.markAsDone();
-      return interaction.createMessage(this.translate('commands.addReason.errors.genericFailure'));
+      return interaction.createMessage(this.translate('commands.addReason.errors.failure'));
     }
     return interaction.createMessage({
-      content: this.translate('commands.addReason.messages.successStatus', {
+      content: this.translate('commands.addReason.messages.success', {
         reasonName: this.name,
       })
     });

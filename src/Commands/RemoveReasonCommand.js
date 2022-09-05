@@ -1,12 +1,10 @@
-const {Constants: {ApplicationCommandTypes, ApplicationCommandOptionTypes, ComponentTypes, ButtonStyles}} = require('eris');
+const {Constants: {ApplicationCommandTypes, ButtonStyles}} = require('eris');
 const ReasonOption = require('../ReasonOption');
 const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
+const {ButtonId, actionRow, button} = require('../Components');
 
 const reasonOptionId = 'reason';
-
-const noButtonId = 'no-button-id';
-const yesButtonId = 'yes-button-id';
 
 class RemoveReasonInteractionHandler extends InteractionHandler {
   constructor(client, dataModel, settings, translate, optionsValues) {
@@ -22,20 +20,12 @@ class RemoveReasonInteractionHandler extends InteractionHandler {
       content: this.translate('commands.removeReason.messages.confirmation', {
         reasonName: this.reason.name,
       }),
-      components: [{
-        type: ComponentTypes.ACTION_ROW,
-        components: [{
-          type: ComponentTypes.BUTTON,
-          style: ButtonStyles.PRIMARY,
-          custom_id: noButtonId,
-          label: this.translate('common.no'),
-        }, {
-          type: ComponentTypes.BUTTON,
-          style: ButtonStyles.DANGER,
-          custom_id: yesButtonId,
-          label: this.translate('common.yes'),
-        }],
-      }],
+      components: [
+        actionRow([
+          button(ButtonId.No, this.translate('common.no')),
+          button(ButtonId.Yes, this.translate('common.yes'), ButtonStyles.DANGER),
+        ]),
+      ],
     });
   }
 
@@ -53,16 +43,16 @@ class RemoveReasonInteractionHandler extends InteractionHandler {
   }
 
   async handleComponentInteraction(interaction) {
+    this.markAsDone();
     const content = await (() => {
       const buttonId = interaction.data.custom_id;
       switch (buttonId) {
-        case noButtonId:
+        case ButtonId.No:
           return Promise.resolve(this.translate('common.canceled'));
-        case yesButtonId:
+        case ButtonId.Yes:
           return this.removeReason();
       }
     })();
-    this.markAsDone();
     return interaction.createMessage(content);
   }
 }
