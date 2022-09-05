@@ -200,6 +200,14 @@ class DataModel {
     `);
   }
 
+  changePoints(pointsId, points, reasonId) {
+    return this.database.run(`
+      UPDATE Points
+      SET points = ${points}, reasonId = ${reasonId}
+      WHERE id = ${pointsId};
+    `);
+  }
+
   getPointsSummary(userId) {
     return this.database.get(`
       SELECT SUM(points) AS points, COUNT(1) as pointsCount, MIN(acquireDate) AS minAcquireDate, MAX(acquireDate) AS maxAcquireDate

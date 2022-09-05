@@ -16,20 +16,19 @@ module.exports = {
     doBoth: 'Do both',
   },
   autoCompete: {
-    recentlyGivenPoints: (params) => `${params.points} points added at ${params.acquireDate} for a reason ${params.reasonName}`,
+    recentlyGivenPoints: (params) => `${params.points} points added at ${params.acquireDate} with reason ${params.reasonName}`,
   },
   commands: {
     addPoints: {
       description: 'Adds points to a user',
       options: {
-        user: 'User name for which points points should be added',
+        user: 'User for which points points should be added',
         reason: 'Reason why points are being added',
-        points: 'Number of points to add',
-        comment: 'Comment',
+        points: 'Number of points',
       },
       errors: {
         invalidRange: (params) => `❗ Valid points range for the selected reason **${params.reasonName}** is ${params.min} to ${params.max}`,
-        failure: (params) => `❗ Faield to add **${params.points}** points for **${params.userName}**`,
+        failure: (params) => `❗ Faield to add **${params.points}** points to user **${params.userName}**`,
       },
       messages: {
         success: (params) => `✅ Added **${params.points}** points to user **${params.userName}** with reason **${params.reasonName}**\nWould you like to send notification?`,
@@ -39,8 +38,35 @@ module.exports = {
         publicMessageCreated: (params) => `✅ Public message at channel **${params.channelName}** was created.`,
       }
     },
+    removePoints: {
+      description: 'Removes previously added points',
+      options: {
+        user: 'User which points should be removed',
+        recentlyGivenPoints: 'Points you have recently given',
+      },
+      errors: {
+        failure: (params) => `❗ Failed to remove **${params.points}** points from user **${params.userName}**`,
+      },
+      messages: {
+        confirmation: (params) => `❓ Are you sure you want to remove **${params.points}** points from user **${params.userName}** added at ${params.acquireDate} with reason ${params.reasonName}?`,
+        success: (params) => `✅ Removed points from user **${params.userName}**`,
+      }
+    },
+    changePoints: {
+      description: 'Changes previously added points',
+      options: {
+        user: 'User which points should be changed',
+      },
+      errors: {
+        failure: (params) => `❗ Failed to change **${params.points}** points from user **${params.userName}**`,
+      },
+      messages: {
+        confirmation: (params) => `❓ Are you sure you want to change **${params.points}** points from user **${params.userName}** added at ${params.acquireDate} with reason ${params.reasonName}?`,
+        success: (params) => `✅ Changed points from user **${params.userName}**`,
+      }
+    },
     showPoints: {
-      description: `Shows user's points`,
+      description: `Shows user points`,
       errors: {
         failure: (params) => `❗ Faield get points for user **${params.userName}**`,
       },

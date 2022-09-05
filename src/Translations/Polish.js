@@ -22,10 +22,9 @@ module.exports = {
     addPoints: {
       description: 'Dodaje punkty uzytkownikowi',
       options: {
-        user: 'Nazwa uzytkownika dla którego punkty zostaną dodane',
+        user: 'Uzytkownik któremu zostaną dodane punkty',
         reason: 'Powód dodania punktów',
-        points: 'Liczba punktów do dodania',
-        comment: 'Komentarz',
+        points: 'Liczba punktów',
       },
       errors: {
         invalidRange: (params) => `❗ Prawidłowy zakres punktów dla powodu **${params.reasonName}** wynosi od ${params.min} do ${params.max}`,
@@ -42,15 +41,28 @@ module.exports = {
     removePoints: {
       description: 'Usuwa wcześniej dodane uzytkownikowi punkty',
       options: {
-        user: 'Nazwa uzytkownika, któremu nalezy usunąć punkty',
+        user: 'Uzytkownik, któremu nalezy usunąć punkty',
         recentlyGivenPoints: 'Ostatnio przyznane punkty przez ciebie punkty',
       },
       errors: {
         failure: (params) => `❗ Nie udało się usunąć **${params.points}** punktów uzytkownikowi **${params.userName}**`,
       },
       messages: {
-        confirmation: (params) => `❓ Czy na pewno chcesz usunąć **${params.points}** punkty przyznanych uzytkownikowi **${params.userName}** dnia ${params.acquireDate} z powodu ${params.reasonName}?`,
-        success: (params) => `✅ Usunięto **${params.points}** punkty uzytkownikowi **${params.userName}**`,
+        confirmation: (params) => `❓ Czy na pewno chcesz usunąć **${params.points}** punkty uzytkownikowi **${params.userName}** dnia ${params.acquireDate} z powodu ${params.reasonName}?`,
+        success: (params) => `✅ Usunięto punkty uzytkownikowi **${params.userName}**`,
+      }
+    },
+    changePoints: {
+      description: 'Zmiania wcześniej dodane uzytkownikowi punkty',
+      options: {
+        user: 'Uzytkownik, któremu nalezy zmienić punkty',
+      },
+      errors: {
+        failure: (params) => `❗ Nie udało się zmienić **${params.points}** punktów uzytkownikowi **${params.userName}**`,
+      },
+      messages: {
+        confirmation: (params) => `❓ Czy na pewno chcesz zmienić **${params.points}** punkty uzytkownikowi **${params.userName}** z dnia ${params.acquireDate} z powodu ${params.reasonName}?`,
+        success: (params) => `✅ Zmieniono punkty uzytkownikowi **${params.userName}**`,
       }
     },
     showPoints: {
@@ -67,7 +79,7 @@ module.exports = {
     addReason: {
       description: 'Dodaje nowy powód do przyznawania punktów',
       options: {
-        name: 'Nazwa',
+        name: 'Nazwa powodu dodania punktów',
         min: 'Minimalna liczba punktów jaką mozna przyznać',
         max: 'Maksymalna liczba punktów jaką mozna przyznać',
       },

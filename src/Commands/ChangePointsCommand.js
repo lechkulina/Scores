@@ -1,20 +1,23 @@
 const {Constants: {ButtonStyles}} = require('eris');
-const UserOption = require('../UserOption');
-const RecentlyGivenPointsOption = require('../RecentlyGivenPointsOption');
-const {OptionId} = require('../Options');
+const ReasonOption = require('../ReasonOption');
+const {OptionId, NumberOption} = require('../Options');
 const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
 const {ButtonId, actionRow, button} = require('../Components');
+const UserOption = require('../UserOption');
+const RecentlyGivenPointsOption = require('../RecentlyGivenPointsOption');
 
-class RemovePointsInteractionHandler extends InteractionHandler {
+class ChangePointsInteractionHandler extends InteractionHandler {
   async initialize() {
     this.user = this.dataModel.getUser(this.getOptionValue(OptionId.User));
     this.pointsEntry = await this.dataModel.getPoints(this.getOptionValue(OptionId.RecentlyGivenPoints));
+    this.reason = await this.dataModel.getReason(this.getOptionValue(OptionId.Reason));
+    this.pointsValue = this.getOptionValue(OptionId.Points);
   }
 
   async handleCommandInteraction(interaction) {
     return interaction.createMessage({
-      content: this.translate('commands.removePoints.messages.confirmation', {
+      content: this.translate('commands.changePoints.messages.confirmation', {
         userName: this.user.name,
         points: this.pointsEntry.points,
         acquireDate: this.pointsEntry.acquireDate,
@@ -29,15 +32,15 @@ class RemovePointsInteractionHandler extends InteractionHandler {
     });
   }
 
-  async removePoints() {
+  async changePoints() {
     try {
-      await this.dataModel.removePoints(this.pointsEntry.id);
-      return this.translate('commands.removePoints.messages.success', {
-        userName: this.user.name,
+      await this.dataModel.changePoints(this.pointsEntry.id, this.pointsValue, this.reason.id);
+      return this.translate('commands.changePoints.messages.success', {
+        userName: this.user.name
       });
     } catch (error) {
-      return this.translate('commands.removePoints.errors.failure', {
-        userName: this.user.name,
+      return this.translate('commands.changePoints.errors.failure', {
+        userName: this.user.name
       });
     }
   }
@@ -50,28 +53,30 @@ class RemovePointsInteractionHandler extends InteractionHandler {
         case ButtonId.No:
           return Promise.resolve(this.translate('common.canceled'));
         case ButtonId.Yes:
-          return this.removePoints();
+          return this.changePoints();
       }
     })();
     return interaction.createMessage(content);
   }
 }
 
-class RemovePointsCommand extends Command {
+class ChangePointsCommand extends Command {
   constructor(translate) {
-    super(translate, 'remove-points');
+    super(translate, 'change-points');
   }
 
   initialize() {
-    this.setDescription(this.translate('commands.removePoints.description'));
-    this.addOption(new UserOption(this.translate('commands.removePoints.options.user')));
+    this.setDescription(this.translate('commands.changePoints.description'));
+    this.addOption(new UserOption(this.translate('commands.changePoints.options.user')));
     this.addOption(new RecentlyGivenPointsOption(this.translate('commands.removePoints.options.recentlyGivenPoints')));
+    this.addOption(new ReasonOption(this.translate('commands.addPoints.options.reason')));
+    this.addOption(new NumberOption(OptionId.Points, this.translate('commands.addPoints.options.points')));
     return Promise.resolve();
   }
 
   createInteractionHandler(...props) {
-    return new RemovePointsInteractionHandler(...props);
+    return new ChangePointsInteractionHandler(...props);
   }
 }
 
-module.exports = RemovePointsCommand;
+module.exports = ChangePointsCommand;
