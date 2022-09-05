@@ -3,9 +3,8 @@ const InteractionHandler = require('../InteractionHandler');
 const {Entities, formatMessageTable} = require('../Formatters');
 
 class ShowPointsInteractionHandler extends InteractionHandler {
-  initialize(interaction) {
-    this.user = this.dataModel.getUser(interaction.member.user.id);
-    return Promise.resolve();
+  async initialize(interaction) {
+    this.user = await this.findUser(interaction.guildID, interaction.member.user.id);
   }
 
   async handleCommandInteraction(interaction) {
@@ -52,7 +51,7 @@ class ShowPointsInteractionHandler extends InteractionHandler {
     } catch (error) {
       this.markAsDone();
       return interaction.createMessage(this.translate('commands.showPoints.errors.failure', {
-        userName: user.name,
+        userName: user.username,
       }));
     }
   }

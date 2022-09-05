@@ -38,7 +38,7 @@ class InteractionHandler {
   }
 
   async findUser(guildId, userId) {
-    (await this.findMember(guildId, userId))?.user;
+    return (await this.findMember(guildId, userId))?.user;
   }
 
   findRole(guildId, roleId) {
@@ -52,7 +52,7 @@ class InteractionHandler {
   }
 
   async createDirectMessagesChannel(guildId, userId) {
-    return await this.findUser(guildId, userId)?.getDMChannel();
+    return (await this.findUser(guildId, userId))?.getDMChannel();
   }
 
   async findPublicChannel(guildId) {

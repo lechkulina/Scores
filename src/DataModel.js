@@ -4,136 +4,11 @@ class DataModel {
   constructor(client) {
     this.database = new Database();
     this.client = client;
-    // guidlds, user and reasons are cached for autocompete
-    this.guildsCache = new Map();
-    this.usersCache = new Map();
     this.reasonsCache = new Map();
-    this.commandsInfo = new Map();
   }
 
   createSchema() {
     return this.database.exec(require('./schema.js'));
-  }
-
-  addGuildsToDatabase(guilds) {
-    const values = guilds.map(({id, name}) => `("${id}", "${name}")`);
-    return this.database.run(`INSERT INTO Guild VALUES ${values.join(', ')};`);
-  }
-
-  addGuildsToCache(guilds) {
-    guilds.forEach(guild => this.guildsCache.set(guild.id, guild));
-  }
-
-  getGuildsFromDatabase() {
-    return this.database.all('SELECT id, name FROM Guild;');
-  }
-
-  getGuildsFromDiscord() {
-    return this.client.guilds.map(({id, name}) => ({
-      id, name,
-    }));
-  }
-
-  async initializeGuildsCache() {
-    this.getGuildsFromDiscord();
-    let guilds = await this.getGuildsFromDatabase();
-    if (guilds.length > 0) {
-      this.addGuildsToCache(guilds);
-      return;
-    }
-    guilds = this.getGuildsFromDiscord();
-    if (guilds.length > 0) {
-      console.info(`Got ${guilds.length} new guilds`);
-      this.addGuildsToCache(guilds);
-      await this.addGuildsToDatabase(guilds);
-    }
-  }
-
-  addUsersToDatabase(users) {
-    const values = users.map(
-      ({id, name, discriminator, guild}) => `("${id}", "${name}", "${discriminator}", "${guild.id}")`
-    );
-    return this.database.run(`INSERT INTO User VALUES ${values.join(', ')};`);
-  }
-
-  addUsersToCache(users) {
-    users.forEach(user => this.usersCache.set(user.id, user));
-  }
-
-  async getUsersFromDatabase() {
-    const items = await this.database.all('SELECT id, name, discriminator, guildId FROM User;');
-    return items.map(({id, name, discriminator, guildId}) => ({
-      id,
-      name,
-      discriminator,
-      guild: this.guildsCache.get(guildId),
-    }));
-  }
-
-  async addNewUsers(users) {
-    const newUsers = users.filter(({id}) => !this.usersCache.has(id));
-    if (newUsers.length === 0) {
-      return;
-    }
-    console.info(`Got ${newUsers.length} new users`);
-    this.addUsersToCache(newUsers);
-    return this.addUsersToDatabase(newUsers);
-  }
-
-  async searchUsersAtDiscord(guildId, query, limit) {
-    if (!query || query.length < 1) {
-      return [];
-    }
-    const clientGuild = this.client.guilds.find(({id}) => id === guildId);
-    if (!clientGuild) {
-      console.error(`Unable to search users - unknown guild id ${guildId}`);
-      return [];
-    }
-    const clientMembers = await clientGuild.fetchMembers({
-      query,
-      limit,
-      presences: false,
-    });
-    return clientMembers.map(({guild: {id: guildId}, user: {id, username, discriminator}}) => ({
-      id,
-      name: username,
-      discriminator,
-      guild: this.guildsCache.get(guildId),
-    }));
-  }
-
-  async addInteractionAuthor(commandInteraction) {
-    if (!commandInteraction?.member) {
-      return;
-    }
-    const {guild: {id: guildId}, user: {id, username, discriminator}} = commandInteraction.member;
-    return this.addNewUsers([{
-      id,
-      name: username,
-      discriminator,
-      guild: this.guildsCache.get(guildId),
-    }]);
-  }
-
-  async initializeUsersCache() {
-    this.addUsersToCache(await this.getUsersFromDatabase());
-  }
-
-  getUsers() {
-    return Array.from(this.usersCache.values());
-  }
-
-  getUser(userId) {
-    return this.usersCache.get(userId);
-  }
-
-  async searchUsers(guildId, query, limit) {
-    const users = await this.searchUsersAtDiscord(guildId, query, limit);
-    if (users.length === 0) {
-      return this.getUsers();
-    }
-    await this.addNewUsers(users);
-    return users;
   }
 
   async addReason(name, min, max) {
@@ -333,6 +208,13 @@ class DataModel {
     `);
   }
 
+  addGuild(id, name) {
+    return this.database.run(`
+      INSERT OR REPLACE INTO Guild(id, name)
+      VALUES ("${id}", "${name}");
+    `);
+  }
+
   grantUserPermission(userId, commandId) {
     return this.database.run(`
       INSERT OR REPLACE INTO UserPermission(userId, commandId)
@@ -369,12 +251,8 @@ class DataModel {
   }
 
   async initialize() {
-    return Promise.all([
-      this.database.open(),
-      this.createSchema(),
-      this.initializeGuildsCache(),
-      this.initializeUsersCache(),
-    ]);
+    await this.database.open();
+    await this.createSchema();
   }
 
   uninitialize() {

@@ -1,21 +1,20 @@
 const {Constants: {ButtonStyles}} = require('eris');
-const UserOption = require('../UserOption');
 const RecentlyGivenPointsOption = require('../RecentlyGivenPointsOption');
-const {OptionId} = require('../Options');
+const {OptionId, UserOption} = require('../Options');
 const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
 const {ButtonId, actionRow, button} = require('../Components');
 
 class RemovePointsInteractionHandler extends InteractionHandler {
   async initialize(interaction) {
-    this.user = this.dataModel.getUser(this.getOptionValue(OptionId.User));
+    this.user = await this.findUser(interaction.guildID, this.getOptionValue(OptionId.User));
     this.pointsEntry = await this.dataModel.getPoints(this.getOptionValue(OptionId.RecentlyGivenPoints));
   }
 
   async handleCommandInteraction(interaction) {
     return interaction.createMessage({
       content: this.translate('commands.removePoints.messages.confirmation', {
-        userName: this.user.name,
+        userName: this.user.username,
         points: this.pointsEntry.points,
         acquireDate: this.pointsEntry.acquireDate,
         reasonName: this.pointsEntry.reasonName,
@@ -33,11 +32,11 @@ class RemovePointsInteractionHandler extends InteractionHandler {
     try {
       await this.dataModel.removePoints(this.pointsEntry.id);
       return this.translate('commands.removePoints.messages.success', {
-        userName: this.user.name,
+        userName: this.user.username,
       });
     } catch (error) {
       return this.translate('commands.removePoints.errors.failure', {
-        userName: this.user.name,
+        userName: this.user.username,
       });
     }
   }

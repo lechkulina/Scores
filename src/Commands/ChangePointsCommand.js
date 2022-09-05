@@ -1,15 +1,14 @@
 const {Constants: {ButtonStyles}} = require('eris');
 const ReasonOption = require('../ReasonOption');
-const {OptionId, NumberOption} = require('../Options');
+const {OptionId, UserOption, NumberOption} = require('../Options');
 const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
 const {ButtonId, actionRow, button} = require('../Components');
-const UserOption = require('../UserOption');
 const RecentlyGivenPointsOption = require('../RecentlyGivenPointsOption');
 
 class ChangePointsInteractionHandler extends InteractionHandler {
   async initialize(interaction) {
-    this.user = this.dataModel.getUser(this.getOptionValue(OptionId.User));
+    this.user = await this.findUser(interaction.guildID, this.getOptionValue(OptionId.User));
     this.pointsEntry = await this.dataModel.getPoints(this.getOptionValue(OptionId.RecentlyGivenPoints));
     this.reason = await this.dataModel.getReason(this.getOptionValue(OptionId.Reason));
     this.pointsValue = this.getOptionValue(OptionId.Points);
@@ -18,7 +17,7 @@ class ChangePointsInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     return interaction.createMessage({
       content: this.translate('commands.changePoints.messages.confirmation', {
-        userName: this.user.name,
+        userName: this.user.username,
         points: this.pointsEntry.points,
         acquireDate: this.pointsEntry.acquireDate,
         reasonName: this.pointsEntry.reasonName,
@@ -36,11 +35,11 @@ class ChangePointsInteractionHandler extends InteractionHandler {
     try {
       await this.dataModel.changePoints(this.pointsEntry.id, this.pointsValue, this.reason.id);
       return this.translate('commands.changePoints.messages.success', {
-        userName: this.user.name
+        userName: this.user.username
       });
     } catch (error) {
       return this.translate('commands.changePoints.errors.failure', {
-        userName: this.user.name
+        userName: this.user.username
       });
     }
   }

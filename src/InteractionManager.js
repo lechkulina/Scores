@@ -28,7 +28,7 @@ class InteractionManager {
     const translate = await this.translatorsFactory.createTranslator(interaction);
     const userId = interaction.member.user.id;
     const rolesIds = interaction.member.roles;
-    const allowed = await this.dataModel.isAllowed(userId, rolesIds, commandId);
+    const allowed = true; // await this.dataModel.isAllowed(userId, rolesIds, commandId);
     if (!allowed) {
       await interaction.createMessage({
         content: translate('commands.errors.notAllowed', {
@@ -62,7 +62,6 @@ class InteractionManager {
   }
   
   async handleCommandInteraction(interaction) {
-    await this.dataModel.addInteractionAuthor(interaction);
     const interactionHandler = await this.createInteractionHandler(interaction);
     if (!interactionHandler) {
       return;
