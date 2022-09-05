@@ -25,6 +25,12 @@ class StringOption extends Option {
   }
 }
 
+class UserOption extends Option {
+  constructor(description, required) {
+    super(OptionId.User, description, ApplicationCommandOptionTypes.USER, required, false);
+  }
+}
+
 class RoleOption extends Option {
   constructor(description, required) {
     super(OptionId.Role, description, ApplicationCommandOptionTypes.ROLE, required, false);
@@ -35,5 +41,6 @@ module.exports = {
   OptionId,
   NumberOption,
   StringOption,
+  UserOption,
   RoleOption,
 };

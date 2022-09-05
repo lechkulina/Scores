@@ -149,5 +149,14 @@ module.exports = {
         success: (params) => `✅ Odebrano uprawnienia do wykonywania polecenia **${params.commandId}**`,
       }
     },
+    grantUserPermission: {
+      description: 'Nadaje uprawnienia do wykonywania polecenia uzytkownikowi',
+      options: {
+        user: 'Uzytkownik',
+      },
+      messages: {
+        confirmation: (params) => `❓ Czy na pewno chcesz nadać uprawnienia do wykonywania polecnia **${params.commandId}** uzytkownikowi **${params.userName}**?`,
+      }
+    },
   }
 };

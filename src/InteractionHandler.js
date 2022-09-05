@@ -24,7 +24,7 @@ class InteractionHandler {
     return this.client.guilds.find(({id}) => id === guildId);
   }
 
-  async findUser(guildId, userId) {
+  async findMember(guildId, userId) {
     const guild = this.findGuild(guildId);
     if (!guild) {
       return;
@@ -34,7 +34,11 @@ class InteractionHandler {
       limit: 1,
       presences: false,
     });
-    return members[0]?.user;
+    return members[0];
+  }
+
+  async findUser(guildId, userId) {
+    (await this.findMember(guildId, userId))?.user;
   }
 
   findRole(guildId, roleId) {

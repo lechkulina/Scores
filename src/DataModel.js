@@ -326,6 +326,20 @@ class DataModel {
     `);
   }
 
+  addUser(id, name, discriminator, guildId) {
+    return this.database.run(`
+      INSERT OR REPLACE INTO User(id, name, discriminator, guildId)
+      VALUES ("${id}", "${name}", "${discriminator}", "${guildId}");
+    `);
+  }
+
+  grantUserPermission(userId, commandId) {
+    return this.database.run(`
+      INSERT OR REPLACE INTO UserPermission(userId, commandId)
+      VALUES ("${userId}", "${commandId}");
+    `);
+  }
+
   async initialize() {
     return Promise.all([
       this.database.open(),

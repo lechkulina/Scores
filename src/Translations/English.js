@@ -149,5 +149,14 @@ module.exports = {
         success: (params) => `✅ Revoked permission to execute command **${params.commandId}**`,
       }
     },
+    grantUserPermission: {
+      description: 'Grants user a permission to execute a command',
+      options: {
+        user: 'User',
+      },
+      messages: {
+        confirmation: (params) => `❓ Are you sure you want to grant permission to execute command **${params.commandId}** by user **${params.userName}**?`,
+      }
+    },
   }
 };
