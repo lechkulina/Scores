@@ -63,6 +63,19 @@ module.exports = {
       messages: {
         success: (params) => `✅ Added new points add reason **${params.reasonName}**`,
       }
-    }
+    },
+    removeReason: {
+      description: 'Removes existing points add reason.',
+      options: {
+        reason: 'Points add reason',
+      },
+      errors: {
+        failure: (params) => `❗ Failed to removed points add reason **${params.reasonName}**`,
+      },
+      messages: {
+        confirmation: (params) => `❓ Are you sure you want to remove points add reason **${params.reasonName}**?`,
+        success: (params) => `✅ Removed points add reason **${params.reasonName}**`,
+      }
+    },
   }
 };

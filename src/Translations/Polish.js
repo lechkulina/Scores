@@ -73,7 +73,7 @@ module.exports = {
         failure: (params) => `❗ Nie udało się usunąć powodu do przyznawania punktów **${params.reasonName}**`,
       },
       messages: {
-        confirmation: (params) => `❓ Czy na pewno chcesz usunąć powód do przyznania punktów **${params.reasonName}**`,
+        confirmation: (params) => `❓ Czy na pewno chcesz usunąć powód do przyznania punktów **${params.reasonName}**?`,
         success: (params) => `✅ Usunięto powód przyznania punktów **${params.reasonName}**`,
       }
     },
