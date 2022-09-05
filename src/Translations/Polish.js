@@ -19,6 +19,9 @@ module.exports = {
     recentlyGivenPoints: (params) => `${params.points} punkty przyznane dnia ${params.acquireDate} z powodu ${params.reasonName}`,
   },
   commands: {
+    errors: {
+      notAllowed: (params) => `❌ Nie masz uprawnień do wykonania polecenia **${params.commandId}**`,
+    },
     addPoints: {
       description: 'Dodaje punkty uzytkownikowi',
       options: {

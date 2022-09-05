@@ -19,6 +19,9 @@ module.exports = {
     recentlyGivenPoints: (params) => `${params.points} points added at ${params.acquireDate} with reason ${params.reasonName}`,
   },
   commands: {
+    errors: {
+      notAllowed: (params) => `❌ You do not have permissions to execute command **${params.commandId}**`,
+    },
     addPoints: {
       description: 'Adds points to a user',
       options: {

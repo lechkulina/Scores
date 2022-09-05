@@ -19,14 +19,25 @@ class InteractionManager {
   }
 
   async createInteractionHandler(interaction) {
-    const commandName = interaction.data.name;
-    const command = this.commandsManager.findCommand(commandName);
+    const commandId = interaction.data.name;
+    const command = this.commandsManager.findCommand(commandId);
     if (!command) {
-      console.error(`Unable to handle interaction of unsupported command ${commandName}`);
+      await interaction.acknowledge();
+      return;
+    }
+    const translate = await this.translatorsFactory.createTranslator(interaction);
+    const userId = interaction.member.user.id;
+    const rolesIds = interaction.member.roles;
+    const allowed = await this.dataModel.isAllowed(userId, rolesIds, commandId);
+    if (!allowed) {
+      await interaction.createMessage({
+        content: translate('commands.errors.notAllowed', {
+          commandId,
+        }),
+      });
       return;
     }
     const optionsValues = command.createOptionsValues(interaction);
-    const translate = await this.translatorsFactory.createTranslator(interaction);
     const interactionHandler = command.createInteractionHandler(this.client, this.dataModel, this.settings, translate, optionsValues);
     await interactionHandler.initialize(interaction);
     this.interactionHandlers.set(interaction.id, interactionHandler);
@@ -53,7 +64,9 @@ class InteractionManager {
   async handleCommandInteraction(interaction) {
     await this.dataModel.addInteractionAuthor(interaction);
     const interactionHandler = await this.createInteractionHandler(interaction);
-    this.interactionHandlers.set(interaction.id, interactionHandler);
+    if (!interactionHandler) {
+      return;
+    }
     return interactionHandler.handleCommandInteraction(interaction)
       .finally(result => {
         this.removeInteractionHandler(interaction, interactionHandler);

@@ -42,12 +42,12 @@ class CommandsManager {
     await this.registerCommands();
   }
 
-  findCommand(commandName) {
-    return this.commands.get(commandName);
+  findCommand(commandId) {
+    return this.commands.get(commandId);
   }
 
-  findOption(commandName, optionName) {
-    return this.findCommand(commandName)?.findOption(optionName);
+  findOption(commandId, optionName) {
+    return this.findCommand(commandId)?.findOption(optionName);
   }
 }
 
