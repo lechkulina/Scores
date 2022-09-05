@@ -1,6 +1,6 @@
 const UserOption = require('../UserOption');
 const ReasonOption = require('../ReasonOption');
-const {OptionId, StringOption, NumberOption} = require('../Options');
+const {OptionId, NumberOption} = require('../Options');
 const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
 const {ButtonId, actionRow, button} = require('../Components');
@@ -11,7 +11,6 @@ class AddPointsInteractionHandler extends InteractionHandler {
     this.user = this.dataModel.getUser(this.getOptionValue(OptionId.User));
     this.reason = await this.dataModel.getReason(this.getOptionValue(OptionId.Reason));
     this.points = this.getOptionValue(OptionId.Points);
-    this.comment = this.getOptionValue(OptionId.Comment) ?? '';
   }
 
   async handleCommandInteraction(interaction) {
@@ -25,7 +24,7 @@ class AddPointsInteractionHandler extends InteractionHandler {
     }
     const giver = this.dataModel.getUser(interaction.member.user.id);
     try {
-      await this.dataModel.addPoints(this.points, this.comment, this.user.id, giver.id, this.reason.id);
+      await this.dataModel.addPoints(this.points, this.user.id, giver.id, this.reason.id);
     } catch (error) {
       this.markAsDone();
       return interaction.createMessage(this.translate('commands.addPoints.errors.failure', {
@@ -111,7 +110,6 @@ class AddPointsCommand extends Command {
     this.addOption(new UserOption(this.translate('commands.addPoints.options.user')));
     this.addOption(new ReasonOption(this.translate('commands.addPoints.options.reason')));
     this.addOption(new NumberOption(OptionId.Points, this.translate('commands.addPoints.options.points')));
-    this.addOption(new StringOption(OptionId.Comment, this.translate('commands.addPoints.options.comment'), false));
     return Promise.resolve();
   }
 

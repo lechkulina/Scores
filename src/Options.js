@@ -5,7 +5,6 @@ const OptionId = {
   User: 'user',
   Reason: 'reason',
   Points: 'points',
-  Comment: 'comment',
   Name: 'name',
   Min: 'min',
   Max: 'max'

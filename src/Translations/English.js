@@ -9,7 +9,6 @@ module.exports = {
     points: 'Points',
     giverName: 'Giver name',
     reasonName: 'Reason for granting',
-    comment: 'Comment',
   },
   buttons: {
     sendHimDirectMessage: 'Send him a direct message',

@@ -186,10 +186,10 @@ class DataModel {
     return reason;
   }
   
-  addPoints(points, comment, userId, giverId, reasonId) {
+  addPoints(points, userId, giverId, reasonId) {
     return this.database.run(`
-      INSERT INTO Points(points, comment, userId, giverId, reasonId)
-      VALUES (${points}, "${comment}", "${userId}", "${giverId}", ${reasonId});
+      INSERT INTO Points(points, userId, giverId, reasonId)
+      VALUES (${points}, "${userId}", "${giverId}", ${reasonId});
     `);
   }
 
@@ -206,7 +206,7 @@ class DataModel {
 
   getRecentPoints(userId, limit) {
     return this.database.all(`
-      SELECT Points.points as points, Points.acquireDate as acquireDate, Giver.name AS giverName, Reason.name AS reasonName, Points.comment as comment
+      SELECT Points.points as points, Points.acquireDate as acquireDate, Giver.name AS giverName, Reason.name AS reasonName
       FROM Points
       INNER JOIN User AS Giver ON Giver.id = giverId
       INNER JOIN Reason ON Reason.id = Points.reasonId

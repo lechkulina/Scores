@@ -9,7 +9,6 @@ module.exports = {
     points: 'Punkty',
     giverName: 'Osoba przynająca',
     reasonName: 'Powód przyznania',
-    comment: 'Komentarz',
   },
   buttons: {
     sendHimDirectMessage: 'Wyślij mu prywatną wiadomość',

@@ -20,13 +20,12 @@ class ShowPointsInteractionHandler extends InteractionHandler {
           }),
           formatMessageTable({
             rows: recentPointsRows,
-            columnsOrder: ['acquireDate', 'points', 'giverName', 'reasonName', 'comment'],
+            columnsOrder: ['acquireDate', 'points', 'giverName', 'reasonName'],
             columnsLabels: {
               acquireDate: this.translate('common.acquireDate'),
               points: this.translate('common.points'),
               giverName: this.translate('common.giverName'),
               reasonName: this.translate('common.reasonName'),
-              comment: this.translate('common.comment'),
             },
             message: this.translate('commands.showPoints.messages.recentPoints', {
               pointsCount: Math.min(recentPointsLimit, summary.pointsCount),
