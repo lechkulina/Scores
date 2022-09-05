@@ -340,6 +340,13 @@ class DataModel {
     `);
   }
 
+  revokeUserPermission(userId, commandId) {
+    return this.database.run(`
+      DELETE FROM UserPermission
+      WHERE userId = "${userId}" AND commandId = "${commandId}";
+    `);
+  }
+
   async initialize() {
     return Promise.all([
       this.database.open(),

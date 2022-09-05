@@ -158,5 +158,11 @@ module.exports = {
         confirmation: (params) => `❓ Czy na pewno chcesz nadać uprawnienia do wykonywania polecnia **${params.commandId}** uzytkownikowi **${params.userName}**?`,
       }
     },
+    revokeUserPermission: {
+      description: 'Odbiera uprawnienia do wykonywania polecenia uzytkownikowi',
+      messages: {
+        confirmation: (params) => `❓ Czy na pewno chcesz odebrać uprawnienia do wykonywania polecnia **${params.commandId}** uzytkownikowi **${params.userName}**?`,
+      }
+    },
   }
 };

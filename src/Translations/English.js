@@ -158,5 +158,11 @@ module.exports = {
         confirmation: (params) => `❓ Are you sure you want to grant permission to execute command **${params.commandId}** by user **${params.userName}**?`,
       }
     },
+    revokeUserPermission: {
+      description: 'Revokes user a permission to execute a command',
+      messages: {
+        confirmation: (params) => `❓ Are you sure you want to revoke permission to execute command **${params.commandId}** by user **${params.userName}**?`,
+      }
+    },
   }
 };

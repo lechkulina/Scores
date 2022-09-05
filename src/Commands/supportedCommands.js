@@ -13,4 +13,5 @@ module.exports = [
   require('./GrantRolePermissionCommand'),
   require('./RevokeRolePermissionCommand'),
   require('./GrantUserPermissionCommand'),
+  require('./RevokeUserPermissionCommand'),
 ];
