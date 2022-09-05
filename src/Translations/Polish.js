@@ -27,23 +27,23 @@ module.exports = {
       },
       errors: {
         invalidRange: (params) => `❗ Prawidłowy zakres punktów dla powodu **${params.reasonName}** wynosi od ${params.min} do ${params.max}`,
-        genericFailure: (params) => `❗ Nie udało się dodać **${params.points}** punktów uzytkownikowi **${params.userName}**`,
+        failure: (params) => `❗ Nie udało się dodać **${params.points}** punktów uzytkownikowi **${params.userName}**`,
       },
       messages: {
-        successStatus: (params) => `✅ Dodano **${params.points}** punkty uzytkownikowi **${params.userName}** z powodu **${params.reasonName}**\nCzy chcesz wysłać notyfikacje?`,
+        success: (params) => `✅ Dodano **${params.points}** punkty uzytkownikowi **${params.userName}** z powodu **${params.reasonName}**\nCzy chcesz wysłać notyfikacje?`,
         directMessage: (params) => `${params.giverName} dodał tobie **${params.points}** punkty z powodu ${params.reasonName}.`,
-        directMessageStatus: (params) => `✅ Wiadomość prywatna do uzytkownika **${params.userName}** została wysłana.`,
+        directMessageSent: (params) => `✅ Wiadomość prywatna do uzytkownika **${params.userName}** została wysłana.`,
         publicMessage: (params) => `**${params.userName}** zyskał **${params.points}** punkty z powodu ${params.reasonName}.`,
-        publicMessageStatus: (params) => `✅ Publiczna wiadomość została stworzona na kanale **${params.channelName}**`,
+        publicMessageCreated: (params) => `✅ Publiczna wiadomość została stworzona na kanale **${params.channelName}**`,
       }
     },
     showPoints: {
       description: 'Pokazuje punkty przyznane uzytkownikowi',
       errors: {
-        genericFailure: (params) => `❗ Nie udało się pobrać punktów dla uzytkownika **${params.userName}**`,
+        failure: (params) => `❗ Nie udało się pobrać punktów dla uzytkownika **${params.userName}**`,
       },
       messages: {
-        summaryStatus: (params) => `➡ Masz **${params.points}** punktów zdobytych pomiędzy ${params.minAcquireDate} a ${params.maxAcquireDate}`,
+        summary: (params) => `➡ Masz **${params.points}** punktów zdobytych pomiędzy ${params.minAcquireDate} a ${params.maxAcquireDate}`,
         recentPoints: (params) => `⬇ ${params.pointsCount} ostatnio przyznane punkty`,
         rankingPositions: '⬇ Pozycje w rankingu',
       }
@@ -70,12 +70,12 @@ module.exports = {
         reason: 'Powód dodania punktów',
       },
       errors: {
-        genericFailure: (params) => `❗ Nie udało się usunąć powodu do przyznawania punktów **${params.reasonName}**`,
+        failure: (params) => `❗ Nie udało się usunąć powodu do przyznawania punktów **${params.reasonName}**`,
       },
       messages: {
         confirmation: (params) => `❓ Czy na pewno chcesz usunąć powód do przyznania punktów **${params.reasonName}**`,
         success: (params) => `✅ Usunięto powód przyznania punktów **${params.reasonName}**`,
       }
-    }
+    },
   }
 };

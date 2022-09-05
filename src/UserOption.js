@@ -1,9 +1,10 @@
 const {Constants: {ApplicationCommandOptionTypes}} = require('eris');
 const Option = require('./Option');
+const {OptionId} = require('./Options');
 
 class UserOption extends Option {
-  constructor(name, description, required) {
-    super(name, description, ApplicationCommandOptionTypes.STRING, required, true);
+  constructor(description, required) {
+    super(OptionId.User, description, ApplicationCommandOptionTypes.STRING, required, true);
   }
 
   async getAutoCompeteResults(interaction, dataModel, value) {

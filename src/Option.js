@@ -1,5 +1,5 @@
 class Option {
-  constructor(name, description, type, required, autocomplete) {
+  constructor(name, description, type, required = true, autocomplete = false) {
     this.name = name;
     this.description = description;
     this.type = type;

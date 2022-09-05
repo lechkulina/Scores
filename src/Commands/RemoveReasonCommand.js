@@ -1,18 +1,13 @@
-const {Constants: {ApplicationCommandTypes, ButtonStyles}} = require('eris');
+const {Constants: {ButtonStyles}} = require('eris');
 const ReasonOption = require('../ReasonOption');
+const {OptionId} = require('../Options');
 const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
 const {ButtonId, actionRow, button} = require('../Components');
 
-const reasonOptionId = 'reason';
-
 class RemoveReasonInteractionHandler extends InteractionHandler {
-  constructor(client, dataModel, settings, translate, optionsValues) {
-    super(client, dataModel, settings, translate, optionsValues);
-  }
-
   async initialize() {
-    this.reason = await this.dataModel.getReason(this.getOptionValue(reasonOptionId));
+    this.reason = await this.dataModel.getReason(this.getOptionValue(OptionId.Reason));
   }
 
   async handleCommandInteraction(interaction) {
@@ -36,7 +31,7 @@ class RemoveReasonInteractionHandler extends InteractionHandler {
         reasonName: this.reason.name,
       });
     } catch (error) {
-      return this.translate('commands.removeReason.errors.genericFailure', {
+      return this.translate('commands.removeReason.errors.failure', {
         reasonName: this.reason.name,
       });
     }
@@ -59,17 +54,17 @@ class RemoveReasonInteractionHandler extends InteractionHandler {
 
 class RemoveReasonCommand extends Command {
   constructor(translate) {
-    super(translate, 'remove-reason', ApplicationCommandTypes.CHAT_INPUT);
+    super(translate, 'remove-reason');
   }
 
   initialize() {
     this.setDescription(this.translate('commands.removeReason.description'));
-    this.addOption(new ReasonOption(reasonOptionId, this.translate('commands.removeReason.options.reason'), true));
+    this.addOption(new ReasonOption(this.translate('commands.removeReason.options.reason')));
     return Promise.resolve();
   }
 
-  createInteractionHandler(client, dataModel, settings, translate, optionsValues) {
-    return new RemoveReasonInteractionHandler(client, dataModel, settings, translate, optionsValues);
+  createInteractionHandler(...props) {
+    return new RemoveReasonInteractionHandler(...props);
   }
 }
 

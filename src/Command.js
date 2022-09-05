@@ -1,5 +1,7 @@
+const {Constants: {ApplicationCommandTypes}} = require('eris');
+
 class Command {
-  constructor(translate, name, type) {
+  constructor(translate, name, type = ApplicationCommandTypes.CHAT_INPUT) {
     this.translate = translate;
     this.name = name;
     this.type = type;

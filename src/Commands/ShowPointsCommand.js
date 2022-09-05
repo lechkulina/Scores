@@ -1,13 +1,8 @@
-const {Constants: {ApplicationCommandTypes}} = require('eris');
 const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
 const {Entities, formatMessageTable} = require('../Formatters');
 
 class ShowPointsInteractionHandler extends InteractionHandler {
-  constructor(client, dataModel, settings, translate, optionsValues) {
-    super(client, dataModel, settings, translate, optionsValues);
-  }
-
   async handleCommandInteraction(interaction) {
     const user = this.dataModel.getUser(interaction.member.user.id);
     try {
@@ -18,7 +13,7 @@ class ShowPointsInteractionHandler extends InteractionHandler {
       this.markAsDone();
       return interaction.createMessage({
         content: [
-          this.translate('commands.showPoints.messages.summaryStatus', {
+          this.translate('commands.showPoints.messages.summary', {
             points: summary.points,
             minAcquireDate: summary.minAcquireDate,
             maxAcquireDate: summary.maxAcquireDate,
@@ -53,7 +48,7 @@ class ShowPointsInteractionHandler extends InteractionHandler {
       });
     } catch (error) {
       this.markAsDone();
-      return interaction.createMessage(this.translate('commands.showPoints.errors.genericFailure', {
+      return interaction.createMessage(this.translate('commands.showPoints.errors.failure', {
         userName: user.name,
       }));
     }
@@ -62,7 +57,7 @@ class ShowPointsInteractionHandler extends InteractionHandler {
 
 class ShowPointsCommand extends Command {
   constructor(translate) {
-    super(translate, 'show-points', ApplicationCommandTypes.CHAT_INPUT);
+    super(translate, 'show-points');
   }
 
   initialize() {
@@ -70,8 +65,8 @@ class ShowPointsCommand extends Command {
     return Promise.resolve();
   }
 
-  createInteractionHandler(client, dataModel, settings, translate, optionsValues) {
-    return new ShowPointsInteractionHandler(client, dataModel, settings, translate, optionsValues);
+  createInteractionHandler(...props) {
+    return new ShowPointsInteractionHandler(...props);
   }
 }
 

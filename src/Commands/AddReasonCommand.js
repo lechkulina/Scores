@@ -1,21 +1,12 @@
-const {Constants: {ApplicationCommandTypes, ApplicationCommandOptionTypes, ComponentTypes, ButtonStyles}} = require('eris');
-const Option = require('../Option');
+const {OptionId, StringOption, NumberOption} = require('../Options');
 const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
 
-const nameOptionName = 'name';
-const minOptionName = 'min';
-const maxOptionName = 'max';
-
 class AddReasonInteractionHandler extends InteractionHandler {
-  constructor(client, dataModel, settings, translate, optionsValues) {
-    super(client, dataModel, settings, translate, optionsValues);
-  }
-
   initialize() {
-    this.name = this.getOptionValue(nameOptionName);
-    this.min = this.getOptionValue(minOptionName);
-    this.max = this.getOptionValue(maxOptionName);
+    this.name = this.getOptionValue(OptionId.Name);
+    this.min = this.getOptionValue(OptionId.Min);
+    this.max = this.getOptionValue(OptionId.Max);
     return Promise.resolve();
   }
 
@@ -45,19 +36,19 @@ class AddReasonInteractionHandler extends InteractionHandler {
 
 class AddReasonCommand extends Command {
   constructor(translate) {
-    super(translate, 'add-reason', ApplicationCommandTypes.CHAT_INPUT);
+    super(translate, 'add-reason');
   }
 
   initialize() {
     this.setDescription(this.translate('commands.addReason.description'));
-    this.addOption(new Option(nameOptionName, this.translate('commands.addReason.options.name'), ApplicationCommandOptionTypes.STRING, true, false));
-    this.addOption(new Option(minOptionName, this.translate('commands.addReason.options.min'), ApplicationCommandOptionTypes.NUMBER, true, false));
-    this.addOption(new Option(maxOptionName, this.translate('commands.addReason.options.max'), ApplicationCommandOptionTypes.NUMBER, true, false));
+    this.addOption(new StringOption(OptionId.Name, this.translate('commands.addReason.options.name')));
+    this.addOption(new NumberOption(OptionId.Min, this.translate('commands.addReason.options.min')));
+    this.addOption(new NumberOption(OptionId.Max, this.translate('commands.addReason.options.max')));
     return Promise.resolve();
   }
 
-  createInteractionHandler(client, dataModel, settings, translate, optionsValues) {
-    return new AddReasonInteractionHandler(client, dataModel, settings, translate, optionsValues);
+  createInteractionHandler(...props) {
+    return new AddReasonInteractionHandler(...props);
   }
 }
 
