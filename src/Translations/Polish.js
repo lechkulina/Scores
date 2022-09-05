@@ -135,10 +135,19 @@ module.exports = {
         failure: (params) => `❗ Nie udało się nadać uprawnień do wykonywania polecnia **${params.commandId}**`,
       },
       messages: {
-        confirmation: (params) => `❓ Czy na pewno chcesz nadać uprawnienia do wykonywania polecnia **${params.commandId}** roli ${params.roleName}?`,
+        confirmation: (params) => `❓ Czy na pewno chcesz nadać uprawnienia do wykonywania polecnia **${params.commandId}** roli **${params.roleName}**?`,
         success: (params) => `✅ Nadano uprawnienia do wykonywania polecenia **${params.commandId}**`,
       }
     },
-
+    revokeRolePermission: {
+      description: 'Odbiera uprawnienia do wykonywania polecenia roli',
+      errors: {
+        failure: (params) => `❗ Nie udało się odebrać uprawnień do wykonywania polecnia **${params.commandId}**`,
+      },
+      messages: {
+        confirmation: (params) => `❓ Czy na pewno chcesz odebrać uprawnienia do wykonywania polecnia **${params.commandId}** roli **${params.roleName}**?`,
+        success: (params) => `✅ Odebrano uprawnienia do wykonywania polecenia **${params.commandId}**`,
+      }
+    },
   }
 };

@@ -319,6 +319,13 @@ class DataModel {
     `);
   }
 
+  revokeRolePermission(roleId, commandId) {
+    return this.database.run(`
+      DELETE FROM RolePermission
+      WHERE roleId = "${roleId}" AND commandId = "${commandId}";
+    `);
+  }
+
   async initialize() {
     return Promise.all([
       this.database.open(),

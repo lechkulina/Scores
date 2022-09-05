@@ -126,7 +126,7 @@ module.exports = {
       }
     },
     grantRolePermission: {
-      description: 'Graents role a permission to execute a command',
+      description: 'Grants role a permission to execute a command',
       options: {
         role: 'Role',
         command: 'Command',
@@ -135,10 +135,19 @@ module.exports = {
         failure: (params) => `❗ Failed to grant permission to execute command **${params.commandId}**`,
       },
       messages: {
-        confirmation: (params) => `❓ Are you sure you want to grant permission to execute command **${params.commandId}** by role ${params.roleName}?`,
+        confirmation: (params) => `❓ Are you sure you want to grant permission to execute command **${params.commandId}** by role **${params.roleName}**?`,
         success: (params) => `✅ Granted permission to execute command **${params.commandId}**`,
       }
     },
-
+    revokeRolePermission: {
+      description: 'Revokes role a permission to execute a command',
+      errors: {
+        failure: (params) => `❗ Failed to revoke permission to execute command **${params.commandId}**`,
+      },
+      messages: {
+        confirmation: (params) => `❓ Are you sure you want to revoke permission to execute command **${params.commandId}** by role **${params.roleName}**?`,
+        success: (params) => `✅ Revoked permission to execute command **${params.commandId}**`,
+      }
+    },
   }
 };
