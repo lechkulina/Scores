@@ -9,7 +9,7 @@ class InteractionManager {
     this.dataModel = dataModel;
     this.settings = new Settings(this.dataModel);
     this.translatorsFactory = new TranslatorsFactory(this.settings);
-    this.commandsManager = new CommandsManager(this.client, this.translatorsFactory);
+    this.commandsManager = new CommandsManager(this.client, this.translatorsFactory, this.dataModel);
     this.interactionHandlers = new Map();
   }
 

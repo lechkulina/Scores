@@ -115,5 +115,15 @@ module.exports = {
         success: (params) => `✅ Zmieniono powód przyznania punktów **${params.reasonName}**`,
       }
     },
+    showHelp: {
+      description: 'Pokazuje listę dostępnych poleceń',
+      errors: {
+        failure: (params) => `❗ Nie udało się wyświetlić pomocy`,
+      },
+      messages: {
+        summary: (params) => `⬇ Masz dostęp do ${params.commandsCount} poleceń`,
+        command: (params) => `**${params.id}** - ${params.description}`,
+      }
+    },
   }
 };

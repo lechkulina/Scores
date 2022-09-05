@@ -115,5 +115,15 @@ module.exports = {
         success: (params) => `✅ Changed points add reason **${params.reasonName}**`,
       }
     },
+    showHelp: {
+      description: 'Shows list of available commands',
+      errors: {
+        failure: (params) => `❗ Failed to show help`,
+      },
+      messages: {
+        summary: (params) => `⬇ You have access to ${params.commandsCount} commands`,
+        command: (params) => `**${params.id}** - ${params.description}`,
+      }
+    },
   }
 };

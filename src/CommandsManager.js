@@ -2,9 +2,10 @@ const supportedCommands = require('./Commands/supportedCommands.js');
 const config = require('../config.js');
 
 class CommandsManager {
-  constructor(client, translatorsFactory) {
+  constructor(client, translatorsFactory, dataModel) {
     this.client = client;
     this.translatorsFactory = translatorsFactory;
+    this.dataModel = dataModel;
     this.commands = new Map();
   }
 
@@ -12,6 +13,16 @@ class CommandsManager {
     return Array.from(this.commands.keys()).map(key =>
       this.commands.get(key).getConfig()
     );
+  }
+
+  async initializeCommands() {
+    const commandsArray = Array.from(this.commands.values());
+    await Promise.all(commandsArray.map(command =>
+      command.initialize()
+    ));
+    await Promise.all(commandsArray.map(command =>
+      this.dataModel.addCommand(command.name, command.description)
+    ));
   }
 
   registerCommands() {
@@ -27,8 +38,7 @@ class CommandsManager {
       const command = new Command(translate);
       this.commands.set(command.name, command);
     });
-    const commandsArray = Array.from(this.commands.values());
-    await Promise.all(commandsArray.map(command => command.initialize()));
+    await this.initializeCommands();
     await this.registerCommands();
   }
 

@@ -8,6 +8,7 @@ class DataModel {
     this.guildsCache = new Map();
     this.usersCache = new Map();
     this.reasonsCache = new Map();
+    this.commandsInfo = new Map();
   }
 
   createSchema() {
@@ -287,6 +288,20 @@ class DataModel {
       WHERE key="${key}"
       LIMIT 1;
     `)?.value;
+  }
+
+  addCommand(id, description) {
+    return this.database.run(`
+      INSERT OR REPLACE INTO Command(id, description)
+      VALUES ("${id}", "${description}");
+    `);
+  }
+
+  getCommands() {
+    return this.database.all(`
+      SELECT Command.id AS id, Command.description AS description
+      FROM Command;
+    `);
   }
 
   async initialize() {

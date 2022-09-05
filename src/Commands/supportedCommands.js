@@ -9,4 +9,5 @@ module.exports = [
   require('./AddReasonCommand'),
   require('./RemoveReasonCommand'),
   require('./ChangeReasonCommand'),
+  require('./ShowHelpCommand'),
 ];
