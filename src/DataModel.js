@@ -35,6 +35,7 @@ class DataModel {
   }
 
   async initializeGuildsCache() {
+    this.getGuildsFromDiscord();
     let guilds = await this.getGuildsFromDatabase();
     if (guilds.length > 0) {
       this.addGuildsToCache(guilds);
@@ -301,6 +302,20 @@ class DataModel {
     return this.database.all(`
       SELECT Command.id AS id, Command.description AS description
       FROM Command;
+    `);
+  }
+
+  addRole(id, name, guildId) {
+    return this.database.run(`
+      INSERT OR REPLACE INTO Role(id, name, guildId)
+      VALUES ("${id}", "${name}", "${guildId}");
+    `);
+  }
+
+  grantRolePermission(roleId, commandId) {
+    return this.database.run(`
+      INSERT OR REPLACE INTO RolePermission(roleId, commandId)
+      VALUES ("${roleId}", "${commandId}");
     `);
   }
 

@@ -125,5 +125,20 @@ module.exports = {
         command: (params) => `**${params.id}** - ${params.description}`,
       }
     },
+    grantRolePermission: {
+      description: 'Graents role a permission to execute a command',
+      options: {
+        role: 'Role',
+        command: 'Command',
+      },
+      errors: {
+        failure: (params) => `❗ Failed to grant permission to execute command **${params.commandId}**`,
+      },
+      messages: {
+        confirmation: (params) => `❓ Are you sure you want to grant permission to execute command **${params.commandId}** by role ${params.roleName}?`,
+        success: (params) => `✅ Granted permission to execute command **${params.commandId}**`,
+      }
+    },
+
   }
 };

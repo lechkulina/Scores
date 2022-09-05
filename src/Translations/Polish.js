@@ -125,5 +125,20 @@ module.exports = {
         command: (params) => `**${params.id}** - ${params.description}`,
       }
     },
+    grantRolePermission: {
+      description: 'Nadaje uprawnienia do wykonywania polecenia roli',
+      options: {
+        role: 'Rola',
+        command: 'Polecenie',
+      },
+      errors: {
+        failure: (params) => `❗ Nie udało się nadać uprawnień do wykonywania polecnia **${params.commandId}**`,
+      },
+      messages: {
+        confirmation: (params) => `❓ Czy na pewno chcesz nadać uprawnienia do wykonywania polecnia **${params.commandId}** roli ${params.roleName}?`,
+        success: (params) => `✅ Nadano uprawnienia do wykonywania polecenia **${params.commandId}**`,
+      }
+    },
+
   }
 };

@@ -7,7 +7,7 @@ const InteractionHandler = require('../InteractionHandler');
 const {ButtonId, actionRow, button} = require('../Components');
 
 class RemovePointsInteractionHandler extends InteractionHandler {
-  async initialize() {
+  async initialize(interaction) {
     this.user = this.dataModel.getUser(this.getOptionValue(OptionId.User));
     this.pointsEntry = await this.dataModel.getPoints(this.getOptionValue(OptionId.RecentlyGivenPoints));
   }

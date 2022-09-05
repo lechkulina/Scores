@@ -3,7 +3,9 @@ const Option = require('./Option');
 
 const OptionId = {
   User: 'user',
+  Role: 'role',
   Reason: 'reason',
+  Command: 'command',
   RecentlyGivenPoints: 'recently-given-points',
   Points: 'points',
   Name: 'name',
@@ -23,8 +25,15 @@ class StringOption extends Option {
   }
 }
 
+class RoleOption extends Option {
+  constructor(description, required) {
+    super(OptionId.Role, description, ApplicationCommandOptionTypes.ROLE, required, false);
+  }
+}
+
 module.exports = {
   OptionId,
   NumberOption,
   StringOption,
+  RoleOption,
 };

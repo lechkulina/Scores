@@ -10,4 +10,5 @@ module.exports = [
   require('./RemoveReasonCommand'),
   require('./ChangeReasonCommand'),
   require('./ShowHelpCommand'),
+  require('./GrantRolePermissionCommand'),
 ];

@@ -3,7 +3,7 @@ const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
 
 class AddReasonInteractionHandler extends InteractionHandler {
-  initialize() {
+  initialize(interaction) {
     this.name = this.getOptionValue(OptionId.Name);
     this.min = this.getOptionValue(OptionId.Min);
     this.max = this.getOptionValue(OptionId.Max);

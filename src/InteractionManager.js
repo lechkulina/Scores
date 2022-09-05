@@ -28,7 +28,7 @@ class InteractionManager {
     const optionsValues = command.createOptionsValues(interaction);
     const translate = await this.translatorsFactory.createTranslator(interaction);
     const interactionHandler = command.createInteractionHandler(this.client, this.dataModel, this.settings, translate, optionsValues);
-    await interactionHandler.initialize();
+    await interactionHandler.initialize(interaction);
     this.interactionHandlers.set(interaction.id, interactionHandler);
     return interactionHandler;
   }

@@ -20,10 +20,13 @@ class InteractionHandler {
     this.done = true;
   }
 
-  async createDirectMessagesChannel(guildId, userId) {
-    const guild = this.client.guilds.find(({id}) => id === guildId);
+  findGuild(guildId) {
+    return this.client.guilds.find(({id}) => id === guildId);
+  }
+
+  async findUser(guildId, userId) {
+    const guild = this.findGuild(guildId);
     if (!guild) {
-      console.error(`Unable to create direct messages channel - unknown guild id ${guildId}`);
       return;
     }
     const members = await guild.fetchMembers({
@@ -31,22 +34,26 @@ class InteractionHandler {
       limit: 1,
       presences: false,
     });
-    const user = members[0]?.user;
-    if (!user) {
-      console.error(`Unable to create direct messages channel - unknown user id ${userId}`);
-      return;
-    }
-    return user.getDMChannel();
+    return members[0]?.user;
+  }
+
+  findRole(guildId, roleId) {
+    const guild = this.findGuild(guildId);
+    return guild?.roles.find(({id}) => id === roleId);
+  }
+
+  findChannel(guildId, channelId) {
+    const guild = this.findGuild(guildId);
+    return guild?.channels.find(({id}) => id === channelId);
+  }
+
+  async createDirectMessagesChannel(guildId, userId) {
+    return await this.findUser(guildId, userId)?.getDMChannel();
   }
 
   async findPublicChannel(guildId) {
-    const guild = this.client.guilds.find(({id}) => id === guildId);
-    if (!guild) {
-      console.error(`Unable to get public channel - unknown guild id ${guildId}`);
-      return;
-    }
     const publicChannelId = await this.settings.get('publicChannelId');
-    return guild.channels.find(channel => channel.id === publicChannelId);
+    return this.findChannel(guildId, publicChannelId);
   }
 
   initialize() {

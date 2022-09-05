@@ -6,7 +6,7 @@ const InteractionHandler = require('../InteractionHandler');
 const {ButtonId, actionRow, button} = require('../Components');
 
 class RemoveReasonInteractionHandler extends InteractionHandler {
-  async initialize() {
+  async initialize(interaction) {
     this.reason = await this.dataModel.getReason(this.getOptionValue(OptionId.Reason));
   }
 

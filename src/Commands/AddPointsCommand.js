@@ -7,7 +7,7 @@ const {ButtonId, actionRow, button} = require('../Components');
 const {Entities} = require('../Formatters');
 
 class AddPointsInteractionHandler extends InteractionHandler {
-  async initialize() {
+  async initialize(interaction) {
     this.user = this.dataModel.getUser(this.getOptionValue(OptionId.User));
     this.reason = await this.dataModel.getReason(this.getOptionValue(OptionId.Reason));
     this.points = this.getOptionValue(OptionId.Points);
