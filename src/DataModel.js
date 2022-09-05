@@ -347,6 +347,18 @@ class DataModel {
     `);
   }
 
+  getCommandsWithPermissions(userId, roleIds) {
+    return this.database.all(`
+      SELECT Command.id AS id, Command.description AS description, IFNULL((
+        SELECT 1
+        FROM UserPermission AS U, RolePermission AS R
+        WHERE (U.userId = "${userId}" AND U.commandId = Command.id)
+          OR (R.roleId IN (${roleIds.map(roldId => `"${roldId}"`).join(', ')}) AND R.commandId = Command.id)
+      ), 0) AS allowed
+      FROM Command;
+    `);
+  }
+
   async initialize() {
     return Promise.all([
       this.database.open(),

@@ -3,26 +3,36 @@ const InteractionHandler = require('../InteractionHandler');
 const {Entities} = require('../Formatters');
 
 class ShowHelpInteractionHandler extends InteractionHandler {
+  async initialize(interaction) {
+    const userId = interaction.member.user.id;
+    const rolesIds = interaction.member.roles;
+    this.commands = await this.dataModel.getCommandsWithPermissions(userId, rolesIds);
+    this.allowedCommandsCount = this.commands.reduce((count, command) => {
+      if (command.allowed) {
+        count++;
+      }
+      return count;
+    }, 0);
+  }
+
   async handleCommandInteraction(interaction) {
     this.markAsDone();
     try {
-      const commands = await this.dataModel.getCommands();
       return interaction.createMessage({
         content: [
           this.translate('commands.showHelp.messages.summary', {
-            commandsCount: commands.length,
+            allowedCommandsCount: this.allowedCommandsCount,
           }),
-          ...commands.map(({id, description}) => this.translate('commands.showHelp.messages.command', {
-            id,
-            description,
+          ...this.commands.map(command => this.translate('commands.showHelp.messages.command', {
+            allowed: command.allowed,
+            id: command.id,
+            description: command.description,
           }))
         ].join(Entities.NewLine),
       });
     } catch (error) {
       this.markAsDone();
-      return interaction.createMessage(this.translate('commands.showHelp.errors.failure', {
-        userName: user.name,
-      }));
+      return interaction.createMessage(this.translate('commands.showHelp.errors.failure'));
     }
   }
 }

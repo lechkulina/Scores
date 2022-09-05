@@ -118,11 +118,11 @@ module.exports = {
     showHelp: {
       description: 'Shows list of available commands',
       errors: {
-        failure: (params) => `❗ Failed to show help`,
+        failure: '❗ Failed to show help',
       },
       messages: {
-        summary: (params) => `⬇ You have access to ${params.commandsCount} commands`,
-        command: (params) => `**${params.id}** - ${params.description}`,
+        summary: (params) => `⬇ You have access to ${params.allowedCommandsCount} commands`,
+        command: (params) => `${params.allowed ? '✅' : '❌' } **${params.id}** - ${params.description}`,
       }
     },
     grantRolePermission: {

@@ -118,11 +118,11 @@ module.exports = {
     showHelp: {
       description: 'Pokazuje listę dostępnych poleceń',
       errors: {
-        failure: (params) => `❗ Nie udało się wyświetlić pomocy`,
+        failure: '❗ Nie udało się wyświetlić pomocy',
       },
       messages: {
-        summary: (params) => `⬇ Masz dostęp do ${params.commandsCount} poleceń`,
-        command: (params) => `**${params.id}** - ${params.description}`,
+        summary: (params) => `⬇ Masz dostęp do ${params.allowedCommandsCount} poleceń`,
+        command: (params) => `${params.allowed ? '✅' : '❌' } **${params.id}** - ${params.description}`,
       }
     },
     grantRolePermission: {
