@@ -3,6 +3,7 @@
  */
 module.exports = [
   require('./AddPointsCommand'),
+  require('./RemovePointsCommand'),
   require('./ShowPointsCommand'),
   require('./AddReasonCommand'),
   require('./RemoveReasonCommand'),

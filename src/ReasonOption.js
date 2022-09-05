@@ -7,7 +7,7 @@ class ReasonOption extends Option {
     super(OptionId.Reason, description, ApplicationCommandOptionTypes.NUMBER, required, true);
   }
 
-  async getAutoCompeteResults(interaction, dataModel, value) {
+  async getAutoCompeteResults(interaction, dataModel, translate, optionValue) {
     const reasons = await dataModel.getReasons();
     const response = reasons.map(({name, id}) => ({
       name,

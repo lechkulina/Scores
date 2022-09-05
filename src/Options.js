@@ -4,10 +4,11 @@ const Option = require('./Option');
 const OptionId = {
   User: 'user',
   Reason: 'reason',
+  RecentlyGivenPoints: 'recently-given-points',
   Points: 'points',
   Name: 'name',
   Min: 'min',
-  Max: 'max'
+  Max: 'max',
 };
 
 class NumberOption extends Option {

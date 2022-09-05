@@ -21,7 +21,7 @@ class Option {
     return value; // some options may want to process the value in some way
   }
 
-  async getAutoCompeteResults(interaction, dataModel, value) {
+  async getAutoCompeteResults(interaction, dataModel, translate, optionValue) {
     return interaction.result([]);
   }
 };

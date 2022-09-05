@@ -15,6 +15,9 @@ module.exports = {
     createPublicMessage: 'Stwórz wiadomość na kanale publicznym',
     doBoth: 'Wykonaj jedno i drugie',
   },
+  autoCompete: {
+    recentlyGivenPoints: (params) => `${params.points} punkty przyznane dnia ${params.acquireDate} z powodu ${params.reasonName}`,
+  },
   commands: {
     addPoints: {
       description: 'Dodaje punkty uzytkownikowi',
@@ -34,6 +37,20 @@ module.exports = {
         directMessageSent: (params) => `✅ Wiadomość prywatna do uzytkownika **${params.userName}** została wysłana.`,
         publicMessage: (params) => `**${params.userName}** zyskał **${params.points}** punkty z powodu ${params.reasonName}.`,
         publicMessageCreated: (params) => `✅ Publiczna wiadomość została stworzona na kanale **${params.channelName}**`,
+      }
+    },
+    removePoints: {
+      description: 'Usuwa wcześniej dodane uzytkownikowi punkty',
+      options: {
+        user: 'Nazwa uzytkownika, któremu nalezy usunąć punkty',
+        recentlyGivenPoints: 'Ostatnio przyznane punkty przez ciebie punkty',
+      },
+      errors: {
+        failure: (params) => `❗ Nie udało się usunąć **${params.points}** punktów uzytkownikowi **${params.userName}**`,
+      },
+      messages: {
+        confirmation: (params) => `❓ Czy na pewno chcesz usunąć **${params.points}** punkty przyznanych uzytkownikowi **${params.userName}** dnia ${params.acquireDate} z powodu ${params.reasonName}?`,
+        success: (params) => `✅ Usunięto **${params.points}** punkty uzytkownikowi **${params.userName}**`,
       }
     },
     showPoints: {

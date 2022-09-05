@@ -45,7 +45,9 @@ class InteractionManager {
     if (!option) {
       return interaction.result([]);
     }
-    return option.getAutoCompeteResults(interaction, this.dataModel, focusedOption?.value || '');
+    const optionValue = focusedOption?.value || '';
+    const translate = await this.translatorsFactory.createTranslator(interaction);
+    return option.getAutoCompeteResults(interaction, this.dataModel, translate, optionValue);
   }
   
   async handleCommandInteraction(interaction) {

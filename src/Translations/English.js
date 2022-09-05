@@ -15,6 +15,9 @@ module.exports = {
     createPublicMessage: 'Create a public message',
     doBoth: 'Do both',
   },
+  autoCompete: {
+    recentlyGivenPoints: (params) => `${params.points} points added at ${params.acquireDate} for a reason ${params.reasonName}`,
+  },
   commands: {
     addPoints: {
       description: 'Adds points to a user',

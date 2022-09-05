@@ -193,13 +193,20 @@ class DataModel {
     `);
   }
 
+  removePoints(pointsId) {
+    return this.database.run(`
+      DELETE FROM Points
+      WHERE id = ${pointsId};
+    `);
+  }
+
   getPointsSummary(userId) {
     return this.database.get(`
       SELECT SUM(points) AS points, COUNT(1) as pointsCount, MIN(acquireDate) AS minAcquireDate, MAX(acquireDate) AS maxAcquireDate
       FROM (
         SELECT points, acquireDate
         FROM Points
-        WHERE userId="${userId}"
+        WHERE userId = "${userId}"
       );
     `);
   }
@@ -210,7 +217,7 @@ class DataModel {
       FROM Points
       INNER JOIN User AS Giver ON Giver.id = giverId
       INNER JOIN Reason ON Reason.id = Points.reasonId
-      WHERE Points.userId="${userId}"
+      WHERE Points.userId = "${userId}"
       ORDER BY Points.acquireDate DESC
       LIMIT ${limit};
     `);
@@ -234,6 +241,27 @@ class DataModel {
       WHERE D.userId = "${userId}"
       GROUP BY D.reasonId
       ORDER BY rankingPosition ASC;
+    `);
+  }
+
+  getRecentlyGivenPoints(userId, giverId, limit) {
+    return this.database.all(`
+      SELECT Points.id, Points.points as points, Points.acquireDate as acquireDate, Reason.name AS reasonName
+      FROM Points
+      INNER JOIN Reason ON Reason.id = Points.reasonId
+      WHERE Points.userId = "${userId}" AND Points.giverId = ${giverId}
+      ORDER BY Points.acquireDate DESC
+      LIMIT ${limit};
+    `);
+  }
+
+  getPoints(pointsId) {
+    return this.database.get(`
+      SELECT Points.id AS id, Points.points as points, Points.acquireDate as acquireDate, Giver.name AS giverName, Reason.name AS reasonName
+      FROM Points
+      INNER JOIN User AS Giver ON Giver.id = giverId
+      INNER JOIN Reason ON Reason.id = Points.reasonId
+      WHERE Points.id="${pointsId}"
     `);
   }
 
