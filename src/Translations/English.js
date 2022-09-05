@@ -77,5 +77,15 @@ module.exports = {
         success: (params) => `✅ Removed points add reason **${params.reasonName}**`,
       }
     },
+    changeReason: {
+      description: 'Changes existing points add reason.',
+      errors: {
+        failure: (params) => `❗ Failed to change points add reason**${params.reasonName}**`,
+      },
+      messages: {
+        confirmation: (params) => `❓ Are you sure you want to change points add reason **${params.reasonName}**?`,
+        success: (params) => `✅ Changed points add reason **${params.reasonName}**`,
+      }
+    },
   }
 };

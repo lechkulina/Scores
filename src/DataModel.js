@@ -150,6 +150,15 @@ class DataModel {
     this.reasonsCache.delete(reasonId);
   }
 
+  async changeReason(reasonId, name, min, max) {
+    await this.database.run(`
+      UPDATE Reason
+      SET name = "${name}", min = ${min}, max = ${max}
+      WHERE id = ${reasonId};
+    `);
+    this.reasonsCache.clear();
+  }
+
   async getReasons() {
     if (this.reasonsCache.size > 0) {
       return Array.from(this.reasonsCache.values());

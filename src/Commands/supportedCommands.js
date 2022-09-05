@@ -6,4 +6,5 @@ module.exports = [
   require('./ShowPointsCommand'),
   require('./AddReasonCommand'),
   require('./RemoveReasonCommand'),
+  require('./ChangeReasonCommand'),
 ];

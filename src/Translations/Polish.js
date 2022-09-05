@@ -77,5 +77,15 @@ module.exports = {
         success: (params) => `✅ Usunięto powód przyznania punktów **${params.reasonName}**`,
       }
     },
+    changeReason: {
+      description: 'Zmienia istniejący powód do przyznawania punktów',
+      errors: {
+        failure: (params) => `❗ Nie udało się zmianić powodu do przyznawania punktów **${params.reasonName}**`,
+      },
+      messages: {
+        confirmation: (params) => `❓ Czy na pewno chcesz zmienić powód do przyznania punktów **${params.reasonName}**?`,
+        success: (params) => `✅ Zmieniono powód przyznania punktów **${params.reasonName}**`,
+      }
+    },
   }
 };
