@@ -9,6 +9,7 @@ class ChangeContestInteractionHandler extends InteractionHandler {
     this.contest = await this.dataModel.getContest(interaction.guildID, this.getOptionValue(OptionId.Contest));
     this.name = this.getOptionValue(OptionId.Name);
     this.description = this.getOptionValue(OptionId.Description);
+    this.announcementDate = this.getOptionValue(OptionId.AnnouncementDate);
     this.activeBeginDate = this.getOptionValue(OptionId.ActiveBeginDate);
     this.activeEndDate = this.getOptionValue(OptionId.ActiveEndDate);
     this.votingBeginDate = this.getOptionValue(OptionId.VotingBeginDate);
@@ -29,6 +30,7 @@ class ChangeContestInteractionHandler extends InteractionHandler {
           this.contest.id,
           this.name,
           this.description,
+          this.announcementDate.unix(),
           this.activeBeginDate.unix(),
           this.activeEndDate.unix(),
           this.votingBeginDate.unix(),
@@ -57,6 +59,7 @@ class ChangeContestCommand extends Command {
       new ContestOption(this.translate('common.contest')),
       new StringOption(OptionId.Name, this.translate('commands.changeContest.options.name')),
       new StringOption(OptionId.Description, this.translate('commands.changeContest.options.description')),
+      new StringOption(OptionId.AnnouncementDate, this.translate('commands.addContest.options.announcementDate')),
       new StringOption(OptionId.ActiveBeginDate, this.translate('commands.changeContest.options.activeBeginDate')),
       new StringOption(OptionId.ActiveEndDate, this.translate('commands.changeContest.options.activeEndDate')),
       new StringOption(OptionId.VotingBeginDate, this.translate('commands.changeContest.options.votingBeginDate')),
@@ -67,12 +70,14 @@ class ChangeContestCommand extends Command {
       new StringsLengthsValidator([OptionId.Description], 'minDescriptionLength', 'maxDescriptionLength', this.settings, this.options),
       new FirstLetterValidator([OptionId.Name, OptionId.Description], this.options),
       new DatesValidator([
+        OptionId.AnnouncementDate,
         OptionId.ActiveBeginDate,
         OptionId.ActiveEndDate,
         OptionId.VotingBeginDate,
         OptionId.VotingEndDate,
       ], this.settings, this.options),
       new DatesRangesValidator([
+        [OptionId.AnnouncementDate, OptionId.ActiveBeginDate],
         [OptionId.ActiveBeginDate, OptionId.ActiveEndDate],
         [OptionId.VotingBeginDate, OptionId.VotingEndDate],
         [OptionId.ActiveBeginDate, OptionId.VotingBeginDate],

@@ -253,10 +253,10 @@ class DataModel {
     `);
   }
 
-  addContest(guildId, name, description, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate) {
+  addContest(guildId, name, description, announcementDate, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate) {
     return this.database.run(`
-      INSERT OR REPLACE INTO Contest(name, description, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId)
-      VALUES ("${name}", "${description}", ${activeBeginDate}, ${activeEndDate}, ${votingBeginDate}, ${votingEndDate}, "${guildId}");
+      INSERT OR REPLACE INTO Contest(name, description, announcementDate, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId)
+      VALUES ("${name}", "${description}", ${announcementDate}, ${activeBeginDate}, ${activeEndDate}, ${votingBeginDate}, ${votingEndDate}, "${guildId}");
     `);
   }
 
@@ -270,17 +270,18 @@ class DataModel {
 
   getContest(guildId, contestId) {
     return this.database.get(`
-      SELECT id, name, description, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate
+      SELECT id, name, description, announcementDate, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate
       FROM Contest
       WHERE id = "${contestId}" AND guildId = "${guildId}";
     `);
   }
 
-  changeContest(guildId, contestId, name, description, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate) {
+  changeContest(guildId, contestId, name, description, announcementDate, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate) {
     return this.database.run(`
       UPDATE Contest
       SET name = "${name}",
           description = "${description}",
+          announcementDate = "${announcementDate}",
           activeBeginDate = ${activeBeginDate},
           activeEndDate = ${activeEndDate},
           votingBeginDate = ${votingBeginDate},

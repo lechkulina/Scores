@@ -193,6 +193,7 @@
         "options": {
           "name": "Nazwa konkursu",
           "description": "Opis konkursu",
+          "announcementDate": "Data ogłoszenia konkursu", 
           "activeBeginDate": "Data rozpoczęcia konkursu",
           "activeEndDate": "Data zakończenia konkursu",
           "votingBeginDate": "Data rozpoczęcia głosowania",
@@ -210,6 +211,7 @@
         "options": {
           "name": "$(commands.addContest.options.name)",
           "description": "$(commands.addContest.options.description)",
+          "announcementDate": "$(commands.addContest.options.announcementDate)",
           "activeBeginDate": "$(commands.addContest.options.activeBeginDate)",
           "activeEndDate": "$(commands.addContest.options.activeEndDate)",
           "votingBeginDate": "$(commands.v.options.votingBeginDate)",

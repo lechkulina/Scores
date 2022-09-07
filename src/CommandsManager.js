@@ -21,7 +21,7 @@ class CommandsManager {
       command.initialize()
     ));
     await Promise.all(commandsArray.map(command =>
-      this.dataModel.addCommand(command.name, command.description)
+      this.dataModel.addCommand(command.id, command.description)
     ));
   }
 

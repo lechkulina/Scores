@@ -47,10 +47,11 @@ CREATE TABLE IF NOT EXISTS Contest(
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
   description TEXT NOT NULL,
-  activeBeginDate INTEGER,
-  activeEndDate INTEGER,
-  votingBeginDate INTEGER,
-  votingEndDate INTEGER,
+  announcementDate INTEGER NOT NULL,
+  activeBeginDate INTEGER NOT NULL,
+  activeEndDate INTEGER NOT NULL,
+  votingBeginDate INTEGER NOT NULL,
+  votingEndDate INTEGER NOT NULL,
   guildId TEXT NOT NULL REFERENCES Guild(id)
 );
 CREATE TABLE IF NOT EXISTS Rule(

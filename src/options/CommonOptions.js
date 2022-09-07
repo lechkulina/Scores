@@ -12,6 +12,7 @@ const OptionId = {
   Min: 'min',
   Max: 'max',
   Description: 'description',
+  AnnouncementDate: 'announcement-date',
   ActiveBeginDate: 'active-begin-date',
   ActiveEndDate: 'active-end-date',
   VotingBeginDate: 'voting-begin-date',
