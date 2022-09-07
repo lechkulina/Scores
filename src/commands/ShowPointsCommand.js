@@ -1,6 +1,6 @@
-const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
 const {Entities, formatMessageTable} = require('../Formatters');
+const Command = require('./Command');
 
 class ShowPointsInteractionHandler extends InteractionHandler {
   async initialize(interaction) {

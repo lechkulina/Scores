@@ -1,9 +1,7 @@
-const {Constants: {ButtonStyles}} = require('eris');
 const RecentlyGivenPointsOption = require('../RecentlyGivenPointsOption');
 const {OptionId, UserOption} = require('../Options');
-const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
-const {ButtonId, actionRow, button} = require('../Components');
+const Command = require('./Command');
 
 class RemovePointsInteractionHandler extends InteractionHandler {
   async initialize(interaction) {
@@ -19,40 +17,23 @@ class RemovePointsInteractionHandler extends InteractionHandler {
         acquireDate: this.pointsEntry.acquireDate,
         reasonName: this.pointsEntry.reasonName,
       }),
-      components: [
-        actionRow([
-          button(ButtonId.No, this.translate('common.no')),
-          button(ButtonId.Yes, this.translate('common.yes'), ButtonStyles.DANGER),
-        ]),
-      ],
+      components: this.createConfirmationForm(),
     });
   }
 
-  async removePoints() {
-    try {
-      await this.dataModel.removePoints(this.pointsEntry.id);
-      return this.translate('commands.removePoints.messages.success', {
-        userName: this.user.username,
-      });
-    } catch (error) {
-      return this.translate('commands.removePoints.errors.failure', {
-        userName: this.user.username,
-      });
-    }
-  }
-
   async handleComponentInteraction(interaction) {
-    this.markAsDone();
-    const content = await (() => {
-      const buttonId = interaction.data.custom_id;
-      switch (buttonId) {
-        case ButtonId.No:
-          return Promise.resolve(this.translate('common.canceled'));
-        case ButtonId.Yes:
-          return this.removePoints();
+    return this.handleConfirmationForm(interaction, async () => {
+      try {
+        await this.dataModel.removePoints(this.pointsEntry.id);
+        return this.translate('commands.removePoints.messages.success', {
+          userName: this.user.username,
+        });
+      } catch (error) {
+        return this.translate('commands.removePoints.errors.failure', {
+          userName: this.user.username,
+        });
       }
-    })();
-    return interaction.createMessage(content);
+    });
   }
 }
 

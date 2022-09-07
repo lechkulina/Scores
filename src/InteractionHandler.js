@@ -1,3 +1,6 @@
+const {Constants: {ButtonStyles}} = require('eris');
+const {ButtonId, createActionRow, createButton} = require('./Components');
+
 class InteractionHandler {
   constructor(client, dataModel, settings, translate, optionsValues) {
     this.client = client;
@@ -60,16 +63,41 @@ class InteractionHandler {
     return this.findChannel(guildId, publicChannelId);
   }
 
+  createConfirmationForm() {
+    return [
+      createActionRow([
+        createButton(ButtonId.No, this.translate('common.no')),
+        createButton(ButtonId.Yes, this.translate('common.yes'), ButtonStyles.DANGER),
+      ]),
+    ];
+  }
+
+  async handleConfirmationForm(interaction, onConfirmation) {
+    this.markAsDone();
+    const content = await (() => {
+      const buttonId = interaction.data.custom_id;
+      switch (buttonId) {
+        case ButtonId.No:
+          return Promise.resolve(this.translate('common.canceled'));
+        case ButtonId.Yes:
+          return onConfirmation?.();
+      }
+    })();
+    return interaction.createMessage(content);
+  }
+
   initialize() {
     return Promise.resolve();
   }
 
   handleCommandInteraction(interaction) {
-    return Promise.resolve();
+    this.markAsDone();
+    return interaction.acknowledge();
   }
 
   handleComponentInteraction(interaction) {
-    return Promise.resolve();
+    this.markAsDone();
+    return interaction.acknowledge();
   }
 }
 

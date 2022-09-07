@@ -1,9 +1,7 @@
-const {Constants: {ButtonStyles}} = require('eris');
 const CommandOption = require('../CommandOption');
 const {OptionId, RoleOption} = require('../Options');
-const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
-const {ButtonId, actionRow, button} = require('../Components');
+const Command = require('./Command');
 
 class GrantRolePermissionInteractionHandler extends InteractionHandler {
   async initialize(interaction) {
@@ -17,41 +15,24 @@ class GrantRolePermissionInteractionHandler extends InteractionHandler {
         commandId: this.commandId,
         roleName: this.role.name,
       }),
-      components: [
-        actionRow([
-          button(ButtonId.No, this.translate('common.no')),
-          button(ButtonId.Yes, this.translate('common.yes'), ButtonStyles.DANGER),
-        ]),
-      ],
+      components: this.createConfirmationForm(),
     });
   }
 
-  async grantRolePermission() {
-    try {
-      await this.dataModel.addRole(this.role.id, this.role.name, this.role.guild.id);
-      await this.dataModel.grantRolePermission(this.role.id, this.commandId);
-      return this.translate('commands.grantRolePermission.messages.success', {
-        commandId: this.commandId,
-      });
-    } catch (error) {
-      return this.translate('commands.grantRolePermission.errors.failure', {
-        commandId: this.commandId,
-      });
-    }
-  }
-
   async handleComponentInteraction(interaction) {
-    this.markAsDone();
-    const content = await (() => {
-      const buttonId = interaction.data.custom_id;
-      switch (buttonId) {
-        case ButtonId.No:
-          return Promise.resolve(this.translate('common.canceled'));
-        case ButtonId.Yes:
-          return this.grantRolePermission();
+    return this.handleConfirmationForm(interaction, async () => {
+      try {
+        await this.dataModel.addRole(this.role.id, this.role.name, this.role.guild.id);
+        await this.dataModel.grantRolePermission(this.role.id, this.commandId);
+        return this.translate('commands.grantRolePermission.messages.success', {
+          commandId: this.commandId,
+        });
+      } catch (error) {
+        return this.translate('commands.grantRolePermission.errors.failure', {
+          commandId: this.commandId,
+        });
       }
-    })();
-    return interaction.createMessage(content);
+    });
   }
 }
 

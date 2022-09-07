@@ -1,9 +1,7 @@
-const {Constants: {ButtonStyles}} = require('eris');
 const CommandOption = require('../CommandOption');
 const {OptionId, UserOption} = require('../Options');
-const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
-const {ButtonId, actionRow, button} = require('../Components');
+const Command = require('./Command');
 
 class GrantRolePermissionInteractionHandler extends InteractionHandler {
   async initialize(interaction) {
@@ -17,42 +15,25 @@ class GrantRolePermissionInteractionHandler extends InteractionHandler {
         commandId: this.commandId,
         userName: this.member.user.username,
       }),
-      components: [
-        actionRow([
-          button(ButtonId.No, this.translate('common.no')),
-          button(ButtonId.Yes, this.translate('common.yes'), ButtonStyles.DANGER),
-        ]),
-      ],
+      components: this.createConfirmationForm(),
     });
   }
 
-  async grantUserPermission() {
-    try {
-      await this.dataModel.addGuild(this.member.guild.id, this.member.guild.name);
-      await this.dataModel.addUser(this.member.user.id, this.member.user.username, this.member.user.discriminator, this.member.guild.id);
-      await this.dataModel.grantUserPermission(this.member.user.id, this.commandId);
-      return this.translate('commands.grantUserPermission.messages.success', {
-        commandId: this.commandId,
-      });
-    } catch (error) {
-      return this.translate('commands.grantUserPermission.errors.failure', {
-        commandId: this.commandId,
-      });
-    }
-  }
-
   async handleComponentInteraction(interaction) {
-    this.markAsDone();
-    const content = await (() => {
-      const buttonId = interaction.data.custom_id;
-      switch (buttonId) {
-        case ButtonId.No:
-          return Promise.resolve(this.translate('common.canceled'));
-        case ButtonId.Yes:
-          return this.grantUserPermission();
+    return this.handleConfirmationForm(interaction, async () => {
+      try {
+        await this.dataModel.addGuild(this.member.guild.id, this.member.guild.name);
+        await this.dataModel.addUser(this.member.user.id, this.member.user.username, this.member.user.discriminator, this.member.guild.id);
+        await this.dataModel.grantUserPermission(this.member.user.id, this.commandId);
+        return this.translate('commands.grantUserPermission.messages.success', {
+          commandId: this.commandId,
+        });
+      } catch (error) {
+        return this.translate('commands.grantUserPermission.errors.failure', {
+          commandId: this.commandId,
+        });
       }
-    })();
-    return interaction.createMessage(content);
+    });
   }
 }
 

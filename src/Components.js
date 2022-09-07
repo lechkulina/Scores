@@ -8,7 +8,7 @@ const ButtonId = {
   DoBoth: 'do-both',
 };
 
-function button(id, label, style = ButtonStyles.PRIMARY) {
+function createButton(id, label, style = ButtonStyles.PRIMARY) {
   return {
     type: ComponentTypes.BUTTON,
     style,
@@ -17,7 +17,7 @@ function button(id, label, style = ButtonStyles.PRIMARY) {
   }
 }
 
-function actionRow(components = []) {
+function createActionRow(components = []) {
   return {
     type: ComponentTypes.ACTION_ROW,
     components,
@@ -26,6 +26,6 @@ function actionRow(components = []) {
 
 module.exports = {
   ButtonId,
-  button,
-  actionRow,
+  createButton,
+  createActionRow,
 };

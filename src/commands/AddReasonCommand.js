@@ -1,6 +1,6 @@
 const {OptionId, StringOption, NumberOption} = require('../Options');
-const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
+const Command = require('./Command');
 
 class AddReasonInteractionHandler extends InteractionHandler {
   initialize(interaction) {
@@ -23,14 +23,14 @@ class AddReasonInteractionHandler extends InteractionHandler {
     }
     try {
       await this.dataModel.addReason(this.name, this.min, this.max);
+      return interaction.createMessage({
+        content: this.translate('commands.addReason.messages.success', {
+          reasonName: this.name,
+        })
+      });
     } catch (error) {
       return interaction.createMessage(this.translate('commands.addReason.errors.failure'));
     }
-    return interaction.createMessage({
-      content: this.translate('commands.addReason.messages.success', {
-        reasonName: this.name,
-      })
-    });
   }
 }
 

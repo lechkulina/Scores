@@ -1,9 +1,9 @@
 const ReasonOption = require('../ReasonOption');
 const {OptionId, UserOption, NumberOption} = require('../Options');
-const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
-const {ButtonId, actionRow, button} = require('../Components');
+const {ButtonId, createActionRow, createButton} = require('../Components');
 const {Entities} = require('../Formatters');
+const Command = require('./Command');
 
 class AddPointsInteractionHandler extends InteractionHandler {
   async initialize(interaction) {
@@ -42,11 +42,11 @@ class AddPointsInteractionHandler extends InteractionHandler {
         reasonName: this.reason.name,
       }),
       components: [
-        actionRow([
-          button(ButtonId.No, this.translate('common.no')),
-          button(ButtonId.SendDirectMessage, this.translate('common.sendHimDirectMessage')),
-          button(ButtonId.CreatePublicMessage, this.translate('common.createPublicMessage')),
-          button(ButtonId.DoBoth, this.translate('common.doBoth')),
+        createActionRow([
+          createButton(ButtonId.No, this.translate('common.no')),
+          createButton(ButtonId.SendDirectMessage, this.translate('common.sendHimDirectMessage')),
+          createButton(ButtonId.CreatePublicMessage, this.translate('common.createPublicMessage')),
+          createButton(ButtonId.DoBoth, this.translate('common.doBoth')),
         ]),
       ],
     });

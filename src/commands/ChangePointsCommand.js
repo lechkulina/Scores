@@ -1,10 +1,8 @@
-const {Constants: {ButtonStyles}} = require('eris');
 const ReasonOption = require('../ReasonOption');
 const {OptionId, UserOption, NumberOption} = require('../Options');
-const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
-const {ButtonId, actionRow, button} = require('../Components');
 const RecentlyGivenPointsOption = require('../RecentlyGivenPointsOption');
+const Command = require('./Command');
 
 class ChangePointsInteractionHandler extends InteractionHandler {
   async initialize(interaction) {
@@ -22,40 +20,23 @@ class ChangePointsInteractionHandler extends InteractionHandler {
         acquireDate: this.pointsEntry.acquireDate,
         reasonName: this.pointsEntry.reasonName,
       }),
-      components: [
-        actionRow([
-          button(ButtonId.No, this.translate('common.no')),
-          button(ButtonId.Yes, this.translate('common.yes'), ButtonStyles.DANGER),
-        ]),
-      ],
+      components: this.createConfirmationForm(),
     });
   }
 
-  async changePoints() {
-    try {
-      await this.dataModel.changePoints(this.pointsEntry.id, this.pointsValue, this.reason.id);
-      return this.translate('commands.changePoints.messages.success', {
-        userName: this.user.username
-      });
-    } catch (error) {
-      return this.translate('commands.changePoints.errors.failure', {
-        userName: this.user.username
-      });
-    }
-  }
-
   async handleComponentInteraction(interaction) {
-    this.markAsDone();
-    const content = await (() => {
-      const buttonId = interaction.data.custom_id;
-      switch (buttonId) {
-        case ButtonId.No:
-          return Promise.resolve(this.translate('common.canceled'));
-        case ButtonId.Yes:
-          return this.changePoints();
+    return this.handleConfirmationForm(interaction, async () => {
+      try {
+        await this.dataModel.changePoints(this.pointsEntry.id, this.pointsValue, this.reason.id);
+        return this.translate('commands.changePoints.messages.success', {
+          userName: this.user.username
+        });
+      } catch (error) {
+        return this.translate('commands.changePoints.errors.failure', {
+          userName: this.user.username
+        });
       }
-    })();
-    return interaction.createMessage(content);
+    });
   }
 }
 

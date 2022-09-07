@@ -1,9 +1,7 @@
-const {Constants: {ButtonStyles}} = require('eris');
 const CommandOption = require('../CommandOption');
 const {OptionId, RoleOption} = require('../Options');
-const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
-const {ButtonId, actionRow, button} = require('../Components');
+const Command = require('./Command');
 
 class RevokeRolePermissionInteractionHandler extends InteractionHandler {
   async initialize(interaction) {
@@ -17,40 +15,23 @@ class RevokeRolePermissionInteractionHandler extends InteractionHandler {
         commandId: this.commandId,
         roleName: this.role.name,
       }),
-      components: [
-        actionRow([
-          button(ButtonId.No, this.translate('common.no')),
-          button(ButtonId.Yes, this.translate('common.yes'), ButtonStyles.DANGER),
-        ]),
-      ],
+      components: this.createConfirmationForm(),
     });
   }
 
-  async grantRolePermission() {
-    try {
-      await this.dataModel.revokeRolePermission(this.role.id, this.commandId);
-      return this.translate('commands.revokeRolePermission.messages.success', {
-        commandId: this.commandId,
-      });
-    } catch (error) {
-      return this.translate('commands.revokeRolePermission.errors.failure', {
-        commandId: this.commandId,
-      });
-    }
-  }
-
   async handleComponentInteraction(interaction) {
-    this.markAsDone();
-    const content = await (() => {
-      const buttonId = interaction.data.custom_id;
-      switch (buttonId) {
-        case ButtonId.No:
-          return Promise.resolve(this.translate('common.canceled'));
-        case ButtonId.Yes:
-          return this.grantRolePermission();
+    return this.handleConfirmationForm(interaction, async () => {
+      try {
+        await this.dataModel.revokeRolePermission(this.role.id, this.commandId);
+        return this.translate('commands.revokeRolePermission.messages.success', {
+          commandId: this.commandId,
+        });
+      } catch (error) {
+        return this.translate('commands.revokeRolePermission.errors.failure', {
+          commandId: this.commandId,
+        });
       }
-    })();
-    return interaction.createMessage(content);
+    });
   }
 }
 

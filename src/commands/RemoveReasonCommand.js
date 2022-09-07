@@ -1,9 +1,7 @@
-const {Constants: {ButtonStyles}} = require('eris');
 const ReasonOption = require('../ReasonOption');
 const {OptionId} = require('../Options');
-const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
-const {ButtonId, actionRow, button} = require('../Components');
+const Command = require('./Command');
 
 class RemoveReasonInteractionHandler extends InteractionHandler {
   async initialize(interaction) {
@@ -15,40 +13,23 @@ class RemoveReasonInteractionHandler extends InteractionHandler {
       content: this.translate('commands.removeReason.messages.confirmation', {
         reasonName: this.reason.name,
       }),
-      components: [
-        actionRow([
-          button(ButtonId.No, this.translate('common.no')),
-          button(ButtonId.Yes, this.translate('common.yes'), ButtonStyles.DANGER),
-        ]),
-      ],
+      components: this.createConfirmationForm(),
     });
   }
 
-  async removeReason() {
-    try {
-      await this.dataModel.removeReason(this.reason.id);
-      return this.translate('commands.removeReason.messages.success', {
-        reasonName: this.reason.name,
-      });
-    } catch (error) {
-      return this.translate('commands.removeReason.errors.failure', {
-        reasonName: this.reason.name,
-      });
-    }
-  }
-
   async handleComponentInteraction(interaction) {
-    this.markAsDone();
-    const content = await (() => {
-      const buttonId = interaction.data.custom_id;
-      switch (buttonId) {
-        case ButtonId.No:
-          return Promise.resolve(this.translate('common.canceled'));
-        case ButtonId.Yes:
-          return this.removeReason();
+    return this.handleConfirmationForm(interaction, async () => {
+      try {
+        await this.dataModel.removeReason(this.reason.id);
+        return this.translate('commands.removeReason.messages.success', {
+          reasonName: this.reason.name,
+        });
+      } catch (error) {
+        return this.translate('commands.removeReason.errors.failure', {
+          reasonName: this.reason.name,
+        });
       }
-    })();
-    return interaction.createMessage(content);
+    });
   }
 }
 
