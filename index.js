@@ -1,15 +1,12 @@
 const {CommandClient} = require('eris');
 const {discord: discordCredentials} = require('./credentials.js');
-const DataModel = require('./src/DataModel');
 const InteractionManager = require('./src/InteractionManager');
 
 const client = new CommandClient(discordCredentials.token);
-const dataModel = new DataModel(client);
-const interactionManager = new InteractionManager(client, dataModel);
+const interactionManager = new InteractionManager(client);
 
 async function onClientReady() {
   console.info('Client is ready');
-  await dataModel.initialize();
   await interactionManager.initialize();
   console.info('Bot is ready');
 };

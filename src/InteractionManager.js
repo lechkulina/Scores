@@ -1,12 +1,13 @@
 const {CommandInteraction, AutocompleteInteraction, ComponentInteraction} = require('eris');
+const DataModel = require('./DataModel');
 const Settings = require('./Settings');
 const TranslatorsFactory = require('./TranslatorsFactory');
 const CommandsManager = require('./CommandsManager');
 
 class InteractionManager {
-  constructor(client, dataModel) {
+  constructor(client) {
     this.client = client;
-    this.dataModel = dataModel;
+    this.dataModel = new DataModel(this.client);
     this.settings = new Settings(this.dataModel);
     this.translatorsFactory = new TranslatorsFactory(this.client, this.settings);
     this.commandsManager = new CommandsManager(this.client, this.translatorsFactory, this.dataModel);
@@ -14,6 +15,7 @@ class InteractionManager {
   }
 
   async initialize() {
+    await this.dataModel.initialize();
     await this.settings.initialize();
     await this.translatorsFactory.initialize();
     await this.commandsManager.initialize();
