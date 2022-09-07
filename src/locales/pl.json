@@ -22,7 +22,9 @@
       "invalidFirstLetter": "❗ **{{description}}** musi zaczynać się od duzej litery",
       "invalidPointsRange": "❗ **{{description}}** ma nieprawidłowy zakres punktów dla powodu **{{reasonName}}**. Musi mieścić się w zakresie od {{min}} do {{max}}",
       "invalidNumberZero": "❗ **{{description}}** nie moze byc ponizej zera",
-      "invalidNumbersRange": "❗ **{{min}}** nie mieć wartości wiekszej lub równej **{{max}}**"
+      "invalidNumbersRange": "❗ **{{min}}** nie mieć wartości wiekszej lub równej **{{max}}**",
+      "invalidDateFormat": "❗ **{{description}}** ma nieprawidłowy format daty. Wymagany format to **{{dateInputFormat}}**",
+      "invalidDatesRange": "❗ **{{min}}** nie moze być pózniejszą datą niz **{{max}}**"
     },
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} punkty przyznane dnia {{acquireDate}} z powodu {{reasonName}}"

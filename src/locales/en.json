@@ -22,7 +22,9 @@
       "invalidFirstLetter": "❗ **{{description}}** has to start from upper case letter",
       "invalidPointsRange": "❗ **{{description}}** has invalid range for the given points add reason **{{reasonName}}**. It must be between {{min}} and {{max}}",
       "invalidNumberZero": "❗ **{{description}}** can not be below zero",
-      "invalidNumbersRange": "❗ **{{description}}** can not value value greater than **{{secondDescription}}**"
+      "invalidNumbersRange": "❗ **{{description}}** can not value value greater than **{{secondDescription}}**",
+      "invalidDateFormat": "❗ **{{description}}** has invalid date format. Required date format is **{{dateInputFormat}}**",
+      "invalidDatesRange": "❗ **{{min}}** can not be later date than **{{max}}**"
     },
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} points added at {{acquireDate}} with reason {{reasonName}}"
