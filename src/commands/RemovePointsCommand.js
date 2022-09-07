@@ -1,5 +1,5 @@
-const RecentlyGivenPointsOption = require('../RecentlyGivenPointsOption');
-const {OptionId, UserOption} = require('../Options');
+const RecentlyGivenPointsOption = require('../options/RecentlyGivenPointsOption');
+const {OptionId, UserOption} = require('../options/CommonOptions');
 const InteractionHandler = require('../InteractionHandler');
 const Command = require('./Command');
 

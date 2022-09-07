@@ -1,7 +1,7 @@
-const ReasonOption = require('../ReasonOption');
-const {OptionId, UserOption, NumberOption} = require('../Options');
+const ReasonOption = require('../options/ReasonOption');
+const RecentlyGivenPointsOption = require('../options/RecentlyGivenPointsOption');
+const {OptionId, UserOption, NumberOption} = require('../options/CommonOptions');
 const InteractionHandler = require('../InteractionHandler');
-const RecentlyGivenPointsOption = require('../RecentlyGivenPointsOption');
 const Command = require('./Command');
 
 class ChangePointsInteractionHandler extends InteractionHandler {

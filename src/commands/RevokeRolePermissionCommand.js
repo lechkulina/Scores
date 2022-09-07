@@ -1,5 +1,5 @@
-const CommandOption = require('../CommandOption');
-const {OptionId, RoleOption} = require('../Options');
+const CommandOption = require('../options/CommandOption');
+const {OptionId, RoleOption} = require('../options/CommonOptions');
 const InteractionHandler = require('../InteractionHandler');
 const Command = require('./Command');
 

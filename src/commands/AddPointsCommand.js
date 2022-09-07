@@ -1,5 +1,5 @@
-const ReasonOption = require('../ReasonOption');
-const {OptionId, UserOption, NumberOption} = require('../Options');
+const ReasonOption = require('../options/ReasonOption');
+const {OptionId, UserOption, NumberOption} = require('../options/CommonOptions');
 const InteractionHandler = require('../InteractionHandler');
 const {ButtonId, createActionRow, createButton} = require('../Components');
 const {Entities} = require('../Formatters');

@@ -1,6 +1,6 @@
 const {Constants: {ApplicationCommandOptionTypes}} = require('eris');
+const {OptionId} = require('./CommonOptions');
 const Option = require('./Option');
-const {OptionId} = require('./Options');
 
 class CommandOption extends Option {
   constructor(description, required) {
