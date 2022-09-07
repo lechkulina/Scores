@@ -13,4 +13,5 @@ module.exports = [
   require('./RevokeUserPermissionCommand'),
   require('./AddContestCommand'),
   require('./ChangeContestCommand'),
+  require('./RemoveContestCommand'),
 ];

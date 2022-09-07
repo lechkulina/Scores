@@ -222,6 +222,16 @@
           "confirmation": "❓Are you sure you want to change contest **{{contestName}}**?",
           "success": "✅ Changed contest **{{contestName}}**"
         }
+      },
+      "removeContest": {
+        "description": "Removes existing contest",
+        "errors": {
+          "failure": "❗ Failed to removed contest **{{contestName}}**"
+        },
+        "messages": {
+          "confirmation": "❓Are you sure you want to remove contest **{{contestName}}**?",
+          "success": "✅ Removed contest **{{contestName}}**"
+        }
       }
     }
   }

@@ -276,7 +276,7 @@ class DataModel {
     `);
   }
 
-  async changeContest(guildId, contestId, name, description, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate) {
+  changeContest(guildId, contestId, name, description, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate) {
     return this.database.run(`
       UPDATE Contest
       SET name = "${name}",
@@ -286,6 +286,13 @@ class DataModel {
           votingBeginDate = ${votingBeginDate},
           votingEndDate = ${votingEndDate}
       WHERE id = "${contestId}" AND guildId = "${guildId}";
+    `);
+  }
+
+  removeContest(guildId, contestId) {
+    return this.database.run(`
+      DELETE FROM Contest
+      WHERE id = ${contestId} AND guildId = "${guildId}";
     `);
   }
 

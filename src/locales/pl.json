@@ -222,6 +222,16 @@
           "confirmation": "❓ Czy na pewno chcesz zmienić konkurs **{{contestName}}**?",
           "success": "✅ Zmieniono konkurs **{{contestName}}**"
         }
+      },
+      "removeContest": {
+        "description": "Usuwa istniejący konkurs",
+        "errors": {
+          "failure": "❗ Nie udało się usunąć konkursu **{{contestName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz usunąć konkurs **{{contestName}}**?",
+          "success": "✅ Usunięto konkurs **{{contestName}}**"
+        }
       }
     }
   }
