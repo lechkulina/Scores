@@ -250,6 +250,13 @@ class DataModel {
     `);
   }
 
+  addContest(name, description, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId) {
+    return this.database.run(`
+      INSERT OR REPLACE INTO Contest(name, description, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId)
+      VALUES ("${name}", "${description}", ${activeBeginDate}, ${activeEndDate}, ${votingBeginDate}, ${votingEndDate}, "${guildId}");
+    `);
+  }
+
   async initialize() {
     await this.database.open();
     await this.createSchema();

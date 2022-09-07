@@ -38,14 +38,16 @@ class RemovePointsInteractionHandler extends InteractionHandler {
 }
 
 class RemovePointsCommand extends Command {
-  constructor(translate) {
-    super(translate, 'remove-points');
+  constructor(...props) {
+    super('remove-points', ...props);
   }
 
   initialize() {
     this.setDescription(this.translate('commands.removePoints.description'));
-    this.addOption(new UserOption(this.translate('commands.removePoints.options.user')));
-    this.addOption(new RecentlyGivenPointsOption(this.translate('commands.removePoints.options.recentlyGivenPoints')));
+    this.addOptions([
+      new UserOption(this.translate('commands.removePoints.options.user')),
+      new RecentlyGivenPointsOption(this.translate('commands.removePoints.options.recentlyGivenPoints')),
+    ]);
     return Promise.resolve();
   }
 

@@ -1,10 +1,11 @@
 const config = require('../config.js');
 
 class CommandsManager {
-  constructor(client, translatorsFactory, dataModel) {
+  constructor(client, dataModel, settings, translate) {
     this.client = client;
-    this.translatorsFactory = translatorsFactory;
     this.dataModel = dataModel;
+    this.settings = settings;
+    this.translate = translate;
     this.commands = new Map();
   }
 
@@ -32,10 +33,9 @@ class CommandsManager {
   }
 
   async initialize() {
-    const translate = await this.translatorsFactory.getTranslator();
     require('./commands/commands.js').forEach(Command => {
-      const command = new Command(translate);
-      this.commands.set(command.name, command);
+      const command = new Command(this.dataModel, this.settings, this.translate);
+      this.commands.set(command.id, command);
     });
     await this.initializeCommands();
     await this.registerCommands();
@@ -45,8 +45,8 @@ class CommandsManager {
     return this.commands.get(commandId);
   }
 
-  findOption(commandId, optionName) {
-    return this.findCommand(commandId)?.findOption(optionName);
+  findOption(commandId, optionId) {
+    return this.findCommand(commandId)?.findOption(optionId);
   }
 }
 

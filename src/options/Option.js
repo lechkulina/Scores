@@ -1,6 +1,6 @@
 class Option {
-  constructor(name, description, type, required = true, autocomplete = false) {
-    this.name = name;
+  constructor(id, description, type, required = true, autocomplete = false) {
+    this.id = id;
     this.description = description;
     this.type = type;
     this.required = required;
@@ -9,16 +9,12 @@ class Option {
 
   getConfig() {
     return {
-      name: this.name,
+      name: this.id,
       description: this.description,
       type: this.type,
       required: this.required,
       autocomplete: this.autocomplete,
     };
-  }
-
-  processValue(value) {
-    return value; // some options may want to process the value in some way
   }
 
   async getAutoCompeteResults(interaction, dataModel, translate, optionValue) {

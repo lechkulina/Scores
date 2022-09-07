@@ -3,6 +3,7 @@ const DataModel = require('./DataModel');
 const Settings = require('./Settings');
 const TranslatorsFactory = require('./TranslatorsFactory');
 const CommandsManager = require('./CommandsManager');
+const {Entities} = require('./Formatters');
 
 class InteractionManager {
   constructor(client) {
@@ -10,7 +11,6 @@ class InteractionManager {
     this.dataModel = new DataModel(this.client);
     this.settings = new Settings(this.dataModel);
     this.translatorsFactory = new TranslatorsFactory(this.client, this.settings);
-    this.commandsManager = new CommandsManager(this.client, this.translatorsFactory, this.dataModel);
     this.interactionHandlers = new Map();
   }
 
@@ -18,16 +18,20 @@ class InteractionManager {
     await this.dataModel.initialize();
     await this.settings.initialize();
     await this.translatorsFactory.initialize();
+    this.translate = await this.translatorsFactory.getTranslator();
+    this.commandsManager = new CommandsManager(this.client, this.dataModel, this.settings, this.translate);
     await this.commandsManager.initialize();
   }
 
   async createInteractionHandler(interaction) {
+    // look for the command that would handle the incoming interaction
     const commandId = interaction.data.name;
     const command = this.commandsManager.findCommand(commandId);
     if (!command) {
       await interaction.acknowledge();
       return;
     }
+    // check if the user has the permission to execute this command
     const translate = await this.translatorsFactory.getTranslator(interaction);
     const userId = interaction.member.user.id;
     const rolesIds = interaction.member.roles;
@@ -40,7 +44,21 @@ class InteractionManager {
       });
       return;
     }
+    // validate options values
     const optionsValues = command.createOptionsValues(interaction);
+    const issues = await command.validateOptionsValues(translate, optionsValues);
+    if (issues.length > 0) {
+      await interaction.createMessage({
+        content: [
+          translate('commands.errors.validationFailed', {
+            issuesCount: issues.length,
+          }),
+          ...issues
+        ].join(Entities.NewLine),
+      });
+      return;
+    }
+    // add new interaction handler
     const interactionHandler = command.createInteractionHandler(this.client, this.dataModel, this.settings, translate, optionsValues);
     await interactionHandler.initialize(interaction);
     this.interactionHandlers.set(interaction.id, interactionHandler);

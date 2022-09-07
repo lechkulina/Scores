@@ -17,12 +17,20 @@
       "command": "Command",
       "user": "User"
     },
+    "validators": {
+      "invalidLength": "❗ **{{description}}** has invalid value. It must be between {{minNameLength}} and {{maxNameLength}}",
+      "invalidFirstLetter": "❗ **{{description}}** has to start from upper case letter",
+      "invalidPointsRange": "❗ **{{description}}** has invalid range for the given points add reason **{{reasonName}}**. It must be between {{min}} and {{max}}",
+      "invalidNumberZero": "❗ **{{description}}** can not be below zero",
+      "invalidNumbersRange": "❗ **{{description}}** can not value value greater than **{{secondDescription}}**"
+    },
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} points added at {{acquireDate}} with reason {{reasonName}}"
     },
     "commands": {
       "errors": {
-        "notAllowed": "❌ You do not have permissions to execute command **{{commandId}}**"
+        "notAllowed": "❌ You do not have permissions to execute command **{{commandId}}**",
+        "validationFailed": "⬇ Unable to execute a command. Found {{issuesCount}} issues regarding the given parameters:"
       },
       "addPoints": {
         "description": "Adds points to a user",
@@ -32,7 +40,6 @@
           "points": "Number of points"
         },
         "errors": {
-          "invalidRange": "❗ Valid points range for the selected reason **{{reasonName}}** is {{min}} to {{max}}",
           "failure": "❗ Faield to add **{{points}}** points to user **{{userName}}**"
         },
         "messages": {
@@ -92,8 +99,6 @@
           "vmax": "Maximum number of points that can be added for this reason"
         },
         "errors": {
-          "invalidName": "❗ Name of a points add reason can not be empty.",
-          "invalidRange": "❗ Invalid points range - minimal value {{min}} can not be greater or equal to maximum value {{max}}",
           "failure": "❗ Failed to add points add reason."
         },
         "messages": {
@@ -122,8 +127,6 @@
           "max": "$(commands.addReason.options.max)"
         },
         "errors": {
-          "invalidName": "$(commands.addReason.errors.invalidName)",
-          "invalidRange": "$(commands.addReason.errors.invalidRange)",
           "failure": "❗ Failed to change points add reason **{{reasonName}}**"
         },
         "messages": {

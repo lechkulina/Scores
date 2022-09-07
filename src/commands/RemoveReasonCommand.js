@@ -34,13 +34,15 @@ class RemoveReasonInteractionHandler extends InteractionHandler {
 }
 
 class RemoveReasonCommand extends Command {
-  constructor(translate) {
-    super(translate, 'remove-reason');
+  constructor(...props) {
+    super('remove-reason', ...props);
   }
 
   initialize() {
     this.setDescription(this.translate('commands.removeReason.description'));
-    this.addOption(new ReasonOption(this.translate('commands.removeReason.options.reason')));
+    this.addOptions([
+      new ReasonOption(this.translate('commands.removeReason.options.reason'))
+    ]);
     return Promise.resolve();
   }
 

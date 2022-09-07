@@ -1,12 +1,14 @@
 const {Constants: {ApplicationCommandTypes}} = require('eris');
 
 class Command {
-  constructor(translate, name, type = ApplicationCommandTypes.CHAT_INPUT) {
+  constructor(id, dataModel, settings, translate) {
+    this.id = id;
+    this.dataModel = dataModel;
+    this.settings = settings;
     this.translate = translate;
-    this.name = name;
-    this.type = type;
     this.description = '';
     this.options = new Map();
+    this.validators = [];
   }
 
   getConfig() {
@@ -14,9 +16,9 @@ class Command {
       this.options.get(key).getConfig()
     );
     return {
-      name: this.name,
+      name: this.id,
       description: this.description,
-      type: this.type,
+      type: ApplicationCommandTypes.CHAT_INPUT,
       options,
     };
   }
@@ -25,28 +27,41 @@ class Command {
     this.description = description;
   }
 
-  addOption(option) {
-    this.options.set(option.name, option);
+  addOptions(options) {
+    options.forEach(option => this.options.set(option.id, option));
   }
 
-  findOption(optionName) {
-    return this.options.get(optionName);
+  addValidators(validators) {
+    this.validators.push(...validators);
   }
 
-  createOptionsValues(interaction) {
-    const optionsValues = new Map();
-    (interaction.data.options ?? []).forEach(({name, value}) => {
-      const option = this.findOption(name);
-      optionsValues.set(name, option.processValue(value));
-    });
-    return optionsValues;
+  findOption(id) {
+    return this.options.get(id);
   }
 
   initialize() {
     return Promise.resolve();
   }
 
-  createInteractionHandler(client, dataModel, settings, translate, optionsValues) {
+  createOptionsValues(interaction) {
+    const optionsValues = new Map();
+    (interaction.data.options ?? []).forEach(({name, value}) => {
+      if (this.findOption(name)) {
+        optionsValues.set(name, value);
+      }
+    });
+    return optionsValues;
+  }
+
+  async validateOptionsValues(translate, optionsValues) {
+    const issues = [];
+    for (const validator of this.validators) {
+      issues.push(...(await validator.validate(translate, optionsValues)));      
+    }
+    return issues;
+  }
+
+  createInteractionHandler(translate, optionsValues) {
     return Promise.resolve();
   }
 };

@@ -36,14 +36,16 @@ class RevokeRolePermissionInteractionHandler extends InteractionHandler {
 }
 
 class RevokeUserPermissionCommand extends Command {
-  constructor(translate) {
-    super(translate, 'revoke-user-permission');
+  constructor(...props) {
+    super('revoke-user-permission', ...props);
   }
 
   initialize() {
     this.setDescription(this.translate('commands.revokeUserPermission.description'));
-    this.addOption(new UserOption(this.translate('common.user')));
-    this.addOption(new CommandOption(this.translate('common.command')));
+    this.addOptions([
+      new UserOption(this.translate('common.user')),
+      new CommandOption(this.translate('common.command')),
+    ]);
     return Promise.resolve();
   }
 

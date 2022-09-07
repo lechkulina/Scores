@@ -1,5 +1,6 @@
 const ReasonOption = require('../options/ReasonOption');
 const {OptionId, UserOption, NumberOption} = require('../options/CommonOptions');
+const {PointsValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {ButtonId, createActionRow, createButton} = require('../Components');
 const {Entities} = require('../Formatters');
@@ -14,14 +15,6 @@ class AddPointsInteractionHandler extends InteractionHandler {
   }
 
   async handleCommandInteraction(interaction) {
-    if (this.points < this.reason.min || this.points > this.reason.max) {
-      this.markAsDone();
-      return interaction.createMessage(this.translate('commands.addPoints.errors.invalidRange', {
-        reasonName: this.reason.name,
-        min: this.reason.min,
-        max: this.reason.max,
-      }));
-    }
     try {
       await this.dataModel.addGuild(this.member.guild.id, this.member.guild.name);
       await this.dataModel.addGuild(this.giver.guild.id, this.giver.guild.name);
@@ -103,15 +96,20 @@ class AddPointsInteractionHandler extends InteractionHandler {
 }
 
 class AddPointsCommand extends Command {
-  constructor(translate) {
-    super(translate, 'add-points');
+  constructor(...props) {
+    super('add-points', ...props);
   }
 
   initialize() {
     this.setDescription(this.translate('commands.addPoints.description'));
-    this.addOption(new UserOption(this.translate('commands.addPoints.options.user')));
-    this.addOption(new ReasonOption(this.translate('commands.addPoints.options.reason')));
-    this.addOption(new NumberOption(OptionId.Points, this.translate('commands.addPoints.options.points')));
+    this.addOptions([
+      new UserOption(this.translate('commands.addPoints.options.user')),
+      new ReasonOption(this.translate('commands.addPoints.options.reason')),
+      new NumberOption(OptionId.Points, this.translate('commands.addPoints.options.points')),
+    ]);
+    this.addValidators([
+      new PointsValidator(OptionId.Points, OptionId.Reason, this.dataModel, this.settings, this.options),
+    ])
     return Promise.resolve();
   }
 

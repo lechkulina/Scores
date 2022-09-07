@@ -1,4 +1,5 @@
 const {OptionId, StringOption, NumberOption} = require('../options/CommonOptions');
+const {StringsLengthsValidator, FirstLetterValidator, NumbersValuesValidator, NumbersRangesValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const Command = require('./Command');
 
@@ -12,15 +13,6 @@ class AddReasonInteractionHandler extends InteractionHandler {
 
   async handleCommandInteraction(interaction) {
     this.markAsDone();
-    if (this.name === '') {
-      return interaction.createMessage(this.translate('commands.addReason.errors.invalidName'));
-    }
-    if (this.min >= this.max) {
-      return interaction.createMessage(this.translate('commands.addReason.errors.invalidRange', {
-        min: this.min,
-        max: this.max,
-      }));
-    }
     try {
       await this.dataModel.addReason(this.name, this.min, this.max);
       return interaction.createMessage({
@@ -35,15 +27,25 @@ class AddReasonInteractionHandler extends InteractionHandler {
 }
 
 class AddReasonCommand extends Command {
-  constructor(translate) {
-    super(translate, 'add-reason');
+  constructor(...props) {
+    super('add-reason', ...props);
   }
 
   initialize() {
     this.setDescription(this.translate('commands.addReason.description'));
-    this.addOption(new StringOption(OptionId.Name, this.translate('commands.addReason.options.name')));
-    this.addOption(new NumberOption(OptionId.Min, this.translate('commands.addReason.options.min')));
-    this.addOption(new NumberOption(OptionId.Max, this.translate('commands.addReason.options.max')));
+    this.addOptions([
+      new StringOption(OptionId.Name, this.translate('commands.addReason.options.name')),
+      new NumberOption(OptionId.Min, this.translate('commands.addReason.options.min')),
+      new NumberOption(OptionId.Max, this.translate('commands.addReason.options.max')),
+    ]);
+    this.addValidators([
+      new StringsLengthsValidator([OptionId.Name], 'minNameLength', 'maxNameLength', this.settings, this.options),
+      new FirstLetterValidator([OptionId.Name], this.options),
+      new NumbersValuesValidator([OptionId.Min, OptionId.Max], this.options),
+      new NumbersRangesValidator([
+        [OptionId.Min, OptionId.Max]
+      ], this.options),
+    ]);
     return Promise.resolve();
   }
 

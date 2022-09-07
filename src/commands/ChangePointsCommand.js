@@ -1,6 +1,7 @@
 const ReasonOption = require('../options/ReasonOption');
 const RecentlyGivenPointsOption = require('../options/RecentlyGivenPointsOption');
 const {OptionId, UserOption, NumberOption} = require('../options/CommonOptions');
+const {PointsValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const Command = require('./Command');
 
@@ -41,16 +42,21 @@ class ChangePointsInteractionHandler extends InteractionHandler {
 }
 
 class ChangePointsCommand extends Command {
-  constructor(translate) {
-    super(translate, 'change-points');
+  constructor(...props) {
+    super('change-points', ...props);
   }
 
   initialize() {
     this.setDescription(this.translate('commands.changePoints.description'));
-    this.addOption(new UserOption(this.translate('commands.changePoints.options.user')));
-    this.addOption(new RecentlyGivenPointsOption(this.translate('commands.changePoints.options.recentlyGivenPoints')));
-    this.addOption(new ReasonOption(this.translate('commands.changePoints.options.reason')));
-    this.addOption(new NumberOption(OptionId.Points, this.translate('commands.changePoints.options.points')));
+    this.addOptions([
+      new UserOption(this.translate('commands.changePoints.options.user')),
+      new RecentlyGivenPointsOption(this.translate('commands.changePoints.options.recentlyGivenPoints')),
+      new ReasonOption(this.translate('commands.changePoints.options.reason')),
+      new NumberOption(OptionId.Points, this.translate('commands.changePoints.options.points')),
+    ]);
+    this.addValidators([
+      new PointsValidator(OptionId.Points, OptionId.Reason, this.dataModel, this.options),
+    ])
     return Promise.resolve();
   }
 

@@ -40,8 +40,8 @@ class ShowHelpInteractionHandler extends InteractionHandler {
 }
 
 class ShowHelpCommand extends Command {
-  constructor(translate) {
-    super(translate, 'show-help');
+  constructor(...props) {
+    super('show-help', ...props);
   }
 
   initialize() {

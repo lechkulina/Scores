@@ -46,10 +46,22 @@ CREATE TABLE IF NOT EXISTS Points(
 CREATE TABLE IF NOT EXISTS Contest(
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
+  description TEXT NOT NULL,
   activeBeginDate INTEGER,
   activeEndDate INTEGER,
   votingBeginDate INTEGER,
-  votingEndDate INTEGER
+  votingEndDate INTEGER,
+  guildId TEXT NOT NULL REFERENCES Guild(id)
+);
+CREATE TABLE IF NOT EXISTS Rule(
+  id INTEGER PRIMARY KEY,
+  description TEXT NOT NULL,
+  contestId INTEGER NOT NULL REFERENCES Contest(id)
+);
+CREATE TABLE IF NOT EXISTS Reward(
+  id INTEGER PRIMARY KEY,
+  description TEXT NOT NULL,
+  contestId INTEGER NOT NULL REFERENCES Contest(id)
 );
 CREATE TABLE IF NOT EXISTS Category(
   id INTEGER PRIMARY KEY,
@@ -65,6 +77,7 @@ CREATE TABLE IF NOT EXISTS ContestCategory(
 CREATE TABLE IF NOT EXISTS Entry(
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
+  description TEXT,
   url TEXT NOT NULL,
   authorId TEXT NOT NULL REFERENCES User(id)
 );

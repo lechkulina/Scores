@@ -17,12 +17,20 @@
       "command": "Polecenie",
       "user": "Uzytkownik"
     },
+    "validators": {
+      "invalidLength": "❗ **{{description}}** ma nieprawidłową długość. Musi mieścić się w zakresie od {{min}} do {{max}} znaków",
+      "invalidFirstLetter": "❗ **{{description}}** musi zaczynać się od duzej litery",
+      "invalidPointsRange": "❗ **{{description}}** ma nieprawidłowy zakres punktów dla powodu **{{reasonName}}**. Musi mieścić się w zakresie od {{min}} do {{max}}",
+      "invalidNumberZero": "❗ **{{description}}** nie moze byc ponizej zera",
+      "invalidNumbersRange": "❗ **{{min}}** nie mieć wartości wiekszej lub równej **{{max}}**"
+    },
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} punkty przyznane dnia {{acquireDate}} z powodu {{reasonName}}"
     },
     "commands": {
       "errors": {
-        "notAllowed": "❌ Nie masz uprawnień do wykonania polecenia **{{commandId}}**"
+        "notAllowed": "❌ Nie masz uprawnień do wykonania polecenia **{{commandId}}**",
+        "validationFailed": "⬇ Nie mozna wykonać polecnia. Znaleziono **{{issuesCount}}** problemów z podanymi parametrami:"
       },
       "addPoints": {
         "description": "Dodaje punkty uzytkownikowi",
@@ -32,7 +40,6 @@
           "points": "Liczba punktów"
         },
         "errors": {
-          "invalidRange": "❗ Prawidłowy zakres punktów dla powodu **{{reasonName}}** wynosi od {{min}} do {{max}}",
           "failure": "❗ Nie udało się dodać **{{points}}** punktów uzytkownikowi **{{userName}}**"
         },
         "messages": {
@@ -92,8 +99,6 @@
           "max": "Maksymalna liczba punktów jaką mozna przyznać"
         },
         "errors": {
-          "invalidName": "❗ Nazwa powodu do przyznawania punktów nie moze być pusta.",
-          "invalidRange": "❗ Nieprawidłowy zakres punktów - wartość minimalna {{min}} nie moze byc wieksza lub równa wartości maksymalnej {{max}}",
           "failure": "❗ Nie udało się dodać nowego powodu do przyznawania punktów."
         },
         "messages": {
@@ -122,8 +127,6 @@
           "max": "$(commands.addReason.options.max)"
         },
         "errors": {
-          "invalidName": "$(commands.addReason.errors.invalidName)",
-          "invalidRange": "$(commands.addReason.errors.invalidRange)",
           "failure": "❗ Nie udało się zmianić powodu do przyznawania punktów **{{reasonName}}**"
         },
         "messages": {

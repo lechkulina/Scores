@@ -18,6 +18,12 @@ const converters = {
   preferredLocale: StringConverter,
   useGuildLocale: BooleanConverter,
   recentPointsLimit: NumberConverter,
+  dateInputFormat: StringConverter,
+  dateOuputFormat: StringConverter,
+  minNameLength: NumberConverter,
+  maxNameLength: NumberConverter,
+  minDescriptionLength: NumberConverter,
+  maxDescriptionLength: NumberConverter,
 };
 
 class Settings {
@@ -33,6 +39,12 @@ class Settings {
       this.set('preferredLocale', 'pl'),
       this.set('useGuildLocale', false),
       this.set('recentPointsLimit', 6),
+        this.set('dateInputFormat', 'DD.MM.YYYY HH:mm'),
+        this.set('dateOuputFormat', 'DD.MM.YYYY HH:mm'),
+        this.set('minNameLength', 3),
+        this.set('maxNameLength', 200),
+        this.set('minDescriptionLength', 20),
+        this.set('maxDescriptionLength', 6000),
     ]);
   }
 
@@ -57,6 +69,10 @@ class Settings {
     } catch(error) {
       console.error(`Failed to get setting ${key} - got error ${error.message}`);
     }
+  }
+
+  getAll(keys) {
+    return Promise.all(keys.map(key => this.get(key)));
   }
 
   async set(key, value) {

@@ -58,8 +58,8 @@ class ShowPointsInteractionHandler extends InteractionHandler {
 }
 
 class ShowPointsCommand extends Command {
-  constructor(translate) {
-    super(translate, 'show-points');
+  constructor(...props) {
+    super('show-points', ...props);
   }
 
   initialize() {

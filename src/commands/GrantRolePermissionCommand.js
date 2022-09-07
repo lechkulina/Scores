@@ -37,14 +37,16 @@ class GrantRolePermissionInteractionHandler extends InteractionHandler {
 }
 
 class GrantRolePermissionCommand extends Command {
-  constructor(translate) {
-    super(translate, 'grant-role-permission');
+  constructor(...props) {
+    super('grant-role-permission', ...props);
   }
 
   initialize() {
     this.setDescription(this.translate('commands.grantRolePermission.description'));
-    this.addOption(new RoleOption(this.translate('common.role')));
-    this.addOption(new CommandOption(this.translate('common.command')));
+    this.addOptions([
+      new RoleOption(this.translate('common.role')),
+      new CommandOption(this.translate('common.command')),
+    ]);
     return Promise.resolve();
   }
 

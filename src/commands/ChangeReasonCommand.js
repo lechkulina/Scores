@@ -1,5 +1,6 @@
 const ReasonOption = require('../options/ReasonOption');
 const {OptionId, StringOption, NumberOption} = require('../options/CommonOptions');
+const {StringsLengthsValidator, FirstLetterValidator, NumbersValuesValidator, NumbersRangesValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const Command = require('./Command');
 
@@ -12,17 +13,6 @@ class ChangeReasonInteractionHandler extends InteractionHandler {
   }
 
   async handleCommandInteraction(interaction) {
-    if (this.name === '') {
-      this.markAsDone();
-      return interaction.createMessage(this.translate('commands.changeReason.errors.invalidName'));
-    }
-    if (this.min >= this.max) {
-      this.markAsDone();
-      return interaction.createMessage(this.translate('commands.changeReason.errors.invalidRange', {
-        min: this.min,
-        max: this.max,
-      }));
-    }
     return interaction.createMessage({
       content: this.translate('commands.changeReason.messages.confirmation', {
         reasonName: this.reason.name,
@@ -48,16 +38,26 @@ class ChangeReasonInteractionHandler extends InteractionHandler {
 }
 
 class ChangeReasonCommand extends Command {
-  constructor(translate) {
-    super(translate, 'change-reason');
+  constructor(...props) {
+    super('change-reason', ...props);
   }
 
   initialize() {
     this.setDescription(this.translate('commands.changeReason.description'));
-    this.addOption(new ReasonOption(this.translate('commands.changeReason.options.reason')));
-    this.addOption(new StringOption(OptionId.Name, this.translate('commands.changeReason.options.name')));
-    this.addOption(new NumberOption(OptionId.Min, this.translate('commands.changeReason.options.min')));
-    this.addOption(new NumberOption(OptionId.Max, this.translate('commands.changeReason.options.max')));
+    this.addOptions([
+      new ReasonOption(this.translate('commands.changeReason.options.reason')),
+      new StringOption(OptionId.Name, this.translate('commands.changeReason.options.name')),
+      new NumberOption(OptionId.Min, this.translate('commands.changeReason.options.min')),
+      new NumberOption(OptionId.Max, this.translate('commands.changeReason.options.max')),
+    ]);
+    this.addValidators([
+      new StringsLengthsValidator([OptionId.Name], 'minNameLength', 'maxNameLength', this.settings, this.options),
+      new FirstLetterValidator([OptionId.Name], this.options),
+      new NumbersValuesValidator([OptionId.Min, OptionId.Max], this.options),
+      new NumbersRangesValidator([
+        [OptionId.Min, OptionId.Max]
+      ], this.options),
+    ]);
     return Promise.resolve();
   }
 
