@@ -1,0 +1,187 @@
+{
+  "main": {
+    "common": {
+      "no": "No",
+      "yes": "Yes",
+      "done": "Done",
+      "canceled": "Canceled",
+      "rankingPosition": "Ranking position",
+      "acquireDate": "Acquired date",
+      "points": "Points",
+      "giverName": "Giver name",
+      "sendHimDirectMessage": "Send him a direct message",
+      "createPublicMessage": "Create a public message",
+      "doBoth": "Do both",
+      "reasonName": "Reason for granting",
+      "role": "Role",
+      "command": "Command",
+      "user": "User"
+    },
+    "autoCompete": {
+      "recentlyGivenPoints": "{{points}} points added at {{acquireDate}} with reason {{reasonName}}"
+    },
+    "commands": {
+      "errors": {
+        "notAllowed": "❌ You do not have permissions to execute command **{{commandId}}**"
+      },
+      "addPoints": {
+        "description": "Adds points to a user",
+        "options": {
+          "user": "User for which points points should be added",
+          "reason": "Reason why points are being added",
+          "points": "Number of points"
+        },
+        "errors": {
+          "invalidRange": "❗ Valid points range for the selected reason **{{reasonName}}** is {{min}} to {{max}}",
+          "failure": "❗ Faield to add **{{points}}** points to user **{{userName}}**"
+        },
+        "messages": {
+          "success": "✅ Added **{{points}}** points to user **{{userName}}** with reason **{{reasonName}}**\nWould you like to send notification?",
+          "directMessage": "{{giverName}} added **{{points}}** points to you with reason {{reasonName}.",
+          "directMessageSent": "✅ Direct message to **{{userName}}** was sent.",
+          "publicMessage": "**{{userName}}** gained **{{points}}** points with reason {{reasonName}.",
+          "publicMessageCreated": "✅ Public message at channel **{{channelName}}** was created."
+        }
+      },
+      "removePoints": {
+        "description": "Removes previously added points",
+        "options": {
+          "user": "User which points should be removed",
+          "recentlyGivenPoints": "Points you have recently given"
+        },
+        "errors": {
+          "failure": "❗ Failed to remove **{{points}}** points from user **{{userName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to remove **{{points}}** points from user **{{userName}}** added at {{acquireDate}} with reason {{reasonName}}?",
+          "success": "✅ Removed points from user **{{userName}}**"
+        }
+      },
+      "changePoints": {
+        "description": "Changes previously added points",
+        "options": {
+          "user": "User which points should be changed",
+          "recentlyGivenPoints": "$t(commands.removePoints.options.recentlyGivenPoints)",
+          "reason": "$t(commands.addPoints.options.reason)",
+          "points": "$(commands.addPoints.options.points)"
+        },
+        "errors": {
+          "failure": "❗ Failed to change **{{points}}** points from user **{{userName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to change **{{points}}** points from user **{{userName}}** added at {{acquireDate}} with reason {{reasonName}}?",
+          "success": "✅ Changed points from user **{{userName}}**"
+        }
+      },
+      "showPoints": {
+        "description": "Shows user points",
+        "errors": {
+          "failure": "❗ Faield get points for user **{{userName}}**"
+        },
+        "messages": {
+          "summary": "➡ You have **{{points}}** points acquired between {{minAcquireDate}} and {{maxAcquireDate}}",
+          "recentPoints": "⬇ {{pointsCount}} most recently given points",
+          "rankingPositions": "⬇ Ranking positions"
+        }
+      },
+      "addReason": {
+        "description": "Adds points add reason",
+        "options": {
+          "name": "Name of a points add reason",
+          "min": "Minimal number of points that can be added for this reason",
+          "vmax": "Maximum number of points that can be added for this reason"
+        },
+        "errors": {
+          "invalidName": "❗ Name of a points add reason can not be empty.",
+          "invalidRange": "❗ Invalid points range - minimal value {{min}} can not be greater or equal to maximum value {{max}}",
+          "failure": "❗ Failed to add points add reason."
+        },
+        "messages": {
+          "success": "✅ Added new points add reason **{{reasonName}}**"
+        }
+      },
+      "removeReason": {
+        "description": "Removes existing points add reason.",
+        "options": {
+          "reason": "Points add reason"
+        },
+        "errors": {
+          "failure": "❗ Failed to removed points add reason **{{reasonName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to remove points add reason **{{reasonName}}**?",
+          "success": "✅ Removed points add reason **{{reasonName}}**"
+        }
+      },
+      "changeReason": {
+        "description": "Changes existing points add reason.",
+        "options": {
+          "reason": "$(commands.removeReason.options.reason)",
+          "name": "$(commands.addReason.options.name)",
+          "min": "$(commands.addReason.options.min)",
+          "max": "$(commands.addReason.options.max)"
+        },
+        "errors": {
+          "invalidName": "$(commands.addReason.errors.invalidName)",
+          "invalidRange": "$(commands.addReason.errors.invalidRange)",
+          "failure": "❗ Failed to change points add reason **{{reasonName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to change points add reason **{{reasonName}}**?",
+          "success": "✅ Changed points add reason **{{reasonName}}**"
+        }
+      },
+      "showHelp": {
+        "description": "Shows list of available commands",
+        "errors": {
+          "failure": "❗ Failed to show help"
+        },
+        "messages": {
+          "summary": "⬇ You have access to {{allowedCommandsCount}} commands",
+          "allowedCommand": "✅ **{{id}}** - {{description}}",
+          "notAllowedCommand": "❌ **{{id}}** - {{description}}"
+        }
+      },
+      "grantRolePermission": {
+        "description": "Grants role a permission to execute a command",
+        "errors": {
+          "failure": "❗ Failed to grant permission to execute command **{{commandId}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to grant permission to execute command **{{commandId}}** by role **{{roleName}}**?",
+          "success": "✅ Granted permission to execute command **{{commandId}}**"
+        }
+      },
+      "revokeRolePermission": {
+        "description": "Revokes role a permission to execute a command",
+        "errors": {
+          "failure": "❗ Failed to revoke permission to execute command **{{commandId}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to revoke permission to execute command **{{commandId}}** by role **{{roleName}}**?",
+          "success": "✅ Revoked permission to execute command **{{commandId}}**"
+        }
+      },
+      "grantUserPermission": {
+        "description": "Grants user a permission to execute a command",
+        "errors": {
+          "failure": "$t(commands.grantRolePermission.errors.failure)"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to grant permission to execute command **{{commandId}}** by user **{{userName}}**?",
+          "success": "$t(commands.grantRolePermission.messages.success)"
+        }
+      },
+      "revokeUserPermission": {
+        "description": "Revokes user a permission to execute a command",
+        "errors": {
+          "failure": "$t(commands.revokeRolePermission.errors.failure)"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to revoke permission to execute command **{{commandId}}** by user **{{userName}}**?",
+          "success": "$t(commands.revokeRolePermission.messages.success)"
+        }
+      }
+    }
+  }
+}

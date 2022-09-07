@@ -23,6 +23,7 @@
   "homepage": "https://github.com/lechkulina/Scores#readme",
   "dependencies": {
     "eris": "^0.17.1",
+    "i18next": "^21.9.1",
     "sqlite3": "^5.0.11"
   }
 }

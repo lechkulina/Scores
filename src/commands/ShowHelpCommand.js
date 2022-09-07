@@ -23,11 +23,13 @@ class ShowHelpInteractionHandler extends InteractionHandler {
           this.translate('commands.showHelp.messages.summary', {
             allowedCommandsCount: this.allowedCommandsCount,
           }),
-          ...this.commands.map(command => this.translate('commands.showHelp.messages.command', {
-            allowed: command.allowed,
-            id: command.id,
-            description: command.description,
-          }))
+          ...this.commands.map(command => {
+            const translateKey = `commands.showHelp.messages.${command.allowed ? 'allowedCommand' : 'notAllowedCommand'}`;
+            return this.translate(translateKey, {
+              id: command.id,
+              description: command.description,
+            });
+          })
         ].join(Entities.NewLine),
       });
     } catch (error) {

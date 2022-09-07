@@ -67,9 +67,9 @@ class ChangePointsCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.changePoints.description'));
     this.addOption(new UserOption(this.translate('commands.changePoints.options.user')));
-    this.addOption(new RecentlyGivenPointsOption(this.translate('commands.removePoints.options.recentlyGivenPoints')));
-    this.addOption(new ReasonOption(this.translate('commands.addPoints.options.reason')));
-    this.addOption(new NumberOption(OptionId.Points, this.translate('commands.addPoints.options.points')));
+    this.addOption(new RecentlyGivenPointsOption(this.translate('commands.changePoints.options.recentlyGivenPoints')));
+    this.addOption(new ReasonOption(this.translate('commands.changePoints.options.reason')));
+    this.addOption(new NumberOption(OptionId.Points, this.translate('commands.changePoints.options.points')));
     return Promise.resolve();
   }
 

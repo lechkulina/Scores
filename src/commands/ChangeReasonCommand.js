@@ -16,11 +16,11 @@ class ChangeReasonInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     if (this.name === '') {
       this.markAsDone();
-      return interaction.createMessage(this.translate('commands.addReason.errors.invalidName'));
+      return interaction.createMessage(this.translate('commands.changeReason.errors.invalidName'));
     }
     if (this.min >= this.max) {
       this.markAsDone();
-      return interaction.createMessage(this.translate('commands.addReason.errors.invalidRange', {
+      return interaction.createMessage(this.translate('commands.changeReason.errors.invalidRange', {
         min: this.min,
         max: this.max,
       }));
@@ -73,10 +73,10 @@ class ChangeReasonCommand extends Command {
 
   initialize() {
     this.setDescription(this.translate('commands.changeReason.description'));
-    this.addOption(new ReasonOption(this.translate('commands.removeReason.options.reason')));
-    this.addOption(new StringOption(OptionId.Name, this.translate('commands.addReason.options.name')));
-    this.addOption(new NumberOption(OptionId.Min, this.translate('commands.addReason.options.min')));
-    this.addOption(new NumberOption(OptionId.Max, this.translate('commands.addReason.options.max')));
+    this.addOption(new ReasonOption(this.translate('commands.changeReason.options.reason')));
+    this.addOption(new StringOption(OptionId.Name, this.translate('commands.changeReason.options.name')));
+    this.addOption(new NumberOption(OptionId.Min, this.translate('commands.changeReason.options.min')));
+    this.addOption(new NumberOption(OptionId.Max, this.translate('commands.changeReason.options.max')));
     return Promise.resolve();
   }
 

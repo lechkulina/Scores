@@ -1,0 +1,187 @@
+{
+  "main": {
+    "common": {
+      "no": "Nie",
+      "yes": "Tak",
+      "done": "Zrobiono",
+      "canceled": "Anulowano",
+      "rankingPosition": "Pozycja w rankingu",
+      "acquireDate": "Data przyznania",
+      "points": "Punkty",
+      "giverName": "Osoba przynająca",
+      "sendHimDirectMessage": "Wyślij mu prywatną wiadomość",
+      "createPublicMessage": "Stwórz wiadomość na kanale publicznym",
+      "doBoth": "Wykonaj jedno i drugie",
+      "reasonName": "Powód przyznania",
+      "role": "Rola",
+      "command": "Polecenie",
+      "user": "Uzytkownik"
+    },
+    "autoCompete": {
+      "recentlyGivenPoints": "{{points}} punkty przyznane dnia {{acquireDate}} z powodu {{reasonName}}"
+    },
+    "commands": {
+      "errors": {
+        "notAllowed": "❌ Nie masz uprawnień do wykonania polecenia **{{commandId}}**"
+      },
+      "addPoints": {
+        "description": "Dodaje punkty uzytkownikowi",
+        "options": {
+          "user": "Uzytkownik któremu zostaną dodane punkty",
+          "reason": "Powód dodania punktów",
+          "points": "Liczba punktów"
+        },
+        "errors": {
+          "invalidRange": "❗ Prawidłowy zakres punktów dla powodu **{{reasonName}}** wynosi od {{min}} do {{max}}",
+          "failure": "❗ Nie udało się dodać **{{points}}** punktów uzytkownikowi **{{userName}}**"
+        },
+        "messages": {
+          "success": "✅ Dodano **{{points}}** punkty uzytkownikowi **{{userName}}** z powodu **{{reasonName}}**\nCzy chcesz wysłać notyfikacje?",
+          "directMessage": "{{giverName}} dodał tobie **{{points}}** punkty z powodu {{reasonName}.",
+          "directMessageSent": "✅ Wiadomość prywatna do uzytkownika **{{userName}}** została wysłana.",
+          "publicMessage": "**{{userName}}** zyskał **{{points}}** punkty z powodu {{reasonName}.",
+          "publicMessageCreated": "✅ Publiczna wiadomość została stworzona na kanale **{{channelName}}**"
+        }
+      },
+      "removePoints": {
+        "description": "Usuwa wcześniej dodane uzytkownikowi punkty",
+        "options": {
+          "user": "Uzytkownik, któremu nalezy usunąć punkty",
+          "recentlyGivenPoints": "Ostatnio przyznane punkty przez ciebie punkty"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się usunąć **{{points}}** punktów uzytkownikowi **{{userName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz usunąć **{{points}}** punkty uzytkownikowi **{{userName}}** dnia {{acquireDate}} z powodu {{reasonName}}?",
+          "success": "✅ Usunięto punkty uzytkownikowi **{{userName}}**"
+        }
+      },
+      "changePoints": {
+        "description": "Zmiania wcześniej dodane uzytkownikowi punkty",
+        "options": {
+          "user": "Uzytkownik, któremu nalezy zmienić punkty",
+          "recentlyGivenPoints": "$t(commands.removePoints.options.recentlyGivenPoints)",
+          "reason": "$t(commands.addPoints.options.reason)",
+          "points": "$(commands.addPoints.options.points)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się zmienić **{{points}}** punktów uzytkownikowi **{{userName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz zmienić **{{points}}** punkty uzytkownikowi **{{userName}}** z dnia {{acquireDate}} z powodu {{reasonName}}?",
+          "success": "✅ Zmieniono punkty uzytkownikowi **{{userName}}**"
+        }
+      },
+      "showPoints": {
+        "description": "Pokazuje punkty przyznane uzytkownikowi",
+        "errors": {
+          "failure": "❗ Nie udało się pobrać punktów dla uzytkownika **{{userName}}**"
+        },
+        "messages": {
+          "summary": "➡ Masz **{{points}}** punktów zdobytych pomiędzy {{minAcquireDate}} a {{maxAcquireDate}}",
+          "recentPoints": "⬇ {{pointsCount}} ostatnio przyznane punkty",
+          "rankingPositions": "⬇ Pozycje w rankingu"
+        }
+      },
+      "addReason": {
+        "description": "Dodaje nowy powód do przyznawania punktów",
+        "options": {
+          "name": "Nazwa powodu dodania punktów",
+          "min": "Minimalna liczba punktów jaką mozna przyznać",
+          "max": "Maksymalna liczba punktów jaką mozna przyznać"
+        },
+        "errors": {
+          "invalidName": "❗ Nazwa powodu do przyznawania punktów nie moze być pusta.",
+          "invalidRange": "❗ Nieprawidłowy zakres punktów - wartość minimalna {{min}} nie moze byc wieksza lub równa wartości maksymalnej {{max}}",
+          "failure": "❗ Nie udało się dodać nowego powodu do przyznawania punktów."
+        },
+        "messages": {
+          "success": "✅ Dodano nowy powód do przynawania punktów **{{reasonName}}**"
+        }
+      },
+      "removeReason": {
+        "description": "Usuwa istniejący powód do przyznawania punktów",
+        "options": {
+          "reason": "Powód dodania punktów"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się usunąć powodu do przyznawania punktów **{{reasonName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz usunąć powód do przyznania punktów **{{reasonName}}**?",
+          "success": "✅ Usunięto powód przyznania punktów **{{reasonName}}**"
+        }
+      },
+      "changeReason": {
+        "description": "Zmienia istniejący powód do przyznawania punktów",
+        "options": {
+          "reason": "$(commands.removeReason.options.reason)",
+          "name": "$(commands.addReason.options.name)",
+          "min": "$(commands.addReason.options.min)",
+          "max": "$(commands.addReason.options.max)"
+        },
+        "errors": {
+          "invalidName": "$(commands.addReason.errors.invalidName)",
+          "invalidRange": "$(commands.addReason.errors.invalidRange)",
+          "failure": "❗ Nie udało się zmianić powodu do przyznawania punktów **{{reasonName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz zmienić powód do przyznania punktów **{{reasonName}}**?",
+          "success": "✅ Zmieniono powód przyznania punktów **{{reasonName}}**"
+        }
+      },
+      "showHelp": {
+        "description": "Pokazuje listę dostępnych poleceń",
+        "errors": {
+          "failure": "❗ Nie udało się wyświetlić pomocy"
+        },
+        "messages": {
+          "summary": "⬇ Masz dostęp do {{allowedCommandsCount}} poleceń",
+          "allowedCommand": "✅ **{{id}}** - {{description}}",
+          "notAllowedCommand": "❌ **{{id}}** - {{description}}"
+        }
+      },
+      "grantRolePermission": {
+        "description": "Nadaje uprawnienia do wykonywania polecenia roli",
+        "errors": {
+          "failure": "❗ Nie udało się nadać uprawnień do wykonywania polecnia **{{commandId}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz nadać uprawnienia do wykonywania polecnia **{{commandId}}** roli **{{roleName}}**?",
+          "success": "✅ Nadano uprawnienia do wykonywania polecenia **{{commandId}}**"
+        }
+      },
+      "revokeRolePermission": {
+        "description": "Odbiera uprawnienia do wykonywania polecenia roli",
+        "errors": {
+          "failure": "❗ Nie udało się odebrać uprawnień do wykonywania polecnia **{{commandId}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz odebrać uprawnienia do wykonywania polecnia **{{commandId}}** roli **{{roleName}}**?",
+          "success": "✅ Odebrano uprawnienia do wykonywania polecenia **{{commandId}}**"
+        }
+      },
+      "grantUserPermission": {
+        "description": "Nadaje uprawnienia do wykonywania polecenia uzytkownikowi",
+        "errors": {
+          "failure": "$t(commands.grantRolePermission.errors.failure)"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz nadać uprawnienia do wykonywania polecnia **{{commandId}}** uzytkownikowi **{{userName}}**?",
+          "success": "$t(commands.grantRolePermission.messages.success)"
+        }
+      },
+      "revokeUserPermission": {
+        "description": "Odbiera uprawnienia do wykonywania polecenia uzytkownikowi",
+        "errors": {
+          "failure": "$t(commands.revokeRolePermission.errors.failure)"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz odebrać uprawnienia do wykonywania polecnia **{{commandId}}** uzytkownikowi **{{userName}}**?",
+          "success": "$t(commands.revokeRolePermission.messages.success)"
+        }
+      }
+    }
+  }
+}

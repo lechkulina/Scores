@@ -8,13 +8,14 @@ class InteractionManager {
     this.client = client;
     this.dataModel = dataModel;
     this.settings = new Settings(this.dataModel);
-    this.translatorsFactory = new TranslatorsFactory(this.settings);
+    this.translatorsFactory = new TranslatorsFactory(this.client, this.settings);
     this.commandsManager = new CommandsManager(this.client, this.translatorsFactory, this.dataModel);
     this.interactionHandlers = new Map();
   }
 
   async initialize() {
     await this.settings.initialize();
+    await this.translatorsFactory.initialize();
     await this.commandsManager.initialize();
   }
 
@@ -25,7 +26,7 @@ class InteractionManager {
       await interaction.acknowledge();
       return;
     }
-    const translate = await this.translatorsFactory.createTranslator(interaction);
+    const translate = await this.translatorsFactory.getTranslator(interaction);
     const userId = interaction.member.user.id;
     const rolesIds = interaction.member.roles;
     const allowed = true; // await this.dataModel.isAllowed(userId, rolesIds, commandId);
@@ -57,7 +58,7 @@ class InteractionManager {
       return interaction.result([]);
     }
     const optionValue = focusedOption?.value || '';
-    const translate = await this.translatorsFactory.createTranslator(interaction);
+    const translate = await this.translatorsFactory.getTranslator(interaction);
     return option.getAutoCompeteResults(interaction, this.dataModel, translate, optionValue);
   }
   

@@ -44,9 +44,9 @@ class AddPointsInteractionHandler extends InteractionHandler {
       components: [
         actionRow([
           button(ButtonId.No, this.translate('common.no')),
-          button(ButtonId.SendDirectMessage, this.translate('buttons.sendHimDirectMessage')),
-          button(ButtonId.CreatePublicMessage, this.translate('buttons.createPublicMessage')),
-          button(ButtonId.DoBoth, this.translate('buttons.doBoth')),
+          button(ButtonId.SendDirectMessage, this.translate('common.sendHimDirectMessage')),
+          button(ButtonId.CreatePublicMessage, this.translate('common.createPublicMessage')),
+          button(ButtonId.DoBoth, this.translate('common.doBoth')),
         ]),
       ],
     });

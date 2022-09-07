@@ -1,4 +1,3 @@
-const supportedCommands = require('./Commands/supportedCommands.js');
 const config = require('../config.js');
 
 class CommandsManager {
@@ -33,8 +32,8 @@ class CommandsManager {
   }
 
   async initialize() {
-    const translate = await this.translatorsFactory.createTranslator();
-    supportedCommands.forEach(Command => {
+    const translate = await this.translatorsFactory.getTranslator();
+    require('./commands/commands.js').forEach(Command => {
       const command = new Command(translate);
       this.commands.set(command.name, command);
     });

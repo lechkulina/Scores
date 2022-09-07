@@ -1,21 +1,21 @@
 const {Constants: {ButtonStyles}} = require('eris');
 const CommandOption = require('../CommandOption');
-const {OptionId, RoleOption} = require('../Options');
+const {OptionId, UserOption} = require('../Options');
 const Command = require('../Command');
 const InteractionHandler = require('../InteractionHandler');
 const {ButtonId, actionRow, button} = require('../Components');
 
-class RevokeRolePermissionInteractionHandler extends InteractionHandler {
+class GrantRolePermissionInteractionHandler extends InteractionHandler {
   async initialize(interaction) {
-    this.role = this.findRole(interaction.guildID, this.getOptionValue(OptionId.Role));
+    this.member = await this.findMember(interaction.guildID, this.getOptionValue(OptionId.User));
     this.commandId = this.getOptionValue(OptionId.Command);
   }
 
   async handleCommandInteraction(interaction) {
     return interaction.createMessage({
-      content: this.translate('commands.revokeRolePermission.messages.confirmation', {
+      content: this.translate('commands.grantUserPermission.messages.confirmation', {
         commandId: this.commandId,
-        roleName: this.role.name,
+        userName: this.member.user.username,
       }),
       components: [
         actionRow([
@@ -26,14 +26,16 @@ class RevokeRolePermissionInteractionHandler extends InteractionHandler {
     });
   }
 
-  async grantRolePermission() {
+  async grantUserPermission() {
     try {
-      await this.dataModel.revokeRolePermission(this.role.id, this.commandId);
-      return this.translate('commands.revokeRolePermission.messages.success', {
+      await this.dataModel.addGuild(this.member.guild.id, this.member.guild.name);
+      await this.dataModel.addUser(this.member.user.id, this.member.user.username, this.member.user.discriminator, this.member.guild.id);
+      await this.dataModel.grantUserPermission(this.member.user.id, this.commandId);
+      return this.translate('commands.grantUserPermission.messages.success', {
         commandId: this.commandId,
       });
     } catch (error) {
-      return this.translate('commands.revokeRolePermission.errors.failure', {
+      return this.translate('commands.grantUserPermission.errors.failure', {
         commandId: this.commandId,
       });
     }
@@ -47,28 +49,28 @@ class RevokeRolePermissionInteractionHandler extends InteractionHandler {
         case ButtonId.No:
           return Promise.resolve(this.translate('common.canceled'));
         case ButtonId.Yes:
-          return this.grantRolePermission();
+          return this.grantUserPermission();
       }
     })();
     return interaction.createMessage(content);
   }
 }
 
-class RevokeRolePermissionCommand extends Command {
+class GrantUserPermissionCommand extends Command {
   constructor(translate) {
-    super(translate, 'revoke-role-permission');
+    super(translate, 'grant-user-permission');
   }
 
   initialize() {
-    this.setDescription(this.translate('commands.revokeRolePermission.description'));
-    this.addOption(new RoleOption(this.translate('commands.grantRolePermission.options.role')));
-    this.addOption(new CommandOption(this.translate('commands.grantRolePermission.options.command')));
+    this.setDescription(this.translate('commands.grantUserPermission.description'));
+    this.addOption(new UserOption(this.translate('common.user')));
+    this.addOption(new CommandOption(this.translate('common.command')));
     return Promise.resolve();
   }
 
   createInteractionHandler(...props) {
-    return new RevokeRolePermissionInteractionHandler(...props);
+    return new GrantRolePermissionInteractionHandler(...props);
   }
 }
 
-module.exports = RevokeRolePermissionCommand;
+module.exports = GrantUserPermissionCommand;
