@@ -15,7 +15,8 @@
       "reasonName": "Powód przyznania",
       "role": "Rola",
       "command": "Polecenie",
-      "user": "Uzytkownik"
+      "user": "Uzytkownik",
+      "contest": "Konkurs"
     },
     "validators": {
       "invalidLength": "❗ **{{description}}** ma nieprawidłową długość. Musi mieścić się w zakresie od {{min}} do {{max}} znaków",
@@ -198,10 +199,28 @@
           "votingEndDate": "Data zakończenia głosowania"
         },
         "errors": {
-          "failure": "❗ Nie udało się dodać nowego konkursu"
+          "failure": "❗ Nie udało się dodać nowego konkursu **{{contestName}}**"
         },
         "messages": {
-          "success": "✅ Dodano nowy konkurs **{{name}}**"
+          "success": "✅ Dodano nowy konkurs **{{contestName}}**"
+        }
+      },
+      "changeContest": {
+        "description": "Zmienia istniejący konkurs",
+        "options": {
+          "name": "$(commands.addContest.options.name)",
+          "description": "$(commands.addContest.options.description)",
+          "activeBeginDate": "$(commands.addContest.options.activeBeginDate)",
+          "activeEndDate": "$(commands.addContest.options.activeEndDate)",
+          "votingBeginDate": "$(commands.v.options.votingBeginDate)",
+          "votingEndDate": "$(commands.addContest.options.votingEndDate)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się zmienić konkursu **{{contestName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz zmienić konkurs **{{contestName}}**?",
+          "success": "✅ Zmieniono konkurs **{{contestName}}**"
         }
       }
     }

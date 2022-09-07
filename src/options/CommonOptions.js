@@ -16,6 +16,7 @@ const OptionId = {
   ActiveEndDate: 'active-end-date',
   VotingBeginDate: 'voting-begin-date',
   VotingEndDate: 'voting-end-date',
+  Contest: 'contest',
 };
 
 class NumberOption extends Option {

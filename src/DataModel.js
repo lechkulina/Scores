@@ -30,7 +30,9 @@ class DataModel {
   async changeReason(reasonId, name, min, max) {
     await this.database.run(`
       UPDATE Reason
-      SET name = "${name}", min = ${min}, max = ${max}
+      SET name = "${name}",
+          min = ${min},
+          max = ${max}
       WHERE id = ${reasonId};
     `);
     this.reasonsCache.clear();
@@ -80,7 +82,8 @@ class DataModel {
   changePoints(pointsId, points, reasonId) {
     return this.database.run(`
       UPDATE Points
-      SET points = ${points}, reasonId = ${reasonId}
+      SET points = ${points},
+          reasonId = ${reasonId}
       WHERE id = ${pointsId};
     `);
   }
@@ -250,10 +253,39 @@ class DataModel {
     `);
   }
 
-  addContest(name, description, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId) {
+  addContest(guildId, name, description, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate) {
     return this.database.run(`
       INSERT OR REPLACE INTO Contest(name, description, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId)
       VALUES ("${name}", "${description}", ${activeBeginDate}, ${activeEndDate}, ${votingBeginDate}, ${votingEndDate}, "${guildId}");
+    `);
+  }
+
+  getContestsNames(guildId) {
+    return this.database.all(`
+      SELECT id, name
+      FROM Contest
+      WHERE guildId = "${guildId}";
+    `);
+  }
+
+  getContest(guildId, contestId) {
+    return this.database.get(`
+      SELECT id, name, description, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate
+      FROM Contest
+      WHERE id = "${contestId}" AND guildId = "${guildId}";
+    `);
+  }
+
+  async changeContest(guildId, contestId, name, description, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate) {
+    return this.database.run(`
+      UPDATE Contest
+      SET name = "${name}",
+          description = "${description}",
+          activeBeginDate = ${activeBeginDate},
+          activeEndDate = ${activeEndDate},
+          votingBeginDate = ${votingBeginDate},
+          votingEndDate = ${votingEndDate}
+      WHERE id = "${contestId}" AND guildId = "${guildId}";
     `);
   }
 

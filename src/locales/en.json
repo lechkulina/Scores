@@ -15,7 +15,8 @@
       "reasonName": "Reason for granting",
       "role": "Role",
       "command": "Command",
-      "user": "User"
+      "user": "User",
+      "contest": "Contest"
     },
     "validators": {
       "invalidLength": "❗ **{{description}}** has invalid value. It must be between {{minNameLength}} and {{maxNameLength}}",
@@ -202,6 +203,24 @@
         },
         "messages": {
           "success": "✅ Added new contest **{{name}}**"
+        }
+      },
+      "changeContest": {
+        "description": "Changes existing contest",
+        "options": {
+          "name": "$(commands.addContest.options.name)",
+          "description": "$(commands.addContest.options.description)",
+          "activeBeginDate": "$(commands.addContest.options.activeBeginDate)",
+          "activeEndDate": "$(commands.addContest.options.activeEndDate)",
+          "votingBeginDate": "$(commands.v.options.votingBeginDate)",
+          "votingEndDate": "$(commands.addContest.options.votingEndDate)"
+        },
+        "errors": {
+          "failure": "❗ Failed to changed contest **{{contestName}}**"
+        },
+        "messages": {
+          "confirmation": "❓Are you sure you want to change contest **{{contestName}}**?",
+          "success": "✅ Changed contest **{{contestName}}**"
         }
       }
     }

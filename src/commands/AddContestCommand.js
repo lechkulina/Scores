@@ -16,21 +16,23 @@ class AddContestInteractionHandler extends InteractionHandler {
     ]);
     try {
       await this.dataModel.addContest(
+        interaction.guildID,
         name,
         description,
         activeBeginDate.unix(),
         activeEndDate.unix(),
         votingBeginDate.unix(),
-        votingEndDate.unix(),
-        interaction.guildID
+        votingEndDate.unix()
       );
       return interaction.createMessage({
         content: this.translate('commands.addContest.messages.success', {
-          name,
+          contestName: name,
         })
       });
     } catch (error) {
-      return interaction.createMessage(this.translate('commands.addContest.errors.failure'));
+      return interaction.createMessage(this.translate('commands.addContest.errors.failure', {
+        contestName: name,
+      }));
     }
   }
 }
