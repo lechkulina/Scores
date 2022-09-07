@@ -186,6 +186,23 @@
           "confirmation": "❓ Are you sure you want to revoke permission to execute command **{{commandId}}** by user **{{userName}}**?",
           "success": "$t(commands.revokeRolePermission.messages.success)"
         }
+      },
+      "addContest": {
+        "description": "Adds new contest",
+        "options": {
+          "name": "Contest name",
+          "description": "Contest description",
+          "activeBeginDate": "Contest begin date",
+          "activeEndDate": "Contest end date",
+          "votingBeginDate": "Voting begin date",
+          "votingEndDate": "Voting end date"
+        },
+        "errors": {
+          "failure": "❗ Failed to add new contest"
+        },
+        "messages": {
+          "success": "✅ Added new contest **{{name}}**"
+        }
       }
     }
   }

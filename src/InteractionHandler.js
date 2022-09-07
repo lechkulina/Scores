@@ -15,6 +15,10 @@ class InteractionHandler {
     return this.optionsValues.get(optionName);
   }
 
+  getOptionValues(optionsIds) {
+    return optionsIds.map(optionId => this.optionsValues.get(optionId));
+  }
+
   isDone() {
     return this.done;
   }

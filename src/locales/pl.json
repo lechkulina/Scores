@@ -186,6 +186,23 @@
           "confirmation": "❓ Czy na pewno chcesz odebrać uprawnienia do wykonywania polecnia **{{commandId}}** uzytkownikowi **{{userName}}**?",
           "success": "$t(commands.revokeRolePermission.messages.success)"
         }
+      },
+      "addContest": {
+        "description": "Dodaje nowy konkurs",
+        "options": {
+          "name": "Nazwa konkursu",
+          "description": "Opis konkursu",
+          "activeBeginDate": "Data rozpoczęcia konkursu",
+          "activeEndDate": "Data zakończenia konkursu",
+          "votingBeginDate": "Data rozpoczęcia głosowania",
+          "votingEndDate": "Data zakończenia głosowania"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się dodać nowego konkursu"
+        },
+        "messages": {
+          "success": "✅ Dodano nowy konkurs **{{name}}**"
+        }
       }
     }
   }

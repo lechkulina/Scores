@@ -11,7 +11,6 @@ class DatesValidator extends Validator {
 
   async validate(translate, optionsValues) {
     const dateInputFormat = await this.settings.get('dateInputFormat');
-    console.info('dateInputFormat=', dateInputFormat);
     const issues = [];
     this.optionsIds.forEach(optionId => {
       const option = this.options.get(optionId);

@@ -13,7 +13,7 @@ const OptionId = {
   Max: 'max',
   Description: 'description',
   ActiveBeginDate: 'active-begin-date',
-  ActiveEndDate: 'active-end-eate',
+  ActiveEndDate: 'active-end-date',
   VotingBeginDate: 'voting-begin-date',
   VotingEndDate: 'voting-end-date',
 };
