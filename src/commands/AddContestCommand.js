@@ -17,14 +17,14 @@ class AddContestInteractionHandler extends InteractionHandler {
     ]);
     try {
       await this.dataModel.addContest(
-        interaction.guildID,
         name,
         description,
         announcementDate.unix(),
         activeBeginDate.unix(),
         activeEndDate.unix(),
         votingBeginDate.unix(),
-        votingEndDate.unix()
+        votingEndDate.unix(),
+        interaction.guildID
       );
       return interaction.createMessage({
         content: this.translate('commands.addContest.messages.success', {

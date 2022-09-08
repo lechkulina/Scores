@@ -5,7 +5,7 @@ const Command = require('./Command');
 
 class RemoveContestInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
-    this.contest = await this.dataModel.getContest(interaction.guildID, this.getOptionValue(OptionId.Contest));
+    this.contest = await this.dataModel.getContest(this.getOptionValue(OptionId.Contest));
     return interaction.createMessage({
       content: this.translate('commands.removeContest.messages.confirmation', {
         contestName: this.contest.name,
@@ -17,7 +17,7 @@ class RemoveContestInteractionHandler extends InteractionHandler {
   async handleComponentInteraction(interaction) {
     return this.handleConfirmationForm(interaction, async () => {
       try {
-        await this.dataModel.removeContest(interaction.guildID, this.contest.id);
+        await this.dataModel.removeContest(this.contest.id);
         return this.translate('commands.removeContest.messages.success', {
           contestName: this.contest.name,
         });

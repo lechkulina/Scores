@@ -1,9 +1,8 @@
 const Database = require('./Database');
 
 class DataModel {
-  constructor(client) {
+  constructor() {
     this.database = new Database();
-    this.client = client;
     this.reasonsCache = new Map();
   }
 
@@ -253,10 +252,31 @@ class DataModel {
     `);
   }
 
-  addContest(guildId, name, description, announcementDate, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate) {
-    return this.database.run(`
-      INSERT OR REPLACE INTO Contest(name, description, announcementDate, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId)
-      VALUES ("${name}", "${description}", ${announcementDate}, ${activeBeginDate}, ${activeEndDate}, ${votingBeginDate}, ${votingEndDate}, "${guildId}");
+  async addContest(name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId) {
+    await this.database.run(`
+      INSERT OR REPLACE INTO Contest(name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId)
+      VALUES ("${name}", "${description}", ${announcementsThreshold}, ${activeBeginDate}, ${activeEndDate}, ${votingBeginDate}, ${votingEndDate}, "${guildId}");
+    `);
+  }
+
+  async changeContest(contestId, name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate) {
+    await this.database.run(`
+      UPDATE Contest
+      SET name = "${name}",
+          description = "${description}",
+          announcementsThreshold = "${announcementsThreshold}",
+          activeBeginDate = ${activeBeginDate},
+          activeEndDate = ${activeEndDate},
+          votingBeginDate = ${votingBeginDate},
+          votingEndDate = ${votingEndDate}
+      WHERE id = "${contestId}";
+    `);
+  }
+
+  async removeContest(contestId) {
+    await this.database.run(`
+      DELETE FROM Contest
+      WHERE id = ${contestId} AND guildId = "${guildId}";
     `);
   }
 
@@ -268,32 +288,83 @@ class DataModel {
     `);
   }
 
-  getContest(guildId, contestId) {
+  getContests() {
     return this.database.get(`
-      SELECT id, name, description, announcementDate, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate
+      SELECT id, name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate
+      FROM Contest;
+    `);
+  }
+
+  getContest(contestId) {
+    return this.database.get(`
+      SELECT id, name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate
       FROM Contest
-      WHERE id = "${contestId}" AND guildId = "${guildId}";
+      WHERE id = "${contestId}";
     `);
   }
 
-  changeContest(guildId, contestId, name, description, announcementDate, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate) {
-    return this.database.run(`
-      UPDATE Contest
-      SET name = "${name}",
-          description = "${description}",
-          announcementDate = "${announcementDate}",
-          activeBeginDate = ${activeBeginDate},
-          activeEndDate = ${activeEndDate},
-          votingBeginDate = ${votingBeginDate},
-          votingEndDate = ${votingEndDate}
-      WHERE id = "${contestId}" AND guildId = "${guildId}";
+  async addMessage(guildId, channelId, messageId, messageChunks) {
+    const values = messageChunks.map(
+      ({id, hash}, position) => `("${id}", "${hash}", ${position}, "${messageId}")`
+    );
+    if (values.length === 0) {
+      return;
+    }
+    await this.database.exec(`
+      BEGIN TRANSACTION;
+        INSERT OR REPLACE INTO Message(id, guildId, channelId)
+        VALUES ("${messageId}", "${guildId}", "${channelId}");
+        INSERT INTO MessageChunk(id, hash, position, messageId)
+        VALUES ${values.join(', ')};
+      COMMIT;
     `);
   }
 
-  removeContest(guildId, contestId) {
-    return this.database.run(`
-      DELETE FROM Contest
-      WHERE id = ${contestId} AND guildId = "${guildId}";
+  async updateMessage(updatedMessageChunks, obsoleteMessageChunks) {
+    const updates = updatedMessageChunks.map(
+      ({id, hash}) => (`
+        UPDATE MessageChunk
+        SET hash = "${hash}"
+        WHERE id = "${id}";
+      `)
+    );
+    const deletes = obsoleteMessageChunks.map(
+      ({id}) => (`
+        DELETE FROM MessageChunk
+        WHERE id = "${id}";
+      `)
+    );
+    if (updates.length === 0 && deletes.length === 0) {
+      return;
+    }
+    await this.database.exec(`
+      BEGIN TRANSACTION;
+        ${[...updates, ...deletes].join(' ')}
+      COMMIT;
+    `);
+  }
+
+  async removeMessage(messageId) {
+    await this.database.run(`
+      DELETE FROM Message
+      WHERE id = "${messageId}";
+    `);
+  }
+
+  getMessage(messageId) {
+    return this.database.get(`
+      SELECT id, guildId, channelId
+      FROM Message
+      WHERE id = "${messageId}";
+    `);
+  }
+
+  getMessageChunks(messageId) {
+    return this.database.all(`
+      SELECT id, hash
+      FROM MessageChunk
+      WHERE messageId = "${messageId}"
+      ORDER BY position ASC;
     `);
   }
 

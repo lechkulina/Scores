@@ -6,7 +6,7 @@ const Command = require('./Command');
 
 class ChangeContestInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
-    this.contest = await this.dataModel.getContest(interaction.guildID, this.getOptionValue(OptionId.Contest));
+    this.contest = await this.dataModel.getContest(this.getOptionValue(OptionId.Contest));
     this.name = this.getOptionValue(OptionId.Name);
     this.description = this.getOptionValue(OptionId.Description);
     this.announcementDate = this.getOptionValue(OptionId.AnnouncementDate);
@@ -26,7 +26,6 @@ class ChangeContestInteractionHandler extends InteractionHandler {
     return this.handleConfirmationForm(interaction, async () => {
       try {
         await this.dataModel.changeContest(
-          interaction.guildID,
           this.contest.id,
           this.name,
           this.description,

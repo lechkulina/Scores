@@ -1,6 +1,7 @@
 const Entities = {
   NoFormat: '```',
   NewLine: '\n',
+  EmptyLine: '\n\n',
   VerticalSeparator: '║',
   JointSeparator: '╬',
   HorizontalSeparator: '═',

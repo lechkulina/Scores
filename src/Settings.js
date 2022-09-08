@@ -24,6 +24,7 @@ const converters = {
   maxNameLength: NumberConverter,
   minDescriptionLength: NumberConverter,
   maxDescriptionLength: NumberConverter,
+  messageChunkSize: NumberConverter,
 };
 
 class Settings {
@@ -35,16 +36,17 @@ class Settings {
   async initialize() {
     // temporary settings
     return Promise.all([
-      this.set('publicChannelId', '1014636769989369938'),
+      this.set('publicChannelId', '1017504421200023592'),
       this.set('preferredLocale', 'pl'),
       this.set('useGuildLocale', false),
       this.set('recentPointsLimit', 6),
-        this.set('dateInputFormat', 'DD.MM.YYYY HH:mm'),
-        this.set('dateOuputFormat', 'DD.MM.YYYY HH:mm'),
-        this.set('minNameLength', 3),
-        this.set('maxNameLength', 200),
-        this.set('minDescriptionLength', 20),
-        this.set('maxDescriptionLength', 6000),
+      this.set('dateInputFormat', 'DD.MM.YYYY HH:mm'),
+      this.set('dateOuputFormat', 'DD.MM.YYYY HH:mm'),
+      this.set('minNameLength', 3),
+      this.set('maxNameLength', 200),
+      this.set('minDescriptionLength', 20),
+      this.set('maxDescriptionLength', 6000),
+      this.set('messageChunkSize', 4000),
     ]);
   }
 
