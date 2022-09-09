@@ -1,19 +1,18 @@
 const {OptionId, StringOption} = require('../options/CommonOptions');
 const ContestOption = require('../options/ContestOption');
-const {StringsLengthsValidator, FirstLetterValidator, DatesValidator, DatesRangesValidator} = require('../validators/validators');
+const {
+  StringsLengthsValidator,
+  FirstLetterValidator,
+  DatesValidator,
+  DatesRangesValidator,
+  NumbersValuesValidator
+} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const Command = require('./Command');
 
 class ChangeContestInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     this.contest = await this.dataModel.getContest(this.getOptionValue(OptionId.Contest));
-    this.name = this.getOptionValue(OptionId.Name);
-    this.description = this.getOptionValue(OptionId.Description);
-    this.announcementDate = this.getOptionValue(OptionId.AnnouncementDate);
-    this.activeBeginDate = this.getOptionValue(OptionId.ActiveBeginDate);
-    this.activeEndDate = this.getOptionValue(OptionId.ActiveEndDate);
-    this.votingBeginDate = this.getOptionValue(OptionId.VotingBeginDate);
-    this.votingEndDate = this.getOptionValue(OptionId.VotingEndDate);
     return interaction.createMessage({
       content: this.translate('commands.changeContest.messages.confirmation', {
         contestName: this.contest.name,
@@ -23,17 +22,26 @@ class ChangeContestInteractionHandler extends InteractionHandler {
   }
 
   async handleComponentInteraction(interaction) {
+    const [name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate] = this.getOptionValues([
+      OptionId.Name,
+      OptionId.Description,
+      OptionId.AnnouncementsThreshold,
+      OptionId.ActiveBeginDate,
+      OptionId.ActiveEndDate,
+      OptionId.VotingBeginDate,
+      OptionId.VotingEndDate,
+    ]);
     return this.handleConfirmationForm(interaction, async () => {
       try {
         await this.dataModel.changeContest(
           this.contest.id,
-          this.name,
-          this.description,
-          this.announcementDate.unix(),
-          this.activeBeginDate.unix(),
-          this.activeEndDate.unix(),
-          this.votingBeginDate.unix(),
-          this.votingEndDate.unix()
+          name,
+          description,
+          announcementsThreshold,
+          activeBeginDate.valueOf(),
+          activeEndDate.valueOf(),
+          votingBeginDate.valueOf(),
+          votingEndDate.valueOf()
         );
         return this.translate('commands.changeContest.messages.success', {
           contestName: this.contest.name,
@@ -58,7 +66,7 @@ class ChangeContestCommand extends Command {
       new ContestOption(this.translate('common.contest')),
       new StringOption(OptionId.Name, this.translate('commands.changeContest.options.name')),
       new StringOption(OptionId.Description, this.translate('commands.changeContest.options.description')),
-      new StringOption(OptionId.AnnouncementDate, this.translate('commands.addContest.options.announcementDate')),
+      new StringOption(OptionId.AnnouncementsThreshold, this.translate('commands.changeContest.options.announcementsThreshold')),
       new StringOption(OptionId.ActiveBeginDate, this.translate('commands.changeContest.options.activeBeginDate')),
       new StringOption(OptionId.ActiveEndDate, this.translate('commands.changeContest.options.activeEndDate')),
       new StringOption(OptionId.VotingBeginDate, this.translate('commands.changeContest.options.votingBeginDate')),
@@ -67,6 +75,7 @@ class ChangeContestCommand extends Command {
     this.addValidators([
       new StringsLengthsValidator([OptionId.Name], 'minNameLength', 'maxNameLength', this.settings, this.options),
       new StringsLengthsValidator([OptionId.Description], 'minDescriptionLength', 'maxDescriptionLength', this.settings, this.options),
+      new NumbersValuesValidator([OptionId.AnnouncementsThreshold], this.options),
       new FirstLetterValidator([OptionId.Name, OptionId.Description], this.options),
       new DatesValidator([
         OptionId.AnnouncementDate,
