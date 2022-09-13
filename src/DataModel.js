@@ -439,6 +439,13 @@ class DataModel extends EventEmitter {
     `);
   }
 
+  addContestCategory(name, max, useByDefault) {
+    return this.database.run(`
+      INSERT INTO ContestCategory(name, max, useByDefault)
+      VALUES ("${name}", ${max}, ${useByDefault ? 1 : 0});
+    `);
+  }
+
   async initialize() {
     await this.database.open();
     await this.createSchema();

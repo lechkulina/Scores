@@ -14,4 +14,5 @@ module.exports = [
   require('./AddContestCommand'),
   require('./ChangeContestCommand'),
   require('./RemoveContestCommand'),
+  require('./AddContestCategory'),
 ];

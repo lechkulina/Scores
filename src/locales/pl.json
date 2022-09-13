@@ -29,7 +29,7 @@
       "days_other": "{{count}} dni",
       "hours_one": "{{count}} godzina",
       "hours_few": "{{count}} godziny",
-      "hours_many": "{{count}} godziny",
+      "hours_many": "{{count}} godzin",
       "hours_other": "{{count}} godzin",
       "minutes_one": "{{count}} minuta",
       "minutes_few": "{{count}} minuty",
@@ -262,6 +262,20 @@
         "messages": {
           "confirmation": "❓ Czy na pewno chcesz usunąć konkurs **{{contestName}}**?",
           "success": "✅ Usunięto konkurs **{{contestName}}**"
+        }
+      },
+      "addContestCategory": {
+        "description": "Dodaje nową kategorię oceny prac konkursowych",
+        "options": {
+          "name": "Nazwa kategorii",
+          "max": "Maksymalna liczba punktów jaką mozna uzyskać w tej kategorii",
+          "useByDefault": "Uzywaj domyślnie w kazdym nowym konkursie"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się dodać nowej kategorii oceny pracy konkursowych"
+        },
+        "messages": {
+          "success": "✅ Dodano nową kategorię oceny prac konkursowych **{{categoryName}}**"
         }
       }
     }

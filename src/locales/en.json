@@ -246,6 +246,20 @@
           "confirmation": "❓Are you sure you want to remove contest **{{contestName}}**?",
           "success": "✅ Removed contest **{{contestName}}**"
         }
+      },
+      "addContestCategory": {
+        "description": "Adds new contest category",
+        "options": {
+          "name": "Category name",
+          "max": "Maximum number of points that can be assigned in this category",
+          "useByDefault": "Use this category by default in every new contest"
+        },
+        "errors": {
+          "failure": "❗ Failed to add new contest category"
+        },
+        "messages": {
+          "success": "✅ Added new contest category **{{categoryName}}**"
+        }
       }
     }
   }

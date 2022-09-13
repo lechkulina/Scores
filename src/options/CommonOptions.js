@@ -18,6 +18,7 @@ const OptionId = {
   VotingBeginDate: 'voting-begin-date',
   VotingEndDate: 'voting-end-date',
   Contest: 'contest',
+  UseByDefault: 'use-by-default',
 };
 
 class NumberOption extends Option {
@@ -29,6 +30,12 @@ class NumberOption extends Option {
 class StringOption extends Option {
   constructor(name, description, required = true) {
     super(name, description, ApplicationCommandOptionTypes.STRING, required, false);
+  }
+}
+
+class BooleanOption extends Option {
+  constructor(name, description, required = true) {
+    super(name, description, ApplicationCommandOptionTypes.BOOLEAN, required, false);
   }
 }
 
@@ -48,6 +55,7 @@ module.exports = {
   OptionId,
   NumberOption,
   StringOption,
+  BooleanOption,
   UserOption,
   RoleOption,
 };

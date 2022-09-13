@@ -1,14 +1,13 @@
 const moment = require('moment');
 const {DataModelEvents} = require('./DataModel');
 const {formatDuration, Entities} = require('./Formatters');
+const {msInHour} = require('./constants');
 
 const AnnouncementType = {
   Initial: 0,
   Reminder: 1,
   Final: 2,
 };
-
-const msInHour = 60 * 60 * 1000;
 
 function generateUpdateTaskId(announcementId) {
   return `update-announcement-${announcementId}`;
