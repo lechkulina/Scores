@@ -266,9 +266,21 @@ class DataModel extends EventEmitter {
   }
 
   async addContest(name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId) {
-    await this.database.run(`
-      INSERT INTO Contest(name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId)
-      VALUES ("${name}", "${description}", ${announcementsThreshold}, ${activeBeginDate}, ${activeEndDate}, ${votingBeginDate}, ${votingEndDate}, "${guildId}");
+    await this.database.exec(`
+      PRAGMA temp_store = 2;
+      BEGIN TRANSACTION;
+        INSERT INTO Contest(name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId)
+        VALUES ("${name}", "${description}", ${announcementsThreshold}, ${activeBeginDate}, ${activeEndDate}, ${votingBeginDate}, ${votingEndDate}, "${guildId}");
+
+        CREATE TEMP TABLE Variables AS SELECT last_insert_rowid() as contestId;
+
+        INSERT INTO ContestCategories(contestId, contestCategoryId)
+        SELECT Variables.contestId, ContestCategory.id
+        FROM ContestCategory, Variables
+        WHERE ContestCategory.useByDefault = 1;
+
+        DROP TABLE Variables;
+      COMMIT;
     `);
     this.emit(DataModelEvents.onContestAdded, guildId);
   }
