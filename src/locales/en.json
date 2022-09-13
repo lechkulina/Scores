@@ -18,6 +18,18 @@
       "user": "User",
       "contest": "Contest"
     },
+    "formatters": {
+      "weeks_one": "{{count}} week",
+      "weeks_other": "{{count}} weeks",
+      "days_one": "{{count}} day",
+      "days_other": "{{count}} days",
+      "hours_one": "{{count}} hour",
+      "hours_other": "{{count}} hours",
+      "minutes_one": "{{count}} minute",
+      "minutes_other": "{{count}} minutes",
+      "seconds_one": "{{count}} second",
+      "seconds_other": "{{count}} seconds"
+    },
     "validators": {
       "invalidLength": "❗ **{{description}}** has invalid value. It must be between {{minNameLength}} and {{maxNameLength}}",
       "invalidFirstLetter": "❗ **{{description}}** has to start from upper case letter",

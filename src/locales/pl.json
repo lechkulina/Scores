@@ -18,6 +18,28 @@
       "user": "Uzytkownik",
       "contest": "Konkurs"
     },
+    "formatters": {
+      "weeks_one": "{{count}} tydzień",
+      "weeks_few": "{{count}} tygodnie",
+      "weeks_many": "{{count}} tygodni",
+      "weeks_other": "{{count}} tygodni",
+      "days_one": "{{count}} dzień",
+      "days_few": "{{count}} dni",
+      "days_many": "{{count}} dni",
+      "days_other": "{{count}} dni",
+      "hours_one": "{{count}} godzina",
+      "hours_few": "{{count}} godziny",
+      "hours_many": "{{count}} godziny",
+      "hours_other": "{{count}} godzin",
+      "minutes_one": "{{count}} minuta",
+      "minutes_few": "{{count}} minuty",
+      "minutes_many": "{{count}} minut",
+      "minutes_other": "{{count}} minut",
+      "seconds_one": "{{count}} sekunda",
+      "seconds_few": "{{count}} sekundy",
+      "seconds_many": "{{count}} sekund",
+      "seconds_other": "{{count}} sekund"
+    },
     "validators": {
       "invalidLength": "❗ **{{description}}** ma nieprawidłową długość. Musi mieścić się w zakresie od {{min}} do {{max}} znaków",
       "invalidFirstLetter": "❗ **{{description}}** musi zaczynać się od duzej litery",

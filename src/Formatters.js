@@ -1,5 +1,8 @@
+const {msInSecond, msInMinute, msInHour, msInDay, msInWeek} = require('./constants');
+
 const Entities = {
   NoFormat: '```',
+  Bold: '**',
   NewLine: '\n',
   EmptyLine: '\n\n',
   VerticalSeparator: '║',
@@ -72,9 +75,36 @@ function formatEllipsis(text, limit) {
   return text.slice(0, textLengthLimit) + Entities.Ellipsis;
 }
 
+function formatDuration(translate, duration, includeSeconds = true) {
+  const sections = [];
+  const pushSection = (count, key) => {
+    if (count > 0) {
+      sections.push(translate(key, {count}));
+    }
+  };
+  const weeks = Math.floor(duration / msInWeek);
+  duration -= weeks * msInWeek;
+  const days = Math.floor(duration / msInDay);
+  duration -= days * msInDay;
+  const hours = Math.floor(duration / msInHour);
+  duration -= hours * msInHour;
+  const minutes = Math.floor(duration / msInMinute);
+  duration -= minutes * msInMinute;
+  pushSection(weeks, 'formatters.weeks');
+  pushSection(days, 'formatters.days');
+  pushSection(hours, 'formatters.hours');
+  pushSection(minutes, 'formatters.minutes');
+  if (includeSeconds) {
+    const seconds = Math.floor(duration / msInSecond);
+    pushSection(seconds, 'formatters.seconds');
+  }
+  return sections.join(' ');
+}
+
 module.exports = {
   Entities,
   formatTable,
   formatMessageTable,
   formatEllipsis,
+  formatDuration,
 };
