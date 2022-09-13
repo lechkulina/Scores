@@ -1,26 +1,41 @@
 const {CommandInteraction, AutocompleteInteraction, ComponentInteraction} = require('eris');
-const DataModel = require('./DataModel');
+const {DataModel} = require('./DataModel');
 const Settings = require('./Settings');
 const TranslatorsFactory = require('./TranslatorsFactory');
 const CommandsManager = require('./CommandsManager');
 const {Entities} = require('./Formatters');
+const MessagePublisher = require('./MessagePublisher');
+const TasksScheduler = require('./TasksScheduler');
+const ContestsAnnouncementsManager = require('./ContestsAnnouncementsManager');
 
 class InteractionManager {
   constructor(client) {
     this.client = client;
     this.dataModel = new DataModel(this.client);
     this.settings = new Settings(this.dataModel);
+    this.tasksScheduler = new TasksScheduler(this.settings);
     this.translatorsFactory = new TranslatorsFactory(this.client, this.settings);
+    this.messagePublisher = new MessagePublisher(this.client, this.dataModel, this.settings);
     this.interactionHandlers = new Map();
   }
 
   async initialize() {
     await this.dataModel.initialize();
     await this.settings.initialize();
+    await this.tasksScheduler.initialize();
     await this.translatorsFactory.initialize();
+    await this.messagePublisher.initialize();
     this.translate = await this.translatorsFactory.getTranslator();
     this.commandsManager = new CommandsManager(this.client, this.dataModel, this.settings, this.translate);
+    this.contestsAnnouncementsManager = new ContestsAnnouncementsManager(
+      this.dataModel,
+      this.settings,
+      this.tasksScheduler,
+      this.messagePublisher,
+      this.translate
+    );
     await this.commandsManager.initialize();
+    await this.contestsAnnouncementsManager.initialize();
   }
 
   async createInteractionHandler(interaction) {
