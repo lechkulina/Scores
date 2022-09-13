@@ -11,6 +11,9 @@ class MessagePublisher extends ClientSupport {
   constructor(client, dataModel, settings) {
     super(client, settings);
     this.dataModel = dataModel;
+    this.removeMessagesLock = Promise.resolve();
+    this.onMessageDeleteCallback = this.onMessageDelete.bind(this);
+    this.onMessageDeleteBulkCallback = this.onMessageDeleteBulk.bind(this);
   }
 
   divideContentIntoSections(content, sectionSize) {
@@ -125,7 +128,7 @@ class MessagePublisher extends ClientSupport {
       console.error(`Failed to create message chunks for message ${messageId} - got error ${error}`);
       return;
     }
-    // update the model
+    // update the model - message id is the id of the first chunk
     const messageId = messageChunks[0].id;
     await this.dataModel.addMessage(guildId, channelId, messageId, messageChunks);
     return messageId;
@@ -135,7 +138,7 @@ class MessagePublisher extends ClientSupport {
     // create content chunks and check if the message should exists
     const newContentChunks = await this.createContentChunks(content);
     if (newContentChunks.length === 0) {
-      return this.deleteMessage(messageId);
+      return this.removeMessages([messageId]);
     }
     // get storged message and fetch it's channel
     const message = await this.dataModel.getMessage(messageId);
@@ -196,36 +199,70 @@ class MessagePublisher extends ClientSupport {
       }
     }
     // update the model
-    await this.dataModel.updateMessage(updatedMessageChunks, obsoleteMessageChunks);
+    return this.dataModel.updateMessage(messageId, updatedMessageChunks, obsoleteMessageChunks);
   }
 
-  async deleteMessage(messageId) {
-    // get storged message and fetch it's channel
-    const message = await this.dataModel.getMessage(messageId);
-    if (!message) {
-      console.error(`Unable to delete message ${messageId} - unknown message`);
-      return;
-    }
-    const channel = this.findChannel(message.guildId, message.channelId);
-    if (!channel) {
-      console.error(`Unable to delete message - channel ${message.channelId} is missing`);
-      return;
-    }
-    // delete obsolete message chunks
-    const obsoleteMessageChunks = await this.dataModel.getMessageChunks(messageId);
-    if (obsoleteMessageChunks.length > 0) {
-      console.debug(`Deleting ${obsoleteMessageChunks.length} message chunks from message ${messageId}`);
-      try {
-        for (const messageChunk of obsoleteMessageChunks) {
-          await channel.deleteMessage(messageChunk.id);
+  removeMessages(messagesIds, removedChunksIds = []) {
+    // removing messages needs to be synchonized - onMessageDelete callback may be called while removing obsolete message chunks
+    this.removeMessagesLock = this.removeMessagesLock.finally(async () => {
+      const obsoleteMessagesIds = [];
+      for (const messageId of messagesIds) {
+        const message = await this.dataModel.getMessage(messageId);
+        if (!message) {
+          console.error(`Unable to delete message ${messageId} - unknown message`);
+          continue;
         }
-      } catch (error) {
-        console.error(`Failed to delete message chunks from message ${messageId} - got error ${error}`);
-        return;
+        obsoleteMessagesIds.push(messageId);
+        // remove obsolete message chunks that have not already been removed
+        const messageChunks = await this.dataModel.getMessageChunks(messageId);
+        const obsoleteMessageChunksIds = messageChunks
+          .map(({id}) => id)
+          .filter(id => !removedChunksIds.includes(id));
+        if (obsoleteMessageChunksIds.length > 0) {
+          console.debug(`Removing ${obsoleteMessageChunksIds.length} message chunks from message ${messageId}`);
+          try {
+            await this.client.deleteMessages(message.channelId, obsoleteMessageChunksIds);
+          } catch (error) {
+            console.error(`Failed to delete message chunks from message ${messageId} - got error ${error}`);
+            continue;
+          }
+        }
       }
+      // update the model
+      console.info(`Removing ${obsoleteMessagesIds.length} messages`);
+      await this.dataModel.removeMessages(obsoleteMessagesIds);
+    });
+    return this.removeMessagesLock;
+  }
+
+  async onMessageDelete(removedMessageChunk) {
+    const messageChunk = await this.dataModel.getMessageChunk(removedMessageChunk.id);
+    if (!messageChunk) {
+      return;
     }
-    // update the model
-    await this.dataModel.removeMessage(messageId);
+    return this.removeMessages([messageChunk.messageId], [removedMessageChunk.id]);
+  }
+
+  async onMessageDeleteBulk(removedMessagesChunks) {
+    const removedMessagesChunksIds = removedMessagesChunks.map(({id}) => id);
+    const messagesIds = new Set();
+    const messagesChunks = await Promise.all(
+      removedMessagesChunksIds.map(id => this.dataModel.getMessageChunk(id))
+    );
+    messagesChunks
+      .filter(messagesChunk => !!messagesChunk)
+      .forEach(({messageId}) => messagesIds.add(messageId));
+    return this.removeMessages(Array.from(messagesIds.values()), removedMessagesChunksIds);
+  }
+
+  initialize() {
+    this.client.on('messageDelete', this.onMessageDeleteCallback);
+    this.client.on('messageDeleteBulk', this.onMessageDeleteBulkCallback);
+  }
+
+  uninitialize() {
+    this.client.off('messageDelete', this.onMessageDeleteCallback);
+    this.client.off('messageDeleteBulk', this.onMessageDeleteBulkCallback);
   }
 }
 

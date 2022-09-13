@@ -1,7 +1,18 @@
 const Database = require('./Database');
+const EventEmitter = require('events');
 
-class DataModel {
+const DataModelEvents = {
+  onContestAdded: 'onContestAdded',
+  onContestChanged: 'onContestChanged',
+  onContestRemoved: 'onContestRemoved',
+  onMessageAdded: 'onMessageAdded',
+  onMessageChanged: 'onMessageChanged',
+  onMessagesRemoved: 'onMessagesRemoved',
+}
+
+class DataModel extends EventEmitter {
   constructor() {
+    super();
     this.database = new Database();
     this.reasonsCache = new Map();
   }
@@ -254,9 +265,10 @@ class DataModel {
 
   async addContest(name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId) {
     await this.database.run(`
-      INSERT OR REPLACE INTO Contest(name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId)
+      INSERT INTO Contest(name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId)
       VALUES ("${name}", "${description}", ${announcementsThreshold}, ${activeBeginDate}, ${activeEndDate}, ${votingBeginDate}, ${votingEndDate}, "${guildId}");
     `);
+    this.emit(DataModelEvents.onContestAdded, guildId);
   }
 
   async changeContest(contestId, name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate) {
@@ -269,8 +281,9 @@ class DataModel {
           activeEndDate = ${activeEndDate},
           votingBeginDate = ${votingBeginDate},
           votingEndDate = ${votingEndDate}
-      WHERE id = "${contestId}";
+      WHERE id = ${contestId};
     `);
+    this.emit(DataModelEvents.onContestChanged, contestId);
   }
 
   async removeContest(contestId) {
@@ -278,6 +291,7 @@ class DataModel {
       DELETE FROM Contest
       WHERE id = ${contestId} AND guildId = "${guildId}";
     `);
+    this.emit(DataModelEvents.onContestRemoved, contestId);
   }
 
   getContestsNames(guildId) {
@@ -288,18 +302,21 @@ class DataModel {
     `);
   }
 
-  getContests() {
-    return this.database.get(`
-      SELECT id, name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate
-      FROM Contest;
-    `);
+  getContests(guildId) {
+    return this.database.all(
+      [
+        'SELECT id, name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId',
+        'FROM Contest',
+        guildId ? `WHERE guildId = "${guildId}";` : ';'
+      ].filter(clause => !!clause).join('\n')
+    );
   }
 
   getContest(contestId) {
     return this.database.get(`
-      SELECT id, name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate
+      SELECT id, name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId
       FROM Contest
-      WHERE id = "${contestId}";
+      WHERE id = ${contestId};
     `);
   }
 
@@ -318,37 +335,45 @@ class DataModel {
         VALUES ${values.join(', ')};
       COMMIT;
     `);
+    this.emit(DataModelEvents.onMessageAdded, {guildId, channelId, messageId});
   }
 
-  async updateMessage(updatedMessageChunks, obsoleteMessageChunks) {
-    const updates = updatedMessageChunks.map(
+  async updateMessage(messageId, updatedMessageChunks, obsoleteMessageChunks) {
+    if (updatedMessageChunks.length === 0 && obsoleteMessageChunks.length === 0) {
+      return;
+    }
+    const updateStatements = updatedMessageChunks.map(
       ({id, hash}) => (`
         UPDATE MessageChunk
         SET hash = "${hash}"
         WHERE id = "${id}";
       `)
     );
-    const deletes = obsoleteMessageChunks.map(
-      ({id}) => (`
-        DELETE FROM MessageChunk
-        WHERE id = "${id}";
-      `)
-    );
-    if (updates.length === 0 && deletes.length === 0) {
-      return;
-    }
+    const obsoleteMessageChunksIdsValues = obsoleteMessageChunks.map(({id}) => `"${id}"`).join(', ');
     await this.database.exec(`
       BEGIN TRANSACTION;
-        ${[...updates, ...deletes].join(' ')}
+        ${updateStatements}
+        DELETE FROM MessageChunk
+        WHERE id IN (${obsoleteMessageChunksIdsValues});
       COMMIT;
     `);
+    this.emit(DataModelEvents.onMessageChanged, messageId);
   }
 
-  async removeMessage(messageId) {
-    await this.database.run(`
-      DELETE FROM Message
-      WHERE id = "${messageId}";
+  async removeMessages(messagesIds) {
+    if (messagesIds.length === 0) {
+      return;
+    }
+    const messageIdsValues = messagesIds.map(messageId => `"${messageId}"`).join(', ');
+    await this.database.exec(`
+      BEGIN TRANSACTION;
+        DELETE FROM Message
+        WHERE id IN (${messageIdsValues});
+        DELETE FROM MessageChunk
+        WHERE messageId IN (${messageIdsValues});
+      COMMIT;
     `);
+    this.emit(DataModelEvents.onMessagesRemoved, messagesIds);
   }
 
   getMessage(messageId) {
@@ -368,6 +393,14 @@ class DataModel {
     `);
   }
 
+  getMessageChunk(id) {
+    return this.database.get(`
+      SELECT id, hash, messageId
+      FROM MessageChunk
+      WHERE id = "${id}"
+    `);
+  }
+
   async initialize() {
     await this.database.open();
     await this.createSchema();
@@ -378,4 +411,7 @@ class DataModel {
   }
 }
 
-module.exports = DataModel;
+module.exports = {
+  DataModelEvents,
+  DataModel,
+}
