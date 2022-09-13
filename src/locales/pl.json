@@ -52,6 +52,13 @@
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} punkty przyznane dnia {{acquireDate}} z powodu {{reasonName}}"
     },
+    "announcements": {
+      "contest": {
+        "newContestHeader": "Nowy konkurs **{{contestName}}** rozpocznie się za **{{beginsIn}}**!",
+        "description": "Opis konkursu:\n{{description}}",
+        "ongoingContestHeader": "Aktualnie trwa konkurs {{contestName}}, prace mozna zgłaszać do {{votingBeginTimeout}}!"
+      }
+    },
     "commands": {
       "errors": {
         "notAllowed": "❌ Nie masz uprawnień do wykonania polecenia **{{commandId}}**",

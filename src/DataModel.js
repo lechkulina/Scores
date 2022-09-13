@@ -5,6 +5,8 @@ const DataModelEvents = {
   onContestAdded: 'onContestAdded',
   onContestChanged: 'onContestChanged',
   onContestRemoved: 'onContestRemoved',
+  onContestAnnouncementAdded: 'onContestAnnouncementAdded',
+  onContestAnnouncementRemoved: 'onContestAnnouncementRemoved',
   onMessageAdded: 'onMessageAdded',
   onMessageChanged: 'onMessageChanged',
   onMessagesRemoved: 'onMessagesRemoved',
@@ -289,7 +291,7 @@ class DataModel extends EventEmitter {
   async removeContest(contestId) {
     await this.database.run(`
       DELETE FROM Contest
-      WHERE id = ${contestId} AND guildId = "${guildId}";
+      WHERE id = ${contestId};
     `);
     this.emit(DataModelEvents.onContestRemoved, contestId);
   }
@@ -317,6 +319,42 @@ class DataModel extends EventEmitter {
       SELECT id, name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId
       FROM Contest
       WHERE id = ${contestId};
+    `);
+  }
+
+  async addContestAnnouncement(type, contestId, messageId) {
+    await this.database.run(`
+      INSERT INTO ContestAnnouncement(type, contestId, messageId)
+      VALUES (${type}, ${contestId}, "${messageId}");
+    `);
+    this.emit(DataModelEvents.onContestAnnouncementAdded, contestId);
+  }
+
+  async removeContestAnnouncements(contestAnnouncementsIds) {
+    if (contestAnnouncementsIds.length === 0) {
+      return;
+    }
+    const contestAnnouncementsIdsValues = contestAnnouncementsIds.map(id => `"${id}"`).join(', ');
+    await this.database.exec(`
+      DELETE FROM ContestAnnouncement
+      WHERE id IN (${contestAnnouncementsIdsValues});
+    `);
+    this.emit(DataModelEvents.onContestAnnouncementRemoved, contestAnnouncementsIds);
+  }
+
+  getContestAnnouncements(contestId) {
+    return this.database.all(`
+      SELECT id, type, messageId
+      FROM ContestAnnouncement
+      WHERE contestId = ${contestId};
+    `);
+  }
+
+  getContestAnnouncement(messageId) {
+    return this.database.get(`
+      SELECT id, type, contestId
+      FROM ContestAnnouncement
+      WHERE messageId = ${messageId};
     `);
   }
 
