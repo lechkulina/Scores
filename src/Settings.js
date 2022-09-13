@@ -25,6 +25,7 @@ const converters = {
   minDescriptionLength: NumberConverter,
   maxDescriptionLength: NumberConverter,
   messageChunkSize: NumberConverter,
+  tasksRunInterval: NumberConverter,
 };
 
 class Settings {
@@ -41,12 +42,13 @@ class Settings {
       this.set('useGuildLocale', false),
       this.set('recentPointsLimit', 6),
       this.set('dateInputFormat', 'DD.MM.YYYY HH:mm'),
-      this.set('dateOuputFormat', 'DD.MM.YYYY HH:mm'),
+      this.set('dateOuputFormat', 'DD.MM.YYYY HH:mm:ss'),
       this.set('minNameLength', 3),
       this.set('maxNameLength', 200),
       this.set('minDescriptionLength', 20),
       this.set('maxDescriptionLength', 6000),
       this.set('messageChunkSize', 4000),
+      this.set('tasksRunInterval', 2000),
     ]);
   }
 
