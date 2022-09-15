@@ -37,7 +37,7 @@ class ContestsAnnouncementsManager {
       contestName: contest.name,
       beginsIn: formatDuration(this.translate, contest.activeBeginDate - now),
     });
-    const description = this.translate(`announcements.contest.description`, {
+    const description = this.translate(`announcements.contest.contestCategories`, {
       description: contest.description,
     });
     return [header, description].join(Entities.EmptyLine);

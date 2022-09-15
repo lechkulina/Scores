@@ -3,7 +3,7 @@ const {StringsLengthsValidator, FirstLetterValidator, NumbersValuesValidator} = 
 const InteractionHandler = require('../InteractionHandler');
 const Command = require('./Command');
 
-class AddReasonInteractionHandler extends InteractionHandler {
+class AddContestVoteCategoryHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     this.markAsDone();
     const [name, description, max, useByDefault] = this.getOptionValues([
@@ -13,30 +13,30 @@ class AddReasonInteractionHandler extends InteractionHandler {
       OptionId.UseByDefault
     ]);
     try {
-      await this.dataModel.addContestCategory(name, description, max, useByDefault);
+      await this.dataModel.addContestVoteCategory(name, description, max, useByDefault);
       return interaction.createMessage({
-        content: this.translate('commands.addContestCategory.messages.success', {
+        content: this.translate('commands.addContestVoteCategory.messages.success', {
           categoryName: name,
         })
       });
     } catch (error) {
-      return interaction.createMessage(this.translate('commands.addContestCategory.errors.failure'));
+      return interaction.createMessage(this.translate('commands.addContestVoteCategory.errors.failure'));
     }
   }
 }
 
-class AddContestCategory extends Command {
+class AddContestVoteCategory extends Command {
   constructor(...props) {
-    super('add-contest-category', ...props);
+    super('add-contest-vote-category', ...props);
   }
 
   initialize() {
-    this.setDescription(this.translate('commands.addContestCategory.description'));
+    this.setDescription(this.translate('commands.addContestVoteCategory.description'));
     this.addOptions([
-      new StringOption(OptionId.Name, this.translate('commands.addContestCategory.options.name')),
-      new StringOption(OptionId.Description, this.translate('commands.addContestCategory.options.description')),
-      new NumberOption(OptionId.Max, this.translate('commands.addContestCategory.options.max')),
-      new BooleanOption(OptionId.UseByDefault, this.translate('commands.addContestCategory.options.useByDefault')),
+      new StringOption(OptionId.Name, this.translate('commands.addContestVoteCategory.options.name')),
+      new StringOption(OptionId.Description, this.translate('commands.addContestVoteCategory.options.description')),
+      new NumberOption(OptionId.Max, this.translate('commands.addContestVoteCategory.options.max')),
+      new BooleanOption(OptionId.UseByDefault, this.translate('commands.addContestVoteCategory.options.useByDefault')),
     ]);
     this.addValidators([
       new StringsLengthsValidator([OptionId.Name], 'minNameLength', 'maxNameLength', this.settings, this.options),
@@ -48,8 +48,8 @@ class AddContestCategory extends Command {
   }
 
   createInteractionHandler(...props) {
-    return new AddReasonInteractionHandler(...props);
+    return new AddContestVoteCategoryHandler(...props);
   }
 }
 
-module.exports = AddContestCategory;
+module.exports = AddContestVoteCategory;

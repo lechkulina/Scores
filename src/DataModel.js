@@ -274,10 +274,10 @@ class DataModel extends EventEmitter {
 
         CREATE TEMP TABLE Variables AS SELECT last_insert_rowid() as contestId;
 
-        INSERT INTO ContestCategories(contestId, contestCategoryId)
-        SELECT Variables.contestId, ContestCategory.id
-        FROM ContestCategory, Variables
-        WHERE ContestCategory.useByDefault = 1;
+        INSERT INTO ContestVoteCategories(contestId, contestVoteCategoryId)
+        SELECT Variables.contestId, ContestVoteCategory.id
+        FROM ContestVoteCategory, Variables
+        WHERE ContestVoteCategory.useByDefault = 1;
 
         DROP TABLE Variables;
       COMMIT;
@@ -451,9 +451,9 @@ class DataModel extends EventEmitter {
     `);
   }
 
-  addContestCategory(name, description, max, useByDefault) {
+  addContestVoteCategory(name, description, max, useByDefault) {
     return this.database.run(`
-      INSERT INTO ContestCategory(name, description, max, useByDefault)
+      INSERT INTO ContestVoteCategory(name, description, max, useByDefault)
       VALUES ("${name}", "${description}", ${max}, ${useByDefault ? 1 : 0});
     `);
   }

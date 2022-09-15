@@ -89,18 +89,17 @@ CREATE TABLE IF NOT EXISTS ContestRewards(
   contestRewardId INTEGER NOT NULL REFERENCES ContestReward(id),
   PRIMARY KEY(contestId, contestRewardId)
 );
-
-CREATE TABLE IF NOT EXISTS ContestCategory(
+CREATE TABLE IF NOT EXISTS ContestVoteCategory(
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
   description TEXT NOT NULL,
   max INTEGER NOT NULL CHECK (max > 0),
   useByDefault INTEGER DEFAULT 0
 );
-CREATE TABLE IF NOT EXISTS ContestCategories(
+CREATE TABLE IF NOT EXISTS ContestVoteCategories(
   contestId INTEGER NOT NULL REFERENCES Contest(id),
-  contestCategoryId INTEGER NOT NULL REFERENCES ContestCategory(id),
-  PRIMARY KEY(contestId, contestCategoryId)
+  contestVoteCategoryId INTEGER NOT NULL REFERENCES ContestVoteCategory(id),
+  PRIMARY KEY(contestId, contestVoteCategoryId)
 );
 CREATE TABLE IF NOT EXISTS ContestEntry(
   id INTEGER PRIMARY KEY,
@@ -114,6 +113,7 @@ CREATE TABLE IF NOT EXISTS ContestVote(
   score INTEGER CHECK (score > 0),
   voteDate INTEGER DEFAULT CURRENT_TIMESTAMP,
   contestEntryId INTEGER NOT NULL REFERENCES ContestEntry(id),
+  contestVoteCategoryId INTEGER NOT NULL REFERENCES ContestVoteCategory(id),
   voterId TEXT NOT NULL REFERENCES User(id)
 );
 CREATE TABLE IF NOT EXISTS ContestAnnouncement(

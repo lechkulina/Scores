@@ -247,19 +247,19 @@
           "success": "✅ Removed contest **{{contestName}}**"
         }
       },
-      "addContestCategory": {
-        "description": "Adds new contest category",
+      "addContestVoteCategory": {
+        "description": "Adds new contest vote category",
         "options": {
-          "name": "Category name",
-          "description": "Category description",
-          "max": "Maximum number of points that can be assigned in this category",
-          "useByDefault": "Use this category by default in every new contest"
+          "name": "Contest vote category name",
+          "description": "Contest vote category description",
+          "max": "Maximum number of points that can be assigned in this contest vote category",
+          "useByDefault": "Assign this contest vote category by default in every new contest"
         },
         "errors": {
-          "failure": "❗ Failed to add new contest category"
+          "failure": "❗ Failed to add new contest vote contest category"
         },
         "messages": {
-          "success": "✅ Added new contest category **{{categoryName}}**"
+          "success": "✅ Added new contest vote category **{{categoryName}}**"
         }
       }
     }

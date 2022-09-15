@@ -56,6 +56,7 @@
       "contest": {
         "newContestHeader": "Nowy konkurs **{{contestName}}** rozpocznie się za **{{beginsIn}}**!",
         "description": "Opis konkursu:\n{{description}}",
+        "contestCategories": "Konkurs będzie oceniany w {{contestCategoriesCount}} kategoriach:\n",
         "ongoingContestHeader": "Aktualnie trwa konkurs {{contestName}}, prace mozna zgłaszać do {{votingBeginTimeout}}!"
       }
     },
@@ -264,19 +265,19 @@
           "success": "✅ Usunięto konkurs **{{contestName}}**"
         }
       },
-      "addContestCategory": {
-        "description": "Dodaje nową kategorię oceny prac konkursowych",
+      "addContestVoteCategory": {
+        "description": "Dodaje nową kategorię głosowania prac konkursowych",
         "options": {
-          "name": "Nazwa kategorii",
-          "description": "Opis kategorii",
-          "max": "Maksymalna liczba punktów jaką mozna uzyskać w tej kategorii",
-          "useByDefault": "Uzywaj domyślnie w kazdym nowym konkursie"
+          "name": "Nazwa kategorii głosowania",
+          "description": "Opis kategorii głosowania",
+          "max": "Maksymalna liczba punktów jaką mozna uzyskać w tej kategorii głosowania",
+          "useByDefault": "Dodawaj tą kategorię głosowania domyślnie w kazdym nowym konkursie"
         },
         "errors": {
-          "failure": "❗ Nie udało się dodać nowej kategorii oceny pracy konkursowych"
+          "failure": "❗ Nie udało się dodać nowej kategorii głosowania pracy konkursowych"
         },
         "messages": {
-          "success": "✅ Dodano nową kategorię oceny prac konkursowych **{{categoryName}}**"
+          "success": "✅ Dodano nową kategorię głosowania prac konkursowych **{{categoryName}}**"
         }
       }
     }
