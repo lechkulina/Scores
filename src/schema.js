@@ -89,10 +89,11 @@ CREATE TABLE IF NOT EXISTS ContestRewards(
   contestRewardId INTEGER NOT NULL REFERENCES ContestReward(id),
   PRIMARY KEY(contestId, contestRewardId)
 );
-DROP TABLE ContestCategory;
+
 CREATE TABLE IF NOT EXISTS ContestCategory(
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
+  description TEXT NOT NULL,
   max INTEGER NOT NULL CHECK (max > 0),
   useByDefault INTEGER DEFAULT 0
 );

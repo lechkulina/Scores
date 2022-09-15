@@ -251,6 +251,7 @@
         "description": "Adds new contest category",
         "options": {
           "name": "Category name",
+          "description": "Category description",
           "max": "Maximum number of points that can be assigned in this category",
           "useByDefault": "Use this category by default in every new contest"
         },

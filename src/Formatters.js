@@ -75,7 +75,7 @@ function formatEllipsis(text, limit) {
   return text.slice(0, textLengthLimit) + Entities.Ellipsis;
 }
 
-function formatDuration(translate, duration, includeSeconds = true) {
+function formatDuration(translate, duration, includeSeconds = false) {
   const sections = [];
   const pushSection = (count, key) => {
     if (count > 0) {
