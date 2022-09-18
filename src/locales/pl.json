@@ -58,6 +58,10 @@
         "contestDescription": "Opis konkursu:\n{{contestDescription}}",
         "contestVoteCategoriesDescriotion": "Konkurs będzie oceniany w {{count}} kategoriach:\n{{description}}\nZatem maksymalnie od jednego głosującego praca może otrzymać {{maxPointsPerVoter}} punktów, natomiast od wszystkich {{votersCount}} głosujących {{maxPointsFromVoters}}.",
         "contestVoteCategoryDescriotion": "**{{name}}** - {{description}} - Maksymalnie mozna uzyskać **{{max}} punktów** w tej kategorii.",
+        "submittedContestEntriesDescriotion_one": "Zgłoszono juz pierwszą pracę!\n{{description}}",
+        "submittedContestEntriesDescriotion": "Zgłoszono juz {{count}} prace:\n{{description}}",
+        "submittedContestEntriesDescriotion_many": "Zgłoszono juz {{count}} prac:\n{{description}}",
+        "submittedContestEntryDescriotion": "{{index}}. **{{entryName}}** autorstwa **{{authorName}}** zgłoszona dnia {{submitDate}}",
         "ongoingContestHeader": "Aktualnie trwa konkurs {{contestName}}, prace mozna zgłaszać do {{votingBeginTimeout}}!"
       }
     },

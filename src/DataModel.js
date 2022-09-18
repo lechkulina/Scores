@@ -10,6 +10,7 @@ const DataModelEvents = {
   onMessageAdded: 'onMessageAdded',
   onMessageChanged: 'onMessageChanged',
   onMessagesRemoved: 'onMessagesRemoved',
+  onContestEntrySubmitted: 'onContestEntrySubmitted',
 }
 
 const ContestState = {
@@ -471,7 +472,7 @@ class DataModel extends EventEmitter {
     return this.database.get(`
       SELECT id, hash, messageId
       FROM MessageChunk
-      WHERE id = "${id}"
+      WHERE id = "${id}";
     `);
   }
 
@@ -482,11 +483,31 @@ class DataModel extends EventEmitter {
     `);
   }
 
-  submitContestEntry(name, description, url, contestId, authorId) {
-    return this.database.exec(`
+  getAssignedContestVoteCategories(contestId) {
+    return this.database.all(`
+      SELECT id, name, description, max
+      FROM ContestVoteCategory
+      INNER JOIN ContestVoteCategories ON ContestVoteCategories.contestVoteCategoryId = ContestVoteCategory.id
+      WHERE ContestVoteCategories.contestId = ${contestId};
+    `);
+  }
+
+  async submitContestEntry(name, description, url, contestId, authorId) {
+    await this.database.exec(`
       INSERT OR REPLACE INTO ContestEntry(name, description, url, authorId, contestId)
       VALUES ("${name}", "${description}", "${url}", "${authorId}", ${contestId});
   `);
+    this.emit(DataModelEvents.onContestEntrySubmitted, contestId);
+  }
+
+  getSubmittedContestEntries(contestId) {
+    return this.database.all(`
+      SELECT ContestEntry.id, ContestEntry.name, ContestEntry.description, ContestEntry.url, ContestEntry.submitDate, User.name as authorName
+      FROM ContestEntry
+      INNER JOIN User ON User.id = ContestEntry.authorId
+      WHERE ContestEntry.contestId = ${contestId}
+      ORDER BY ContestEntry.submitDate ASC;
+    `);
   }
 
   async initialize() {

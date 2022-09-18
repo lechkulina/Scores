@@ -106,6 +106,7 @@ CREATE TABLE IF NOT EXISTS ContestEntry(
   name TEXT NOT NULL,
   description TEXT,
   url TEXT NOT NULL,
+  submitDate INTEGER DEFAULT CURRENT_TIMESTAMP,
   authorId TEXT NOT NULL REFERENCES User(id),
   contestId INTEGER NOT NULL REFERENCES Contest(id)
 );

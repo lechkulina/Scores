@@ -27,31 +27,83 @@ class ContestsAnnouncementsManager {
     this.removeAnnouncementsLock = Promise.resolve();
     this.onContestAddedCallback = this.onContestAdded.bind(this);
     this.onContestRemovedCallback = this.onContestRemoved.bind(this);
+    this.onContestEntrySubmittedCallback = this.onContestEntrySubmitted.bind(this);
     this.onContestAnnouncementAddedCallback = this.onContestAnnouncementAdded.bind(this);
     this.onMessagesRemovedCallback = this.onMessagesRemoved.bind(this);
   }
 
-  generateContent(contest, announcementType) {
+  async generateContent(contest, announcementType) {
     const now = Date.now();
-    const header = this.translate(`announcements.contest.newContestHeader`, {
-      contestName: contest.name,
-      beginsIn: formatDuration(this.translate, contest.activeBeginDate - now),
-    });
-    const description = this.translate(`announcements.contest.contestCategories`, {
-      description: contest.description,
-    });
-    return [header, description].join(Entities.EmptyLine);
+    const sections = [];
+    // header
+    sections.push(
+      this.translate('announcements.contest.newContestHeader', {
+        contestName: contest.name,
+        beginsIn: formatDuration(this.translate, contest.activeBeginDate - now),
+      })
+    );
+    // description
+    sections.push(
+      this.translate('announcements.contest.contestDescription', {
+        contestDescription: contest.description,
+      })
+    );
+    // vote categories
+    const categories = await this.dataModel.getAssignedContestVoteCategories(contest.id);
+    if (categories.length) {
+      const categoriesDescription = categories
+        .map(({name, description, max}) => (
+          this.translate('announcements.contest.contestVoteCategoryDescriotion', {
+            name,
+            description,
+            max
+          })
+        ))
+        .join(Entities.NewLine);
+      const maxPointsPerVoter = categories.reduce((points, voteCategory) => {
+        points += voteCategory.max;
+        return points;
+      }, 0);
+      sections.push(
+        this.translate('announcements.contest.contestVoteCategoriesDescriotion', {
+          count: categories.length,
+          description: categoriesDescription,
+          maxPointsPerVoter 
+        })
+      );
+    }
+    // submitted entries
+    const entries = await this.dataModel.getSubmittedContestEntries(contest.id);
+    if (entries.length) {
+      const entriesDescription = entries
+        .map(({name, authorName, submitDate}, index) => (
+          this.translate('announcements.contest.submittedContestEntryDescriotion', {
+            index: index + 1,
+            entryName: name,
+            authorName,
+            submitDate,
+          })
+        ))
+        .join(Entities.NewLine);
+        sections.push(
+          this.translate('announcements.contest.submittedContestEntriesDescriotion', {
+            count: entries.length,
+            description: entriesDescription,
+          })
+        );
+    }
+    return sections.join(Entities.EmptyLine);
   }
 
   async createAnnouncement(contest, announcementType) {
-    const content = this.generateContent(contest, announcementType);
+    const content = await this.generateContent(contest, announcementType);
     const channelId = await this.settings.get('contestsAnnouncementsChannelId');
     const messageId = await this.messagePublisher.createMessage(contest.guildId, channelId, content);
     return this.dataModel.addContestAnnouncement(announcementType, contest.id, messageId);
   }
 
-  updateAnnouncement(contest, announcement) {
-    const content = this.generateContent(contest, announcement.type);
+  async updateAnnouncement(contest, announcement) {
+    const content = await this.generateContent(contest, announcement.type);
     return this.messagePublisher.updateMessage(announcement.messageId, content);
   }
 
@@ -144,6 +196,15 @@ class ContestsAnnouncementsManager {
     return this.removeAnnouncements(announcements);
   }
 
+  async onContestEntrySubmitted(contestId) {
+    console.info('QQQQ onContestEntrySubmitted contestId=', contestId);
+    const contest = await this.dataModel.getContest(contestId);
+    const announcements = await this.dataModel.getContestAnnouncements(contestId);
+    return Promise.all(
+      announcements.map(announcement => this.updateAnnouncement(contest, announcement))
+    );
+  }
+
   async onContestAnnouncementAdded(contestId) {
     const contest = await this.dataModel.getContest(contestId);
     const tasks = await this.createContestsTasks([contest]);
@@ -160,6 +221,7 @@ class ContestsAnnouncementsManager {
   async initialize() {
     this.dataModel.on(DataModelEvents.onContestAdded, this.onContestAddedCallback);
     this.dataModel.on(DataModelEvents.onContestRemoved, this.onContestRemovedCallback);
+    this.dataModel.on(DataModelEvents.onContestEntrySubmitted, this.onContestEntrySubmittedCallback);
     this.dataModel.on(DataModelEvents.onContestAnnouncementAdded, this.onContestAnnouncementAddedCallback);
     this.dataModel.on(DataModelEvents.onMessagesRemoved, this.onMessagesRemovedCallback);
 
@@ -171,6 +233,7 @@ class ContestsAnnouncementsManager {
   uninitialize() {
     this.dataModel.off(DataModelEvents.onContestAdded, this.onContestAddedCallback);
     this.dataModel.off(DataModelEvents.onContestRemoved, this.onContestRemovedCallback);
+    this.dataModel.off(DataModelEvents.onContestEntrySubmitted, this.onContestEntrySubmittedCallback);
     this.dataModel.off(DataModelEvents.onContestAnnouncementAdded, this.onContestAnnouncementAddedCallback);
     this.dataModel.off(DataModelEvents.onMessagesRemoved, this.onMessagesRemovedCallback);
   }

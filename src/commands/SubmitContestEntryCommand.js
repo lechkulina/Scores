@@ -27,7 +27,6 @@ class SubmitContestEntryHandler extends InteractionHandler {
         })
       });
     } catch (error) {
-      throw error;
       return interaction.createMessage(this.translate('commands.submitContestEntry.errors.failure', {
         entryName: name,
         contestName: contest.name,
