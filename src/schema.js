@@ -106,7 +106,8 @@ CREATE TABLE IF NOT EXISTS ContestEntry(
   name TEXT NOT NULL,
   description TEXT,
   url TEXT NOT NULL,
-  authorId TEXT NOT NULL REFERENCES User(id)
+  authorId TEXT NOT NULL REFERENCES User(id),
+  contestId INTEGER NOT NULL REFERENCES Contest(id)
 );
 CREATE TABLE IF NOT EXISTS ContestVote(
   id INTEGER PRIMARY KEY,

@@ -1,6 +1,7 @@
 const {OptionId} = require('../options/CommonOptions');
 const ContestOption = require('../options/ContestOption');
 const InteractionHandler = require('../InteractionHandler');
+const {ContestState} = require('../DataModel');
 const Command = require('./Command');
 
 class RemoveContestInteractionHandler extends InteractionHandler {
@@ -38,7 +39,7 @@ class RemoveContestCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.removeContest.description'));
     this.addOptions([
-      new ContestOption(this.translate('common.contest')),
+      new ContestOption(ContestState.Any, this.translate('common.contest')),
     ]);
     return Promise.resolve();
   }

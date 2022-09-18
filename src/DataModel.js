@@ -12,6 +12,11 @@ const DataModelEvents = {
   onMessagesRemoved: 'onMessagesRemoved',
 }
 
+const ContestState = {
+  Any: 'Any',
+  ReadyToSubmitEntries: 'ReadyToSubmitEntries',
+};
+
 class DataModel extends EventEmitter {
   constructor() {
     super();
@@ -308,21 +313,40 @@ class DataModel extends EventEmitter {
     this.emit(DataModelEvents.onContestRemoved, contestId);
   }
 
-  getContestsNames(guildId) {
-    return this.database.all(`
-      SELECT id, name
-      FROM Contest
-      WHERE guildId = "${guildId}";
-    `);
+  getContestWhereClause(guildId, contestState) {
+    const clause = [];
+    const now = Date.now();
+    if (guildId) {
+      clause.push(`guildId = "${guildId}"`);
+    }
+    if (contestState === ContestState.ReadyToSubmitEntries) {
+      clause.push(`activeBeginDate >= ${now}`);
+      clause.push(`${now} < votingBeginDate`);
+    }
+    return clause.length > 0 ? `WHERE ${clause.join(' AND ')}` : '';
   }
 
-  getContests(guildId) {
+  getContestsNames(guildId, contestState) {
+    return this.database.all(
+      [
+        'SELECT id, name',
+        'FROM Contest',
+        this.getContestWhereClause(guildId, contestState)
+      ]
+      .join('\n')
+      .concat(';')
+    );
+  }
+
+  getContests(guildId, contestState) {
     return this.database.all(
       [
         'SELECT id, name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId',
         'FROM Contest',
-        guildId ? `WHERE guildId = "${guildId}";` : ';'
-      ].filter(clause => !!clause).join('\n')
+        this.getContestWhereClause(guildId, contestState)
+      ]
+      .join('\n')
+      .concat(';')
     );
   }
 
@@ -458,6 +482,13 @@ class DataModel extends EventEmitter {
     `);
   }
 
+  submitContestEntry(name, description, url, contestId, authorId) {
+    return this.database.exec(`
+      INSERT OR REPLACE INTO ContestEntry(name, description, url, authorId, contestId)
+      VALUES ("${name}", "${description}", "${url}", "${authorId}", ${contestId});
+  `);
+  }
+
   async initialize() {
     await this.database.open();
     await this.createSchema();
@@ -470,5 +501,6 @@ class DataModel extends EventEmitter {
 
 module.exports = {
   DataModelEvents,
+  ContestState,
   DataModel,
 }

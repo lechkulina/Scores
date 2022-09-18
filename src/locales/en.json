@@ -261,6 +261,21 @@
         "messages": {
           "success": "✅ Added new contest vote category **{{categoryName}}**"
         }
+      },
+      "submitContestEntry": {
+        "description": "Submits new contest entry",
+        "options": {
+          "contest": "Active contest",
+          "name": "Name of the entry",
+          "description": "Short description",
+          "url": "URL to gallery or movie"
+        },
+        "errors": {
+          "failure": "❗ Failed to submit entry **{{entryName}}** to contest **{{contestName}}**"
+        },
+        "messages": {
+          "success": "✅ Submitted entry **{{entryName}}** to contest **{{contestName}}**"
+        }
       }
     }
   }

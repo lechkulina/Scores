@@ -55,8 +55,9 @@
     "announcements": {
       "contest": {
         "newContestHeader": "Nowy konkurs **{{contestName}}** rozpocznie się za **{{beginsIn}}**!",
-        "description": "Opis konkursu:\n{{description}}",
-        "contestCategories": "Konkurs będzie oceniany w {{contestCategoriesCount}} kategoriach:\n",
+        "contestDescription": "Opis konkursu:\n{{contestDescription}}",
+        "contestVoteCategoriesDescriotion": "Konkurs będzie oceniany w {{count}} kategoriach:\n{{description}}\nZatem maksymalnie od jednego głosującego praca może otrzymać {{maxPointsPerVoter}} punktów, natomiast od wszystkich {{votersCount}} głosujących {{maxPointsFromVoters}}.",
+        "contestVoteCategoryDescriotion": "**{{name}}** - {{description}} - Maksymalnie mozna uzyskać **{{max}} punktów** w tej kategorii.",
         "ongoingContestHeader": "Aktualnie trwa konkurs {{contestName}}, prace mozna zgłaszać do {{votingBeginTimeout}}!"
       }
     },
@@ -278,6 +279,21 @@
         },
         "messages": {
           "success": "✅ Dodano nową kategorię głosowania prac konkursowych **{{categoryName}}**"
+        }
+      },
+      "submitContestEntry": {
+        "description": "Zgłasza nową pracę konkursową",
+        "options": {
+          "contest": "Aktualny konkurs",
+          "name": "Nazwa pracy",
+          "description": "Krótki opis pracy",
+          "url": "URL do galerii zdjęć lub filmu"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się zgłosić pracy **{{entryName}}** do konkursu **{{contestName}}**"
+        },
+        "messages": {
+          "success": "✅ Zgłoszono pracę **{{entryName}}** do konkursu **{{contestName}}**"
         }
       }
     }

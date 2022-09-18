@@ -8,6 +8,7 @@ const {
   NumbersValuesValidator
 } = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
+const {ContestState} = require('../DataModel');
 const Command = require('./Command');
 
 class ChangeContestInteractionHandler extends InteractionHandler {
@@ -63,7 +64,7 @@ class ChangeContestCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.changeContest.description'));
     this.addOptions([
-      new ContestOption(this.translate('common.contest')),
+      new ContestOption(ContestState.Any, this.translate('common.contest')),
       new StringOption(OptionId.Name, this.translate('commands.changeContest.options.name')),
       new StringOption(OptionId.Description, this.translate('commands.changeContest.options.description')),
       new StringOption(OptionId.AnnouncementsThreshold, this.translate('commands.changeContest.options.announcementsThreshold')),

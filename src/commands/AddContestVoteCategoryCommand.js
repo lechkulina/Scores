@@ -25,7 +25,7 @@ class AddContestVoteCategoryHandler extends InteractionHandler {
   }
 }
 
-class AddContestVoteCategory extends Command {
+class AddContestVoteCategoryCommand extends Command {
   constructor(...props) {
     super('add-contest-vote-category', ...props);
   }
@@ -52,4 +52,4 @@ class AddContestVoteCategory extends Command {
   }
 }
 
-module.exports = AddContestVoteCategory;
+module.exports = AddContestVoteCategoryCommand;
