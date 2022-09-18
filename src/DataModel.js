@@ -229,13 +229,6 @@ class DataModel extends EventEmitter {
     `);
   }
 
-  addGuild(id, name) {
-    return this.database.run(`
-      INSERT OR REPLACE INTO Guild(id, name)
-      VALUES ("${id}", "${name}");
-    `);
-  }
-
   grantUserPermission(userId, commandId) {
     return this.database.run(`
       INSERT OR REPLACE INTO UserPermission(userId, commandId)
@@ -283,7 +276,7 @@ class DataModel extends EventEmitter {
         INSERT INTO ContestVoteCategories(contestId, contestVoteCategoryId)
         SELECT Variables.contestId, ContestVoteCategory.id
         FROM ContestVoteCategory, Variables
-        WHERE ContestVoteCategory.useByDefault = 1;
+        WHERE ContestVoteCategory.useByDefault = 1 AND guildId = "${guildId}";
 
         DROP TABLE Variables;
       COMMIT;
@@ -476,10 +469,10 @@ class DataModel extends EventEmitter {
     `);
   }
 
-  addContestVoteCategory(name, description, max, useByDefault) {
+  addContestVoteCategory(name, description, max, useByDefault, guildId) {
     return this.database.run(`
-      INSERT INTO ContestVoteCategory(name, description, max, useByDefault)
-      VALUES ("${name}", "${description}", ${max}, ${useByDefault ? 1 : 0});
+      INSERT INTO ContestVoteCategory(name, description, max, useByDefault, guildId)
+      VALUES ("${name}", "${description}", ${max}, ${useByDefault ? 1 : 0}, "${guildId}");
     `);
   }
 

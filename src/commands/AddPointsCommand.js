@@ -16,8 +16,6 @@ class AddPointsInteractionHandler extends InteractionHandler {
 
   async handleCommandInteraction(interaction) {
     try {
-      await this.dataModel.addGuild(this.member.guild.id, this.member.guild.name);
-      await this.dataModel.addGuild(this.giver.guild.id, this.giver.guild.name);
       await this.dataModel.addUser(this.member.user.id, this.member.user.username, this.member.user.discriminator, this.member.guild.id);
       await this.dataModel.addUser(this.giver.user.id, this.giver.user.username, this.giver.user.discriminator, this.giver.guild.id);
       await this.dataModel.addPoints(this.points, this.member.user.id, this.giver.user.id, this.reason.id);

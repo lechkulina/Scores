@@ -22,7 +22,6 @@ class GrantRolePermissionInteractionHandler extends InteractionHandler {
   async handleComponentInteraction(interaction) {
     return this.handleConfirmationForm(interaction, async () => {
       try {
-        await this.dataModel.addGuild(this.member.guild.id, this.member.guild.name);
         await this.dataModel.addUser(this.member.user.id, this.member.user.username, this.member.user.discriminator, this.member.guild.id);
         await this.dataModel.grantUserPermission(this.member.user.id, this.commandId);
         return this.translate('commands.grantUserPermission.messages.success', {
