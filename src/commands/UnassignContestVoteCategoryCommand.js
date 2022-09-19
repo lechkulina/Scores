@@ -8,7 +8,7 @@ const Command = require('./Command');
 class UnassignContestVoteCategoryHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     this.contest = await this.dataModel.getContest(this.getOptionValue(OptionId.Contest));
-    this.category = await this.dataModel.getContestVoteCategory(this.getOptionValue(OptionId.AssignedContestVoteCategories));
+    this.category = await this.dataModel.getContestVoteCategory(this.getOptionValue(OptionId.AssignedContestVoteCategory));
     return interaction.createMessage({
       content: this.translate('commands.unassignContestVoteCategory.messages.confirmation', {
         contestName: this.contest.name,

@@ -538,6 +538,73 @@ class DataModel extends EventEmitter {
     `);
   }
 
+  addContestRule(description, useByDefault, guildId) {
+    return this.database.run(`
+      INSERT INTO ContestRule(description, useByDefault, guildId)
+      VALUES ("${description}", ${useByDefault ? 1 : 0}, "${guildId}");
+    `);
+  }
+
+  getAssignedContestRules(contestId) {
+    return this.database.all(`
+      SELECT ContestRule.id, ContestRule.description
+      FROM ContestRule
+      INNER JOIN ContestRules ON ContestRules.contestRuleId = ContestRule.id
+      WHERE ContestRules.contestId = ${contestId};
+    `);
+  }
+
+  getContestRulesDescriptions(guildId) {
+    return this.database.all(`
+      SELECT id, description
+      FROM ContestRule
+      WHERE guildId = "${guildId}";
+    `);
+  }
+
+  getContestRule(id) {
+    return this.database.get(`
+      SELECT id, description
+      FROM ContestRule
+      WHERE id = "${id}";
+    `);
+  }
+
+  removeContestRule(contestRuleId) {
+    return this.database.exec(`
+      BEGIN TRANSACTION;
+        DELETE FROM ContestRules
+        WHERE contestRuleId = ${contestRuleId};
+
+        DELETE FROM ContestRule
+        WHERE id = ${contestRuleId};
+      COMMIT;
+    `);
+  }
+
+  changeContestRule(contestRuleId, description, useByDefault) {
+    return this.database.run(`
+      UPDATE ContestRule
+      SET description = "${description}",
+          useByDefault = ${useByDefault}
+      WHERE id = ${contestRuleId};
+    `);
+  }
+
+  assignContestRule(contestId, contestRuleId) {
+    return this.database.run(`
+      INSERT INTO ContestRules(contestId, contestRuleId)
+      VALUES (${contestId}, ${contestRuleId});
+    `);
+  }
+
+  unassignContestRule(contestId, contestRuleId) {
+    return this.database.run(`
+      DELETE FROM ContestRules
+      WHERE contestId = ${contestId} AND contestRuleId = ${contestRuleId};
+    `);
+  }
+
   async submitContestEntry(name, description, url, contestId, authorId) {
     await this.database.exec(`
       INSERT OR REPLACE INTO ContestEntry(name, description, url, authorId, contestId)

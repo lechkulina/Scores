@@ -20,7 +20,9 @@ class AddContestVoteCategoryHandler extends InteractionHandler {
         })
       });
     } catch (error) {
-      return interaction.createMessage(this.translate('commands.addContestVoteCategory.errors.failure'));
+      return interaction.createMessage(this.translate('commands.addContestVoteCategory.errors.failure', {
+        categoryName: name,
+      }));
     }
   }
 }

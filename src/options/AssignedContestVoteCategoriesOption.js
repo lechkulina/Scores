@@ -4,7 +4,7 @@ const {Option, SuggestionMethod} = require('./Option');
 
 class AssignedContestVoteCategoriesOption extends Option {
   constructor(description, required) {
-    super(OptionId.AssignedContestVoteCategories, description, ApplicationCommandOptionTypes.INTEGER, required, SuggestionMethod.Autocomplete);
+    super(OptionId.AssignedContestVoteCategory, description, ApplicationCommandOptionTypes.INTEGER, required, SuggestionMethod.Autocomplete);
   }
 
   async getAutoCompeteResults(interaction, dataModel, translate, optionValue) {
@@ -12,8 +12,8 @@ class AssignedContestVoteCategoriesOption extends Option {
     if (!contestId) {
       return [];
     }
-    const contests = await dataModel.getAssignedContestVoteCategories(contestId);
-    const response = contests.map(({id, name}) => ({
+    const categories = await dataModel.getAssignedContestVoteCategories(contestId);
+    const response = categories.map(({id, name}) => ({
       name,
       value: id,
     }));

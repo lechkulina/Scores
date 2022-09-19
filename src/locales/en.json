@@ -278,7 +278,7 @@
       "changeContestVoteCategory": {
         "description": "Changes contest vote category",
         "options": {
-          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.name)",
+          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.contestVoteCategory)",
           "name": "$(commands.addContestVoteCategory.options.name)",
           "description": "$(commands.addContestVoteCategory.options.description)",
           "max": "$(commands.addContestVoteCategory.options.max)",
@@ -295,7 +295,7 @@
       "assignContestVoteCategory": {
         "description": "Assigns contest vote category to an existing contest",
         "options": {
-          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.name)"
+          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.contestVoteCategory)"
         },
         "errors": {
           "failure": "❗ Failed to assign contest vote category **{{categoryName}}** to contest **{{contestName}}**"
@@ -307,7 +307,7 @@
       "unassignContestVoteCategory": {
         "description": "Unassigns contest vote category from an existing contest",
         "options": {
-          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.name)"
+          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.contestVoteCategory)"
         },
         "errors": {
           "failure": "❗ Failed to unassign contest vote category **{{categoryName}}** from contest **{{contestName}}**"
@@ -315,6 +315,72 @@
         "messages": {
           "confirmation": "❓ Are you sure you want to unassign contest vote category **{{categoryName}}** from contest **{{contestName}}**?",
           "success": "✅ Unassigned contest vote category **{{categoryName}}** from contest **{{contestName}}**"
+        }
+      },
+      "addContestRule": {
+        "description": "Adds contest rule",
+        "options": {
+          "description": "Contest rule description",
+          "useByDefault": "Assign this contest rule  by default in every new contest"
+        },
+        "errors": {
+          "failure": "❗ Failed to add new contest rule **{{ruleDescription}}**"
+        },
+        "messages": {
+          "success": "✅ Added new contest rule **{{ruleDescription}}**"
+        }
+      },
+      "removeContestRule": {
+        "description": "Removes contest rule",
+        "options": {
+          "contestRule": "Contest rule"
+        },
+        "errors": {
+          "failure": "❗ Failed to remove contest rule **{{ruleDescription}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to remove contest rule **{{ruleDescription}}**?",
+          "success": "✅ Removed contest rule **{{ruleDescription}}**"
+        }
+      },
+      "changeContestRule": {
+        "description": "Changes contest rule",
+        "options": {
+          "contestRule": "$(commands.removeContestRule.options.contestRule)",
+          "description": "$(commands.addContestRule.options.description)",
+          "useByDefault": "$(commands.addContestRule.options.useByDefault)"
+        },
+        "errors": {
+          "failure": "❗ Failed to changed contest rule **{{ruleDescription}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to change contest rule **{{ruleDescription}}**?",
+          "success": "✅ Changed contest rule **{{ruleDescription}}**"
+        }
+      },
+      "assignContestRule": {
+        "description": "Assigns contest rule an existing contest",
+        "options": {
+          "contestRule": "$(commands.removeContestRule.options.contestRule)"
+        },
+        "errors": {
+          "failure": "❗ Failed to assign contest rule **{{ruleDescription}}** to contest **{{contestName}}**"
+        },
+        "messages": {
+          "success": "✅ Assigned contest rule *{{ruleDescription}}** to contest **{{contestName}}**"
+        }
+      },
+      "unassignContestRule": {
+        "description": "Unassigns contest rule from an existing contest",
+        "options": {
+          "contestRule": "$(commands.removeContestRule.options.contestRule)"
+        },
+        "errors": {
+          "failure": "❗ Failed to unassign contestrule **{{ruleDescription}}** from contest **{{contestName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to unassign contest rule **{{ruleDescription}}** from contest **{{contestName}}**?",
+          "success": "✅ Unassigned contest rule **{{ruleDescription}}** from contest **{{contestName}}**"
         }
       },
       "submitContestEntry": {

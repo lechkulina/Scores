@@ -8,8 +8,8 @@ class ContestVoteCategoryOption extends Option {
   }
 
   async getAutoCompeteResults(interaction, dataModel, translate, optionValue) {
-    const contests = await dataModel.getContestVoteCategoriesNames(interaction.guildID);
-    const response = contests.map(({id, name}) => ({
+    const categories = await dataModel.getContestVoteCategoriesNames(interaction.guildID);
+    const response = categories.map(({id, name}) => ({
       name,
       value: id,
     }));

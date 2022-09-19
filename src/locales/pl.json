@@ -279,7 +279,7 @@
           "useByDefault": "Dodawaj tą kategorię głosowania domyślnie w kazdym nowym konkursie"
         },
         "errors": {
-          "failure": "❗ Nie udało się dodać nowej kategorii głosowania pracy konkursowych"
+          "failure": "❗ Nie udało się dodać nowej kategorii głosowania pracy konkursowych **{{categoryName}}**"
         },
         "messages": {
           "success": "✅ Dodano nową kategorię głosowania prac konkursowych **{{categoryName}}**"
@@ -301,7 +301,7 @@
       "changeContestVoteCategory": {
         "description": "Zmienia kategorię głosowania na prace konkursowe",
         "options": {
-          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.name)",
+          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.contestVoteCategory)",
           "name": "$(commands.addContestVoteCategory.options.name)",
           "description": "$(commands.addContestVoteCategory.options.description)",
           "max": "$(commands.addContestVoteCategory.options.max)",
@@ -316,9 +316,9 @@
         }
       },
       "assignContestVoteCategory": {
-        "description": "Przypisuje kategorię głosowania na prace konkursowe do konkursu",
+        "description": "Przypisuje kategorię głosowania na prace konkursowe do istniejącego konkursu",
         "options": {
-          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.name)"
+          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.contestVoteCategory)"
         },
         "errors": {
           "failure": "❗ Nie udało się przypisać kategorii głosowania na prace konkursowe **{{categoryName}}** do konkursu **{{contestName}}**"
@@ -328,16 +328,82 @@
         }
       },
       "unassignContestVoteCategory": {
-        "description": "Cofa przypisanie kategorii głosowania na prace konkursowe do konkursu",
+        "description": "Cofa przypisanie kategorii głosowania na prace konkursowe z istniejącego konkursu",
         "options": {
-          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.name)"
+          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.contestVoteCategory)"
         },
         "errors": {
-          "failure": "❗ Nie udało się cofnąć przypisania kategorii głosowania na prace konkursowe **{{categoryName}}** do konkursu **{{contestName}}**"
+          "failure": "❗ Nie udało się cofnąć przypisania kategorii głosowania na prace konkursowe **{{categoryName}}** z konkursu **{{contestName}}**"
         },
         "messages": {
-          "confirmation": "❓ Czy na pewno chcesz cofnać przypisanie kategorii głosowania na prace konkursowe **{{categoryName}}** do konkursu **{{contestName}}**?",
-          "success": "✅ Cofnięto przypisanie kategorii głosowania na prace konkursowe **{{categoryName}}** do konkursu **{{contestName}}**"
+          "confirmation": "❓ Czy na pewno chcesz cofnać przypisanie kategorii głosowania na prace konkursowe **{{categoryName}}** z konkursu **{{contestName}}**?",
+          "success": "✅ Cofnięto przypisanie kategorii głosowania na prace konkursowe **{{categoryName}}** z konkursu **{{contestName}}**"
+        }
+      },
+      "addContestRule": {
+        "description": "Dodaje regułę konkursu",
+        "options": {
+          "description": "Opis reguły konkursu",
+          "useByDefault": "Dodawaj tę regułę konkursu domyślnie w kazdym nowym konkursie"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się dodać nowej reguły konkursowej **{{ruleDescription}}**"
+        },
+        "messages": {
+          "success": "✅ Dodano nową regułę konkursu **{{ruleDescription}}**"
+        }
+      },
+      "removeContestRule": {
+        "description": "Usuwa regułę konkursu",
+        "options": {
+          "contestRule": "Reguła konkursu"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się usunąć reguły konkursu **{{ruleDescription}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz usunąć regułę konkursu **{{ruleDescription}}**?",
+          "success": "✅ Usunięto regułę konkursu **{{ruleDescription}}**"
+        }
+      },
+      "changeContestRule": {
+        "description": "Zmienia regułe konkursu",
+        "options": {
+          "contestRule": "$(commands.removeContestRule.options.contestRule)",
+          "description": "$(commands.addContestRule.options.description)",
+          "useByDefault": "$(commands.addContestRule.options.useByDefault)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się zmienić reguły konkursu **{{ruleDescription}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz zmienić regułe konkursu **{{ruleDescription}}**?",
+          "success": "✅ Zmieniono regułę konkursu **{{ruleDescription}}**"
+        }
+      },
+      "assignContestRule": {
+        "description": "Przypisuje regułę konkursu do istniejącego konkursu",
+        "options": {
+          "contestRule": "$(commands.removeContestRule.options.contestRule)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się przypisać reguły konkursu **{{ruleDescription}}** do konkursu **{{contestName}}**"
+        },
+        "messages": {
+          "success": "✅ Przypisano regułę konkursu **{{ruleDescription}}** do konkursu **{{contestName}}**"
+        }
+      },
+      "unassignContestRule": {
+        "description": "Cofa przypisanie reguły konkursu z istniejącego konkursu",
+        "options": {
+          "contestRule": "$(commands.removeContestRule.options.contestRule)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się cofnąć przypisania reguły konkursu **{{ruleDescription}}** z konkursu **{{contestName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz cofnać przypisanie reguły konkursu **{{ruleDescription}}** z konkursu **{{contestName}}**?",
+          "success": "✅ Cofnięto przypisanie reguły konkursu **{{ruleDescription}}** z konkursu **{{contestName}}**"
         }
       },
       "submitContestEntry": {
