@@ -524,6 +524,20 @@ class DataModel extends EventEmitter {
     `);
   }
 
+  assignContestVoteCategory(contestId, contestVoteCategoryId) {
+    return this.database.run(`
+      INSERT INTO ContestVoteCategories(contestId, contestVoteCategoryId)
+      VALUES (${contestId}, ${contestVoteCategoryId});
+    `);
+  }
+
+  unassignContestVoteCategory(contestId, contestVoteCategoryId) {
+    return this.database.run(`
+      DELETE FROM ContestVoteCategories(contestId, contestVoteCategoryId)
+      WHERE contestId = ${contestId} AND contestVoteCategoryId = ${contestVoteCategoryId};
+    `);
+  }
+
   async submitContestEntry(name, description, url, contestId, authorId) {
     await this.database.exec(`
       INSERT OR REPLACE INTO ContestEntry(name, description, url, authorId, contestId)

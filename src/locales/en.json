@@ -292,6 +292,18 @@
           "success": "✅ Changed contest vote category **{{categoryName}}**"
         }
       },
+      "assignContestVoteCategory": {
+        "description": "Assigns contest vote Category to an existing contest",
+        "options": {
+          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.name)"
+        },
+        "errors": {
+          "failure": "❗ Failed to assign contest vote category **{{categoryName}}** to contest **{{contestName}}**"
+        },
+        "messages": {
+          "success": "✅ Assigned contest vote category **{{categoryName}}** to contest **{{contestName}}**"
+        }
+      },
       "submitContestEntry": {
         "description": "Submits new contest entry",
         "options": {
