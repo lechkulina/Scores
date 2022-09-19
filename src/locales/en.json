@@ -275,6 +275,23 @@
           "success": "✅ Removed contest vote category **{{categoryName}}**"
         }
       },
+      "changeContestVoteCategory": {
+        "description": "Changes contest vote category",
+        "options": {
+          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.name)",
+          "name": "$(commands.addContestVoteCategory.options.name)",
+          "description": "$(commands.addContestVoteCategory.options.description)",
+          "max": "$(commands.addContestVoteCategory.options.max)",
+          "useByDefault": "$(commands.addContestVoteCategory.options.useByDefault)"
+        },
+        "errors": {
+          "failure": "❗ Failed to changed contest vote category **{{categoryName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to change contest vote category **{{categoryName}}**?",
+          "success": "✅ Changed contest vote category **{{categoryName}}**"
+        }
+      },
       "submitContestEntry": {
         "description": "Submits new contest entry",
         "options": {

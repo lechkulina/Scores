@@ -513,6 +513,17 @@ class DataModel extends EventEmitter {
     `);
   }
 
+  changeContestVoteCategory(contestVoteCategoryId, name, description, max, useByDefault) {
+    return this.database.run(`
+      UPDATE ContestVoteCategory
+      SET name = "${name}",
+          description = "${description}",
+          max = ${max},
+          useByDefault = ${useByDefault}
+      WHERE id = ${contestVoteCategoryId};
+    `);
+  }
+
   async submitContestEntry(name, description, url, contestId, authorId) {
     await this.database.exec(`
       INSERT OR REPLACE INTO ContestEntry(name, description, url, authorId, contestId)

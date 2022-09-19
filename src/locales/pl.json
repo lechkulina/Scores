@@ -298,6 +298,23 @@
           "success": "✅ Usunięto kategorię głosowania na prace konkursowe **{{categoryName}}**"
         }
       },
+      "changeContestVoteCategory": {
+        "description": "Zmienia kategorię głosowania na prace konkursowe",
+        "options": {
+          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.name)",
+          "name": "$(commands.addContestVoteCategory.options.name)",
+          "description": "$(commands.addContestVoteCategory.options.description)",
+          "max": "$(commands.addContestVoteCategory.options.max)",
+          "useByDefault": "$(commands.addContestVoteCategory.options.useByDefault)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się zmienić kategorii głosowania na prace konkursowe **{{categoryName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz zmienić kategorię głosowania na prace konkursowe **{{categoryName}}**?",
+          "success": "✅ Zmieniono kategorię głosowania na prace konkursowe **{{categoryName}}**"
+        }
+      },
       "submitContestEntry": {
         "description": "Zgłasza nową pracę konkursową",
         "options": {
