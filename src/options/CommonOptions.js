@@ -23,6 +23,8 @@ const OptionId = {
   AssignedContestVoteCategory: 'assigned-contest-vote-category',
   ContestRule: 'contest-rule',
   AssignedContestRule: 'assigned-contest-rule',
+  ContestReward: 'contest-reward',
+  AssignedContestReward: 'assigned-contest-reward',
   UseByDefault: 'use-by-default',
   AssignAction: 'assign-action',
 };

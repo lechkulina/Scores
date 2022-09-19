@@ -4,7 +4,8 @@ const msInHour = 60 * msInMinute;
 const msInDay = 24 * msInHour;
 const msInWeek = 7 * msInDay;
 
-const contestRuleDescriptionLimit = 30;
+const contestRuleDescriptionLimit = 40;
+const contestRewardDescriptionLimit = 40;
 
 module.exports = {
   msInSecond,
@@ -13,4 +14,5 @@ module.exports = {
   msInDay,
   msInWeek,
   contestRuleDescriptionLimit,
+  contestRewardDescriptionLimit,
 };

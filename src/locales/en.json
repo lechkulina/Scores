@@ -359,7 +359,7 @@
         }
       },
       "assignContestRule": {
-        "description": "Assigns contest rule an existing contest",
+        "description": "Assigns contest rule to an existing contest",
         "options": {
           "contestRule": "$(commands.removeContestRule.options.contestRule)"
         },
@@ -376,11 +376,77 @@
           "contestRule": "$(commands.removeContestRule.options.contestRule)"
         },
         "errors": {
-          "failure": "❗ Failed to unassign contestrule **{{ruleDescription}}** from contest **{{contestName}}**"
+          "failure": "❗ Failed to unassign contest rule **{{ruleDescription}}** from contest **{{contestName}}**"
         },
         "messages": {
           "confirmation": "❓ Are you sure you want to unassign contest rule **{{ruleDescription}}** from contest **{{contestName}}**?",
           "success": "✅ Unassigned contest rule **{{ruleDescription}}** from contest **{{contestName}}**"
+        }
+      },
+      "addContestReward": {
+        "description": "Adds contest reward",
+        "options": {
+          "description": "Contest reward description",
+          "useByDefault": "Assign this contest reward  by default in every new contest"
+        },
+        "errors": {
+          "failure": "❗ Failed to add new contest reward **{{rewardDescription}}**"
+        },
+        "messages": {
+          "success": "✅ Added new contest reward **{{rewardDescription}}**"
+        }
+      },
+      "removeContestReward": {
+        "description": "Removes contest reward",
+        "options": {
+          "contestReward": "Contest reward"
+        },
+        "errors": {
+          "failure": "❗ Failed to remove contest reward **{{rewardDescription}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to remove contest reward **{{rewardDescription}}**?",
+          "success": "✅ Removed contest reward **{{rewardDescription}}**"
+        }
+      },
+      "changeContestReward": {
+        "description": "Changes contest reward",
+        "options": {
+          "contestReward": "$(commands.removeContestReward.options.contestReward)",
+          "description": "$(commands.addContestReward.options.description)",
+          "useByDefault": "$(commands.addContestReward.options.useByDefault)"
+        },
+        "errors": {
+          "failure": "❗ Failed to changed contest reward **{{rewardDescription}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to change contest reward **{{rewardDescription}}**?",
+          "success": "✅ Changed contest reward **{{rewardDescription}}**"
+        }
+      },
+      "assignContestReward": {
+        "description": "Assigns contest reward to an existing contest",
+        "options": {
+          "contestReward": "$(commands.removeContestReward.options.contestReward)"
+        },
+        "errors": {
+          "failure": "❗ Failed to assign contest reward **{{rewardDescription}}** to contest **{{contestName}}**"
+        },
+        "messages": {
+          "success": "✅ Assigned contest reward *{{rewardDescription}}** to contest **{{contestName}}**"
+        }
+      },
+      "unassignContestReward": {
+        "description": "Unassigns contest reward from an existing contest",
+        "options": {
+          "contestReward": "$(commands.removeContestReward.options.contestReward)"
+        },
+        "errors": {
+          "failure": "❗ Failed to unassign contest reward **{{rewardDescription}}** from contest **{{contestName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to unassign contest reward **{{rewardDescription}}** from contest **{{contestName}}**?",
+          "success": "✅ Unassigned contest reward **{{rewardDescription}}** from contest **{{contestName}}**"
         }
       },
       "submitContestEntry": {

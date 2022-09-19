@@ -406,6 +406,72 @@
           "success": "✅ Cofnięto przypisanie reguły konkursu **{{ruleDescription}}** z konkursu **{{contestName}}**"
         }
       },
+      "addContestReward": {
+        "description": "Dodaje nagrodę konkursową",
+        "options": {
+          "description": "Opis nagrody konkursowej",
+          "useByDefault": "Dodawaj tę nagrodę konkursową domyślnie w kazdym nowym konkursie"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się dodać nowej nagrody konkursowej **{{rewardDescription}}**"
+        },
+        "messages": {
+          "success": "✅ Dodano nową nagrodę konkursową **{{rewardDescription}}**"
+        }
+      },
+      "removeContestReward": {
+        "description": "Usuwa nagrodę konkursową",
+        "options": {
+          "contestReward": "Nagroda konkursowa"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się usunąć nagrody konkursowej **{{rewardDescription}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz usunąć nagrodę konkursową **{{rewardDescription}}**?",
+          "success": "✅ Usunięto nagrodę konkursową **{{rewardDescription}}**"
+        }
+      },
+      "changeContestReward": {
+        "description": "Zmienia nagrodę konkursową",
+        "options": {
+          "contestReward": "$(commands.removeContestReward.options.contestReward)",
+          "description": "$(commands.addContestReward.options.description)",
+          "useByDefault": "$(commands.addContestReward.options.useByDefault)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się zmienić nagrody konkursowej **{{rewardDescription}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz zmienić nagrodę konkursową **{{rewardDescription}}**?",
+          "success": "✅ Zmieniono nagrodę konkursową **{{rewardDescription}}**"
+        }
+      },
+      "assignContestReward": {
+        "description": "Przypisuje nagrodę konkursową do istniejącego konkursu",
+        "options": {
+          "contestReward": "$(commands.removeContestReward.options.contestReward)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się przypisać nagrody konkursowej **{{rewardDescription}}** do konkursu **{{contestName}}**"
+        },
+        "messages": {
+          "success": "✅ Przypisano nagrodę konkursową **{{rewardDescription}}** do konkursu **{{contestName}}**"
+        }
+      },
+      "unassignContestReward": {
+        "description": "Cofa przypisanie nagrody konkursowej z istniejącego konkursu",
+        "options": {
+          "contestReward": "$(commands.removeContestReward.options.contestReward)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się cofnąć przypisania nagrody konkursowej **{{rewardDescription}}** z konkursu **{{contestName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz cofnać przypisanie nagrody konkursowej **{{rewardDescription}}** z konkursu **{{contestName}}**?",
+          "success": "✅ Cofnięto przypisanie nagrody konkursowej **{{rewardDescription}}** z konkursu **{{contestName}}**"
+        }
+      },
       "submitContestEntry": {
         "description": "Zgłasza nową pracę konkursową",
         "options": {

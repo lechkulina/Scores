@@ -605,6 +605,73 @@ class DataModel extends EventEmitter {
     `);
   }
 
+  addContestReward(description, useByDefault, guildId) {
+    return this.database.run(`
+      INSERT INTO ContestReward(description, useByDefault, guildId)
+      VALUES ("${description}", ${useByDefault ? 1 : 0}, "${guildId}");
+    `);
+  }
+
+  getAssignedContestRewards(contestId) {
+    return this.database.all(`
+      SELECT ContestReward.id, ContestReward.description
+      FROM ContestReward
+      INNER JOIN ContestRewards ON ContestRewards.contestRewardId = ContestReward.id
+      WHERE ContestRewards.contestId = ${contestId};
+    `);
+  }
+
+  getContestRewardsDescriptions(guildId) {
+    return this.database.all(`
+      SELECT id, description
+      FROM ContestReward
+      WHERE guildId = "${guildId}";
+    `);
+  }
+
+  getContestReward(id) {
+    return this.database.get(`
+      SELECT id, description
+      FROM ContestReward
+      WHERE id = "${id}";
+    `);
+  }
+
+  removeContestReward(contestRewardId) {
+    return this.database.exec(`
+      BEGIN TRANSACTION;
+        DELETE FROM ContestRewards
+        WHERE contestRewardId = ${contestRewardId};
+
+        DELETE FROM ContestReward
+        WHERE id = ${contestRewardId};
+      COMMIT;
+    `);
+  }
+
+  changeContestReward(contestRewardId, description, useByDefault) {
+    return this.database.run(`
+      UPDATE ContestReward
+      SET description = "${description}",
+          useByDefault = ${useByDefault}
+      WHERE id = ${contestRewardId};
+    `);
+  }
+
+  assignContestReward(contestId, contestRewardId) {
+    return this.database.run(`
+      INSERT INTO ContestRewards(contestId, contestRewardId)
+      VALUES (${contestId}, ${contestRewardId});
+    `);
+  }
+
+  unassignContestReward(contestId, contestRewardId) {
+    return this.database.run(`
+      DELETE FROM ContestRewards
+      WHERE contestId = ${contestId} AND contestRewardId = ${contestRewardId};
+    `);
+  }
+
   async submitContestEntry(name, description, url, contestId, authorId) {
     await this.database.exec(`
       INSERT OR REPLACE INTO ContestEntry(name, description, url, authorId, contestId)
