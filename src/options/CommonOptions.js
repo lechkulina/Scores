@@ -20,6 +20,7 @@ const OptionId = {
   VotingEndDate: 'voting-end-date',
   Contest: 'contest',
   ContestVoteCategory: 'contest-vote-category',
+  AssignedContestVoteCategories: 'assigned-contest-vote-categories',
   UseByDefault: 'use-by-default',
   AssignAction: 'assign-action',
 };

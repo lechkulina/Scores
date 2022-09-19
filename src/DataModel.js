@@ -533,7 +533,7 @@ class DataModel extends EventEmitter {
 
   unassignContestVoteCategory(contestId, contestVoteCategoryId) {
     return this.database.run(`
-      DELETE FROM ContestVoteCategories(contestId, contestVoteCategoryId)
+      DELETE FROM ContestVoteCategories
       WHERE contestId = ${contestId} AND contestVoteCategoryId = ${contestVoteCategoryId};
     `);
   }

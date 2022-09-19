@@ -293,7 +293,7 @@
         }
       },
       "assignContestVoteCategory": {
-        "description": "Assigns contest vote Category to an existing contest",
+        "description": "Assigns contest vote category to an existing contest",
         "options": {
           "contestVoteCategory": "$(commands.removeContestVoteCategory.options.name)"
         },
@@ -302,6 +302,19 @@
         },
         "messages": {
           "success": "✅ Assigned contest vote category **{{categoryName}}** to contest **{{contestName}}**"
+        }
+      },
+      "unassignContestVoteCategory": {
+        "description": "Unassigns contest vote category from an existing contest",
+        "options": {
+          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.name)"
+        },
+        "errors": {
+          "failure": "❗ Failed to unassign contest vote category **{{categoryName}}** from contest **{{contestName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to unassign contest vote category **{{categoryName}}** from contest **{{contestName}}**?",
+          "success": "✅ Unassigned contest vote category **{{categoryName}}** from contest **{{contestName}}**"
         }
       },
       "submitContestEntry": {

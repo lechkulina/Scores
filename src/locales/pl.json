@@ -327,6 +327,19 @@
           "success": "✅ Przypisano kategorię głosowania na prace konkursowe **{{categoryName}}** do konkursu **{{contestName}}**"
         }
       },
+      "unassignContestVoteCategory": {
+        "description": "Cofa przypisanie kategorii głosowania na prace konkursowe do konkursu",
+        "options": {
+          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.name)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się cofnąć przypisania kategorii głosowania na prace konkursowe **{{categoryName}}** do konkursu **{{contestName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz cofnać przypisanie kategorii głosowania na prace konkursowe **{{categoryName}}** do konkursu **{{contestName}}**?",
+          "success": "✅ Cofnięto przypisanie kategorii głosowania na prace konkursowe **{{categoryName}}** do konkursu **{{contestName}}**"
+        }
+      },
       "submitContestEntry": {
         "description": "Zgłasza nową pracę konkursową",
         "options": {
