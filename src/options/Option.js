@@ -1,10 +1,16 @@
+const SuggestionMethod = {
+  None: 0,
+  Autocomplete: 1,
+  Choices: 2
+};
+
 class Option {
-  constructor(id, description, type, required = true, autocomplete = false) {
+  constructor(id, description, type, required = true, suggestionMethod = SuggestionMethod.None) {
     this.id = id;
     this.description = description;
     this.type = type;
     this.required = required;
-    this.autocomplete = autocomplete;
+    this.suggestionMethod = suggestionMethod;
   }
 
   getConfig() {
@@ -13,8 +19,13 @@ class Option {
       description: this.description,
       type: this.type,
       required: this.required,
-      autocomplete: this.autocomplete,
+      autocomplete: this.suggestionMethod === SuggestionMethod.Autocomplete,
+      choices: this.suggestionMethod === SuggestionMethod.Choices ? this.getChoices() : undefined,
     };
+  }
+
+  getChoices() {
+    return [];
   }
 
   async getAutoCompeteResults(interaction, dataModel, translate, optionValue) {
@@ -22,4 +33,7 @@ class Option {
   }
 };
 
-module.exports = Option;
+module.exports = {
+  SuggestionMethod,
+  Option,
+};

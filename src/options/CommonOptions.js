@@ -1,5 +1,5 @@
 const {Constants: {ApplicationCommandOptionTypes}} = require('eris');
-const Option = require('./Option');
+const {Option} = require('./Option');
 
 const OptionId = {
   User: 'user',
@@ -21,35 +21,36 @@ const OptionId = {
   Contest: 'contest',
   ContestVoteCategory: 'contest-vote-category',
   UseByDefault: 'use-by-default',
+  AssignAction: 'assign-action',
 };
 
 class NumberOption extends Option {
-  constructor(name, description, required = true) {
-    super(name, description, ApplicationCommandOptionTypes.NUMBER, required, false);
+  constructor(name, description, required) {
+    super(name, description, ApplicationCommandOptionTypes.NUMBER, required);
   }
 }
 
 class StringOption extends Option {
-  constructor(name, description, required = true) {
-    super(name, description, ApplicationCommandOptionTypes.STRING, required, false);
+  constructor(name, description, required) {
+    super(name, description, ApplicationCommandOptionTypes.STRING, required);
   }
 }
 
 class BooleanOption extends Option {
-  constructor(name, description, required = true) {
-    super(name, description, ApplicationCommandOptionTypes.BOOLEAN, required, false);
+  constructor(name, description, required) {
+    super(name, description, ApplicationCommandOptionTypes.BOOLEAN, required);
   }
 }
 
 class UserOption extends Option {
-  constructor(description, required = true) {
-    super(OptionId.User, description, ApplicationCommandOptionTypes.USER, required, false);
+  constructor(description, required) {
+    super(OptionId.User, description, ApplicationCommandOptionTypes.USER, required);
   }
 }
 
 class RoleOption extends Option {
-  constructor(description, required = true) {
-    super(OptionId.Role, description, ApplicationCommandOptionTypes.ROLE, required, false);
+  constructor(description, required) {
+    super(OptionId.Role, description, ApplicationCommandOptionTypes.ROLE, required);
   }
 }
 

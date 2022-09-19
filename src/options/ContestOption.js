@@ -1,10 +1,10 @@
 const {Constants: {ApplicationCommandOptionTypes}} = require('eris');
 const {OptionId} = require('./CommonOptions');
-const Option = require('./Option');
+const {Option, SuggestionMethod} = require('./Option');
 
 class ContestOption extends Option {
   constructor(contestState, description, required) {
-    super(OptionId.Contest, description, ApplicationCommandOptionTypes.INTEGER, required, true);
+    super(OptionId.Contest, description, ApplicationCommandOptionTypes.INTEGER, required, SuggestionMethod.Autocomplete);
     this.contestState = contestState;
   }
 
