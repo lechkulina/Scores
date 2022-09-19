@@ -271,7 +271,7 @@
         }
       },
       "addContestVoteCategory": {
-        "description": "Dodaje nową kategorię głosowania prac konkursowych",
+        "description": "Dodaje nową kategorię głosowania na prace konkursowe",
         "options": {
           "name": "Nazwa kategorii głosowania",
           "description": "Opis kategorii głosowania",
@@ -283,6 +283,19 @@
         },
         "messages": {
           "success": "✅ Dodano nową kategorię głosowania prac konkursowych **{{categoryName}}**"
+        }
+      },
+      "removeContestVoteCategory": {
+        "description": "Usuwa kategorię głosowania na prace konkursowe",
+        "options": {
+          "contestVoteCategory": "Kategoria głosowania"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się usunąć kategorii głosowania na prace konkursowe **{{categoryName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz usunąć kategorię głosowania na prace konkursowe **{{categoryName}}**?",
+          "success": "✅ Usunięto kategorię głosowania na prace konkursowe **{{categoryName}}**"
         }
       },
       "submitContestEntry": {

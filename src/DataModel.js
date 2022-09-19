@@ -485,6 +485,34 @@ class DataModel extends EventEmitter {
     `);
   }
 
+  getContestVoteCategoriesNames(guildId) {
+    return this.database.all(`
+      SELECT id, name
+      FROM ContestVoteCategory
+      WHERE guildId = "${guildId}";
+    `);
+  }
+
+  getContestVoteCategory(id) {
+    return this.database.get(`
+      SELECT id, name, description, max
+      FROM ContestVoteCategory
+      WHERE id = "${id}";
+    `);
+  }
+
+  removeContestVoteCategory(contestVoteCategoryId) {
+    return this.database.exec(`
+      BEGIN TRANSACTION;
+        DELETE FROM ContestVoteCategories
+        WHERE contestVoteCategoryId = ${contestVoteCategoryId};
+
+        DELETE FROM ContestVoteCategory
+        WHERE id = ${contestVoteCategoryId};
+      COMMIT;
+    `);
+  }
+
   async submitContestEntry(name, description, url, contestId, authorId) {
     await this.database.exec(`
       INSERT OR REPLACE INTO ContestEntry(name, description, url, authorId, contestId)

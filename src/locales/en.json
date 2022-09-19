@@ -262,6 +262,19 @@
           "success": "✅ Added new contest vote category **{{categoryName}}**"
         }
       },
+      "removeContestVoteCategory": {
+        "description": "Removes contest vote category",
+        "options": {
+          "contestVoteCategory": "Contest vote category"
+        },
+        "errors": {
+          "failure": "❗ Failed to remove contest vote category **{{categoryName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to remove contest vote category **{{categoryName}}**?",
+          "success": "✅ Removed contest vote category **{{categoryName}}**"
+        }
+      },
       "submitContestEntry": {
         "description": "Submits new contest entry",
         "options": {
