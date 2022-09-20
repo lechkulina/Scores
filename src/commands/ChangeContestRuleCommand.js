@@ -25,7 +25,7 @@ class ChangeContestRuleHandler extends InteractionHandler {
     ]);
     return this.handleConfirmationForm(interaction, async () => {
       try {
-        await this.dataModel.changeContestRule(this.rule.id, description, useByDefault);
+        await this.dataModel.changeContestRule(this.rule.id, description, useByDefault, interaction.guildID);
         return this.translate('commands.changeContestRule.messages.success', {
           ruleDescription: this.ruleDescription,
         });

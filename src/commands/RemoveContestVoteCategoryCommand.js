@@ -17,7 +17,7 @@ class AddContestVoteCategoryHandler extends InteractionHandler {
   async handleComponentInteraction(interaction) {
     return this.handleConfirmationForm(interaction, async () => {
       try {
-        await this.dataModel.removeContestVoteCategory(this.category.id);
+        await this.dataModel.removeContestVoteCategory(this.category.id, interaction.guildID);
         return this.translate('commands.removeContestVoteCategory.messages.success', {
           categoryName: this.category.name,
         });

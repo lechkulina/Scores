@@ -24,7 +24,7 @@ class AddContestVoteCategoryHandler extends InteractionHandler {
     ]);
     return this.handleConfirmationForm(interaction, async () => {
       try {
-        await this.dataModel.changeContestVoteCategory(this.category.id, name, description, max, useByDefault);
+        await this.dataModel.changeContestVoteCategory(this.category.id, name, description, max, useByDefault, interaction.guildID);
         return this.translate('commands.changeContestVoteCategory.messages.success', {
           categoryName: this.category.name,
         });

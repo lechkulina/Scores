@@ -30,6 +30,8 @@ const DataModelEvents = {
 
 const ContestState = {
   Any: 'Any',
+  Active: 'Active',
+  Open: 'Open',
   ReadyToSubmitEntries: 'ReadyToSubmitEntries',
 };
 
@@ -328,9 +330,18 @@ class DataModel extends EventEmitter {
     if (guildId) {
       clause.push(`guildId = "${guildId}"`);
     }
-    if (contestState === ContestState.ReadyToSubmitEntries) {
-      clause.push(`activeBeginDate >= ${now}`);
-      clause.push(`${now} < votingBeginDate`);
+    switch (contestState) {
+      case ContestState.Active:
+        clause.push(`activeBeginDate >= ${now}`);
+        clause.push(`${now} < activeEndDate`);
+        break;
+      case ContestState.Open:
+        clause.push(`${now} < activeEndDate`);
+        break;
+      case ContestState.ReadyToSubmitEntries:
+        clause.push(`activeBeginDate >= ${now}`);
+        clause.push(`${now} < votingBeginDate`);
+        break;
     }
     return clause.length > 0 ? `WHERE ${clause.join(' AND ')}` : '';
   }
@@ -521,7 +532,7 @@ class DataModel extends EventEmitter {
     `);
   }
 
-  async removeContestVoteCategory(contestVoteCategoryId) {
+  async removeContestVoteCategory(contestVoteCategoryId, guildId) {
     await this.database.exec(`
       BEGIN TRANSACTION;
         DELETE FROM ContestVoteCategories
@@ -531,10 +542,10 @@ class DataModel extends EventEmitter {
         WHERE id = ${contestVoteCategoryId};
       COMMIT;
     `);
-    this.emit(DataModelEvents.onContestVoteCategoryRemoved, contestVoteCategoryId);
+    this.emit(DataModelEvents.onContestVoteCategoryRemoved, guildId);
   }
 
-  async changeContestVoteCategory(contestVoteCategoryId, name, description, max, useByDefault) {
+  async changeContestVoteCategory(contestVoteCategoryId, name, description, max, useByDefault, guildId) {
     await this.database.run(`
       UPDATE ContestVoteCategory
       SET name = "${name}",
@@ -543,7 +554,7 @@ class DataModel extends EventEmitter {
           useByDefault = ${useByDefault}
       WHERE id = ${contestVoteCategoryId};
     `);
-    this.emit(DataModelEvents.onContestVoteCategoryChanged, contestVoteCategoryId);
+    this.emit(DataModelEvents.onContestVoteCategoryChanged, guildId);
   }
 
   async assignContestVoteCategory(contestId, contestVoteCategoryId) {
@@ -551,10 +562,7 @@ class DataModel extends EventEmitter {
       INSERT INTO ContestVoteCategories(contestId, contestVoteCategoryId)
       VALUES (${contestId}, ${contestVoteCategoryId});
     `);
-    this.emit(DataModelEvents.onContestVoteCategoryAssigned, {
-      contestId,
-      contestVoteCategoryId,
-    });
+    this.emit(DataModelEvents.onContestVoteCategoryAssigned, contestId);
   }
 
   async unassignContestVoteCategory(contestId, contestVoteCategoryId) {
@@ -562,10 +570,7 @@ class DataModel extends EventEmitter {
       DELETE FROM ContestVoteCategories
       WHERE contestId = ${contestId} AND contestVoteCategoryId = ${contestVoteCategoryId};
     `);
-    this.emit(DataModelEvents.onContestVoteCategoryUnassigned, {
-      contestId,
-      contestVoteCategoryId,
-    });
+    this.emit(DataModelEvents.onContestVoteCategoryUnassigned, contestId);
   }
 
   async addContestRule(description, useByDefault, guildId) {
@@ -601,7 +606,7 @@ class DataModel extends EventEmitter {
     `);
   }
 
-  async removeContestRule(contestRuleId) {
+  async removeContestRule(contestRuleId, guildId) {
     await this.database.exec(`
       BEGIN TRANSACTION;
         DELETE FROM ContestRules
@@ -611,17 +616,17 @@ class DataModel extends EventEmitter {
         WHERE id = ${contestRuleId};
       COMMIT;
     `);
-    this.emit(DataModelEvents.onContestRuleRemoved, contestRuleId);
+    this.emit(DataModelEvents.onContestRuleRemoved, guildId);
   }
 
-  async changeContestRule(contestRuleId, description, useByDefault) {
+  async changeContestRule(contestRuleId, description, useByDefault, guildId) {
     await this.database.run(`
       UPDATE ContestRule
       SET description = "${description}",
           useByDefault = ${useByDefault}
       WHERE id = ${contestRuleId};
     `);
-    this.emit(DataModelEvents.onContestRuleChanged, contestRuleId);
+    this.emit(DataModelEvents.onContestRuleChanged, guildId);
   }
 
   async assignContestRule(contestId, contestRuleId) {
@@ -629,10 +634,7 @@ class DataModel extends EventEmitter {
       INSERT INTO ContestRules(contestId, contestRuleId)
       VALUES (${contestId}, ${contestRuleId});
     `);
-    this.emit(DataModelEvents.onContestRuleAssigned, {
-      contestId,
-      contestRuleId,
-    });
+    this.emit(DataModelEvents.onContestRuleAssigned, contestId);
   }
 
   async unassignContestRule(contestId, contestRuleId) {
@@ -640,10 +642,7 @@ class DataModel extends EventEmitter {
       DELETE FROM ContestRules
       WHERE contestId = ${contestId} AND contestRuleId = ${contestRuleId};
     `);
-    this.emit(DataModelEvents.onContestRuleUnassigned, {
-      contestId,
-      contestRuleId,
-    });
+    this.emit(DataModelEvents.onContestRuleUnassigned, contestId);
   }
 
   async addContestReward(description, useByDefault, guildId) {
@@ -679,7 +678,7 @@ class DataModel extends EventEmitter {
     `);
   }
 
-  async removeContestReward(contestRewardId) {
+  async removeContestReward(contestRewardId, guildId) {
     await this.database.exec(`
       BEGIN TRANSACTION;
         DELETE FROM ContestRewards
@@ -689,17 +688,17 @@ class DataModel extends EventEmitter {
         WHERE id = ${contestRewardId};
       COMMIT;
     `);
-    this.emit(DataModelEvents.onContestRewardRemoved, contestRewardId);
+    this.emit(DataModelEvents.onContestRewardRemoved, guildId);
   }
 
-  async changeContestReward(contestRewardId, description, useByDefault) {
+  async changeContestReward(contestRewardId, description, useByDefault, guildId) {
     await this.database.run(`
       UPDATE ContestReward
       SET description = "${description}",
           useByDefault = ${useByDefault}
       WHERE id = ${contestRewardId};
     `);
-    this.emit(DataModelEvents.onContestRewardChanged, contestRewardId);
+    this.emit(DataModelEvents.onContestRewardChanged, guildId);
   }
 
   async assignContestReward(contestId, contestRewardId) {
@@ -707,10 +706,7 @@ class DataModel extends EventEmitter {
       INSERT INTO ContestRewards(contestId, contestRewardId)
       VALUES (${contestId}, ${contestRewardId});
     `);
-    this.emit(DataModelEvents.onContestRewardAssigned, {
-      contestId,
-      contestRewardId,
-    });
+    this.emit(DataModelEvents.onContestRewardAssigned, contestId);
   }
 
   async unassignContestReward(contestId, contestRewardId) {
@@ -718,10 +714,7 @@ class DataModel extends EventEmitter {
       DELETE FROM ContestRewards
       WHERE contestId = ${contestId} AND contestRewardId = ${contestRewardId};
     `);
-    this.emit(DataModelEvents.onContestRewardUnassigned, {
-      contestId,
-      contestRewardId,
-    });
+    this.emit(DataModelEvents.onContestRewardUnassigned, contestId);
   }
 
   async submitContestEntry(name, description, url, contestId, authorId) {
