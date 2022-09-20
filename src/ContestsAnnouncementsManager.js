@@ -33,68 +33,99 @@ class ContestsAnnouncementsManager {
     this.onUpdateOpenContestsAnnouncementsCallback = this.onUpdateOpenContestsAnnouncements.bind(this);
   }
 
-  getTitle(announcementType) {
+  generateHeaderSection(contest, announcementType, now) {
+    const sections = [];
     switch(announcementType) {
       case AnnouncementType.Final:
-        return this.translate('announcements.contest.finalTitle');
+        sections.push(
+          this.translate('announcements.contest.headerTitleFinal')
+        );
+        break;
       case AnnouncementType.Reminder:
-        return this.translate('announcements.contest.reminderTitle');
+        sections.push(
+          this.translate('announcements.contest.headerTitleReminder')
+        );
+        break;
       default:
-        return this.translate('announcements.contest.initialTitle');
+        sections.push(
+          this.translate('announcements.contest.headerTitleInitial')
+        );
+        break;
     }
-  }
-
-  generateHeaderSection(contest, announcementType, now) {
-    const title = this.getTitle(announcementType);
     switch (true) {
       case contest.activeEndDate <= now:
-        return this.translate('announcements.contest.finalHeader', {
-          title,
-          contestName: contest.name,
-        });
+        sections.push(
+          this.translate('announcements.contest.headerDescriptionFinal', {
+            contestName: contest.name,
+          })
+        );
+        break;
       case contest.votingBeginDate <= now:
-        return this.translate('announcements.contest.begoreFinalReminderHeader', {
-          title,
-          contestName: contest.name,
-          finalStartsIn: formatDuration(this.translate, contest.activeEndDate - now),
-        });
+        sections.push(
+          this.translate('announcements.contest.headerDescriptionBeforeFinal', {
+            title,
+            contestName: contest.name,
+            finalStartsIn: formatDuration(this.translate, contest.activeEndDate - now),
+          })
+        );
+        break;
       case contest.activeBeginDate <= now:
-        return this.translate('announcements.contest.beforeVotingReminderHeader', {
-          title,
-          contestName: contest.name,
-          votingStartsIn: formatDuration(this.translate, contest.votingBeginDate - now),
-        });
+        sections.push(
+          this.translate('announcements.contest.headerDescriptionBeforeVoting', {
+            contestName: contest.name,
+            votingStartsIn: formatDuration(this.translate, contest.votingBeginDate - now),
+          })
+        );
+        break;
       default:
-        return this.translate('announcements.contest.initialHeader', {
-          title,
-          contestName: contest.name,
-          contestStartsIn: formatDuration(this.translate, contest.activeBeginDate - now),
-        });
+        sections.push(
+          this.translate('announcements.contest.headerDescriptionInitial', {
+            contestName: contest.name,
+            contestStartsIn: formatDuration(this.translate, contest.activeBeginDate - now),
+          })
+        );
+        break;
     }
+    return sections.join(Entities.NewLine);
   }
 
   generateDescriptionSection(contest, now) {
+    const sections = [
+      this.translate('announcements.contest.descriptionTitle'),
+    ];
     switch (true) {
+      // TODO
       case contest.activeEndDate <= now:
-        // TODO
-        return this.translate('announcements.contest.finalDescription', {
-          maxPointsCount: 0,
-          winnerPointsCount: 0,
-          winnerName: 0,
-          winnerEntryName: '',
-
-        });
+        sections.push(
+          this.translate('announcements.contest.descriptionFinal', {
+            maxPointsCount: 0,
+            winnerPointsCount: 0,
+            winnerName: 0,
+            winnerEntryName: '',
+          })
+        );
+        break;
       case contest.votingBeginDate <= now:
-        return this.translate('announcements.contest.begoreFinalDescription');
+        sections.push(
+          this.translate('announcements.contest.descriptionBeforeFinal')
+        );
+        break;
       case contest.activeBeginDate <= now:
-        return this.translate('announcements.contest.beforeVotingDescription', {
-          description: contest.description,
-        });
+        sections.push(
+          this.translate('announcements.contest.descriptionBeforeVoting', {
+            description: contest.description,
+          })
+        );
+        break;
       default:
-        return this.translate('announcements.contest.initialDescription', {
-          description: contest.description,
-        });
+        sections.push(
+          this.translate('announcements.contest.descriptionInitial', {
+            description: contest.description,
+          })
+        );
+        break;
     }
+    return sections.join(Entities.NewLine);
   }
 
   async generateRulesSection(contest) {
@@ -102,16 +133,18 @@ class ContestsAnnouncementsManager {
     if (rules.length === 0) {
       return '';
     }
-    const rulesDescription = rules
-      .map(({description}) => (
+    const sections = [
+      this.translate('announcements.contest.rulesTitle'),
+      this.translate('announcements.contest.rulesDescription'),
+    ];
+    rules.forEach(({description}) => {
+      sections.push(
         this.translate('announcements.contest.ruleDescription', {
           ruleDescription: description,
         })
-      ))
-      .join(Entities.NewLine);
-    return this.translate('announcements.contest.rulesDescription', {
-      rulesDescription,
+      );
     });
+    return sections.join(Entities.NewLine);
   }
 
   async generateVoteCategoriesSection(contest) {
@@ -119,28 +152,35 @@ class ContestsAnnouncementsManager {
     if (voteCategories.length === 0) {
       return '';
     }
-    const voteCategoriesDescription = voteCategories
-      .map(({name, description, max}) => (
+    const sections = [
+      this.translate('announcements.contest.voteCategoriesTitle'),
+      this.translate('announcements.contest.voteCategoriesDescription', {
+        count: voteCategories.length
+      }),
+    ];
+    voteCategories.forEach(({name, description, max}) => {
+      sections.push(
         this.translate('announcements.contest.voteCategoryDescription', {
           voteCategoryName: name,
           voteCategoryDescription: description,
           maxPointsPerVoteCategory: max,
         })
-      ))
-      .join(Entities.NewLine);
+      );
+    });
     const maxPointsPerVoter = voteCategories.reduce((points, voteCategory) => {
       points += voteCategory.max;
       return points;
     }, 0);
     const votersCount = 0; // TODO
     const maxPointsFromVoters = maxPointsPerVoter * votersCount;
-    return this.translate('announcements.contest.voteCategoriesDescription', {
-      voteCategoriesCount: voteCategories.length,
-      voteCategoriesDescription,
-      maxPointsPerVoter,
-      votersCount,
-      maxPointsFromVoters,
-    });
+    sections.push(
+      this.translate('announcements.contest.voteCategoriesSummary', {
+        maxPointsPerVoter,
+        votersCount,
+        maxPointsFromVoters,
+      })
+    );
+    return sections.join(Entities.NewLine);
   }
 
   async generateRewardsSection(contest) {
@@ -148,39 +188,53 @@ class ContestsAnnouncementsManager {
     if (rewards.length === 0) {
       return '';
     }
-    const rewardsDescription = rewards
-      .map(({description}) => (
+    const sections = [
+      this.translate('announcements.contest.rewardsTitle'),
+      this.translate('announcements.contest.rewardsDescription'),
+    ];
+    rewards.forEach(({description}) => {
+      sections.push(
         this.translate('announcements.contest.rewardDescription', {
           rewardDescription: description,
         })
-      ))
-      .join(Entities.NewLine);
-    return this.translate('announcements.contest.rewardsDescription', {
-      rewardsDescription,
+      );
     });
+    return sections.join(Entities.NewLine);
   }
 
   async generateSubmittedEntriesSection(contest, now) {
-    if (contest.activeBeginDate < now) {
+    if (now < contest.activeBeginDate) {
       return '';
     }
     const entries = await this.dataModel.getSubmittedContestEntries(contest.id);
     if (entries.length === 0) {
       return '';
     }
-    const entriesDescription = entries
-      .map(({name, authorName, submitDate}) => (
+    const sections = [
+      this.translate('announcements.contest.entriesTitle'),
+      this.translate('announcements.contest.entriesDescription', {
+        count: entries.length,
+      })
+    ];
+    entries.forEach(({name, authorName, submitDate}) => {
+      sections.push(
         this.translate('announcements.contest.entryDescription', {
           entryName: name,
           authorName,
           submitDate,
         })
-      ))
-      .join(Entities.NewLine);
-    return this.translate('announcements.contest.entriesDescription', {
-      entriesCount: entries.length,
-      entriesDescription,
+      );
     });
+    const userWithMostEntries = await this.dataModel.getUserWithMostEntries(contest.id);
+    if (userWithMostEntries) {
+      sections.push(
+        this.translate('announcements.contest.userWithMostEntries', {
+          entriesCount: userWithMostEntries.entriesCount,
+          userName: userWithMostEntries.userName,
+        })
+      )
+    }
+    return sections.join(Entities.NewLine);
   }
 
   async generateVotingResultsSection(contest) {

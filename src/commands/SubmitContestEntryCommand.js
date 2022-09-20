@@ -1,6 +1,6 @@
-const {OptionId, StringOption, NumberOption, BooleanOption} = require('../options/CommonOptions');
+const {OptionId, StringOption} = require('../options/CommonOptions');
 const ContestOption = require('../options/ContestOption');
-const {StringsLengthsValidator, FirstLetterValidator, NumbersValuesValidator} = require('../validators/validators');
+const {StringsLengthsValidator, FirstLetterValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {ContestState} = require('../DataModel');
 const Command = require('./Command');

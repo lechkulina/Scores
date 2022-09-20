@@ -339,7 +339,7 @@ class DataModel extends EventEmitter {
         clause.push(`${now} < activeEndDate`);
         break;
       case ContestState.ReadyToSubmitEntries:
-        clause.push(`activeBeginDate >= ${now}`);
+        clause.push(`${now} >= activeBeginDate`);
         clause.push(`${now} < votingBeginDate`);
         break;
     }
@@ -732,6 +732,19 @@ class DataModel extends EventEmitter {
       INNER JOIN User ON User.id = ContestEntry.authorId
       WHERE ContestEntry.contestId = ${contestId}
       ORDER BY ContestEntry.submitDate ASC;
+    `);
+  }
+
+  getUserWithMostEntries(contestId) {
+    return this.database.get(`
+      SELECT User.name as userName, COUNT(1) as entriesCount
+      FROM User
+      INNER JOIN ContestEntry ON ContestEntry.authorId = User.id
+      WHERE ContestEntry.contestId = ${contestId}
+      GROUP BY User.id
+      HAVING entriesCount > 1
+      ORDER BY entriesCount DESC
+      LIMIT 1
     `);
   }
 
