@@ -202,11 +202,11 @@ class ContestsAnnouncementsManager {
     return sections.join(Entities.NewLine);
   }
 
-  async generateSubmittedEntriesSection(contest, now) {
+  async generateEntriesSection(contest, now) {
     if (now < contest.activeBeginDate) {
       return '';
     }
-    const entries = await this.dataModel.getSubmittedContestEntries(contest.id);
+    const entries = await this.dataModel.getContestEntries(contest.id);
     if (entries.length === 0) {
       return '';
     }
@@ -254,12 +254,12 @@ class ContestsAnnouncementsManager {
             return Promise.all([
               this.generateRulesSection(contest),
               this.generateVoteCategoriesSection(contest),
-              this.generateSubmittedEntriesSection(contest, now),
+              this.generateEntriesSection(contest, now),
             ]);
           case AnnouncementType.Reminder:
             return Promise.all([
               this.generateRulesSection(contest),
-              this.generateSubmittedEntriesSection(contest, now),
+              this.generateEntriesSection(contest, now),
             ]);
           case AnnouncementType.Final:
             return Promise.all([
@@ -427,7 +427,8 @@ class ContestsAnnouncementsManager {
     this.dataModel.on(DataModelEvents.onContestRewardAssigned, this.onUpdateContestAnnouncementsCallback);
     this.dataModel.on(DataModelEvents.onContestRewardUnassigned, this.onUpdateContestAnnouncementsCallback);
     this.dataModel.on(DataModelEvents.onContestEntrySubmitted, this.onUpdateContestAnnouncementsCallback);
-
+    this.dataModel.on(DataModelEvents.onContestEntryCanceled, this.onUpdateContestAnnouncementsCallback);
+    this.dataModel.on(DataModelEvents.onContestEntryChanged, this.onUpdateContestAnnouncementsCallback);
     const contests = await this.dataModel.getContests();
     const tasks = await this.createContestsTasks(contests);
     this.tasksScheduler.addTasks(tasks);
@@ -452,6 +453,8 @@ class ContestsAnnouncementsManager {
     this.dataModel.off(DataModelEvents.onContestRewardAssigned, this.onUpdateContestAnnouncementsCallback);
     this.dataModel.off(DataModelEvents.onContestRewardUnassigned, this.onUpdateContestAnnouncementsCallback);
     this.dataModel.off(DataModelEvents.onContestEntrySubmitted, this.onUpdateContestAnnouncementsCallback);
+    this.dataModel.off(DataModelEvents.onContestEntryCanceled, this.onUpdateContestAnnouncementsCallback);
+    this.dataModel.off(DataModelEvents.onContestEntryChanged, this.onUpdateContestAnnouncementsCallback);
   }
 }
 

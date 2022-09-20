@@ -26,6 +26,8 @@ const DataModelEvents = {
   onContestRewardAssigned: 'onContestRewardAssigned',
   onContestRewardUnassigned: 'onContestRewardUnassigned',
   onContestEntrySubmitted: 'onContestEntrySubmitted',
+  onContestEntryCanceled: 'onContestEntryCanceled',
+  onContestEntryChanged: 'onContestEntryChanged',
 }
 
 const ContestState = {
@@ -718,21 +720,30 @@ class DataModel extends EventEmitter {
   }
 
   async submitContestEntry(name, description, url, contestId, authorId) {
-    await this.database.exec(`
+    await this.database.run(`
       INSERT OR REPLACE INTO ContestEntry(name, description, url, authorId, contestId)
       VALUES ("${name}", "${description}", "${url}", "${authorId}", ${contestId});
-  `);
+    `);
     this.emit(DataModelEvents.onContestEntrySubmitted, contestId);
   }
 
-  getSubmittedContestEntries(contestId) {
-    return this.database.all(`
-      SELECT ContestEntry.id, ContestEntry.name, ContestEntry.description, ContestEntry.url, ContestEntry.submitDate, User.name as authorName
-      FROM ContestEntry
-      INNER JOIN User ON User.id = ContestEntry.authorId
-      WHERE ContestEntry.contestId = ${contestId}
-      ORDER BY ContestEntry.submitDate ASC;
+  async cancelContestEntry(contestEntryId, contestId, authorId) {
+    await this.database.run(`
+      DELETE FROM ContestEntry
+      WHERE id = ${contestEntryId} AND contestId = ${contestId} AND authorId = ${authorId};
     `);
+    this.emit(DataModelEvents.onContestEntryCanceled, contestId);
+  }
+
+  async changeContestEntry(contestEntryId, contestId, name, description, url) {
+    await this.database.run(`
+      UPDATE ContestEntry
+      SET name = "${name}",
+          description = "${description}",
+          url = "${url}"
+      WHERE id = ${contestEntryId} AND contestId = ${contestId};
+    `);
+    this.emit(DataModelEvents.onContestEntryChanged, contestId);
   }
 
   getUserWithMostEntries(contestId) {
@@ -745,6 +756,32 @@ class DataModel extends EventEmitter {
       HAVING entriesCount > 1
       ORDER BY entriesCount DESC
       LIMIT 1
+    `);
+  }
+
+  getContestEntries(contestId) {
+    return this.database.all(`
+      SELECT ContestEntry.id, ContestEntry.name, ContestEntry.description, ContestEntry.url, ContestEntry.submitDate, User.name as authorName
+      FROM ContestEntry
+      INNER JOIN User ON User.id = ContestEntry.authorId
+      WHERE ContestEntry.contestId = ${contestId}
+      ORDER BY ContestEntry.submitDate ASC;
+    `);
+  }
+
+  getContestEntriesNames(contestId, authorId) {
+    return this.database.all(`
+      SELECT id, name
+      FROM ContestEntry
+      WHERE contestId = ${contestId} AND authorId = ${authorId};
+    `);
+  }
+  
+  getContestEntry(id) {
+    return this.database.get(`
+      SELECT id, name, description, url
+      FROM ContestEntry
+      WHERE id = "${id}";
     `);
   }
 

@@ -463,6 +463,37 @@
         "messages": {
           "success": "✅ Submitted entry **{{entryName}}** to contest **{{contestName}}**"
         }
+      },
+      "cancelContestEntry": {
+        "description": "Cancels submitted contest entry",
+        "options": {
+          "contest": "$(commands.submitContestEntry.options.contest)",
+          "contestEntry": "Submitted contest entry"
+        },
+        "errors": {
+          "failure": "❗ Failed to cancel contest entry **{{entryName}}** submitted to contest **{{contestName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to cancel contest entry **{{entryName}}** submitted to contest **{{contestName}}**?",
+          "success": "✅ Canceled contest entry **{{entryName}}** from contest **{{contestName}}**"
+        }
+      },
+      "changeContestEntry": {
+        "description": "Changes submitted contest entry",
+        "options": {
+          "contest": "$(commands.submitContestEntry.options.contest)",
+          "contestEntry": "$(commands.submitContestEntry.cancelContestEntry.contestEntry)",
+          "name": "$(commands.submitContestEntry.cancelContestEntry.name)",
+          "description": "$(commands.submitContestEntry.cancelContestEntry.description)",
+          "url": "$(commands.submitContestEntry.cancelContestEntry.url)"
+        },
+        "errors": {
+          "failure": "❗ Failed to changed contest entry **{{entryName}}** submitted to contest **{{contestName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to change contest entry **{{entryName}}** submitted to contest  **{{contestName}}**?",
+          "success": "✅ Changed contest entry **{{entryName}}** submitted to contest **{{contestName}}**"
+        }
       }
     }
   }

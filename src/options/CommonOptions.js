@@ -26,7 +26,7 @@ const OptionId = {
   ContestReward: 'contest-reward',
   AssignedContestReward: 'assigned-contest-reward',
   UseByDefault: 'use-by-default',
-  AssignAction: 'assign-action',
+  ContestEntry: 'contest-entry',
 };
 
 class NumberOption extends Option {

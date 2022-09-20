@@ -505,6 +505,37 @@
         "messages": {
           "success": "✅ Zgłoszono pracę **{{entryName}}** do konkursu **{{contestName}}**"
         }
+      },
+      "cancelContestEntry": {
+        "description": "Anuluje zgłoszenie pracy konkursowej",
+        "options": {
+          "contest": "$(commands.submitContestEntry.options.contest)",
+          "contestEntry": "Zgłoszona praca konkursowa"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się anulować zgłoszenia pracy konkursowej **{{entryName}}** z konkursu **{{contestName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz anulować zgłoszenie pracy konkursowej **{{entryName}}** z konkursu **{{contestName}}**?",
+          "success": "✅ Anulowano zgłoszenie pracy konkursowej **{{entryName}}** z konkursu **{{contestName}}**"
+        }
+      },
+      "changeContestEntry": {
+        "description": "Zmienia zgłoszenie pracy konkursowej",
+        "options": {
+          "contest": "$(commands.submitContestEntry.options.contest)",
+          "contestEntry": "$(commands.submitContestEntry.cancelContestEntry.contestEntry)",
+          "name": "$(commands.submitContestEntry.cancelContestEntry.name)",
+          "description": "$(commands.submitContestEntry.cancelContestEntry.description)",
+          "url": "$(commands.submitContestEntry.cancelContestEntry.url)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się zmienić zgłoszenia pracy konkursowej **{{entryName}}** do konkursu **{{contestName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz zmienić zgłoszenie pracy konkursowej **{{entryName}}** do konkursu **{{contestName}}**?",
+          "success": "✅ Zmieniono zgłoszenie pracy konkursowej **{{entryName}}** do konkursu **{{contestName}}**"
+        }
       }
     }
   }
