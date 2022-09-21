@@ -7,7 +7,7 @@ class ContestValidator extends Validator {
     this.dataModel = dataModel;
   }
 
-  async validate(translate, optionsValues) {
+  async validate(translate, optionsValues, interaction) {
     const issues = [];
     const contestId = optionsValues.get(this.optionId);
     try {

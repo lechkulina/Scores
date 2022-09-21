@@ -1,4 +1,3 @@
-
 const Validator = require('./Validator');
 
 class CommandValidator extends Validator {
@@ -8,7 +7,7 @@ class CommandValidator extends Validator {
     this.dataModel = dataModel;
   }
 
-  async validate(translate, optionsValues) {
+  async validate(translate, optionsValues, interaction) {
     const issues = [];
     const commandId = optionsValues.get(this.optionId);
     try {

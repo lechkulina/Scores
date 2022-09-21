@@ -10,7 +10,7 @@ class StringsLengthsValidator extends Validator {
     this.options = options;
   }
 
-  async validate(translate, optionsValues) {
+  async validate(translate, optionsValues, interaction) {
     const [minLength, maxLength] = await this.settings.getAll([
       this.minKey,
       this.maxKey,

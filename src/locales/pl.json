@@ -65,7 +65,11 @@
       "unknownPoints": "❗ Wybrane punkty {{pointsId}} nie istnieją! $t(validators.chooseFromAutocompleteList)",
       "pointsFetchFailure": "❗ Nie udało się pobrać danych punktów {{pointsId}}! $t(validators.reportIssue)",
       "unknownCommand": "❗ Wybrane polecenie {{commandId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
-      "commandFetchFailure": "❗ Nie udało się pobrać danych polecenia {{commandId}}! $t(validators.reportIssue)"
+      "commandFetchFailure": "❗ Nie udało się pobrać danych polecenia {{commandId}}! $t(validators.reportIssue)",
+      "unknownUser": "❗ Wybrany uzytkownik {{userId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
+      "userFetchFailure": "❗ Nie udało się pobrać danych uzytkownika {{userId}}! $t(validators.reportIssue)",
+      "unknownRole": "❗ Wybrana rola {{roleId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
+      "roleFetchFailure": "❗ Nie udało się pobrać danych o roli {{roleId}}! $t(validators.reportIssue)"
     },
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} punkty przyznane dnia {{acquireDate}} z powodu {{reasonName}}"

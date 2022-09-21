@@ -1,8 +1,9 @@
 const {Constants: {ApplicationCommandTypes}} = require('eris');
 
 class Command {
-  constructor(id, dataModel, settings, translate) {
+  constructor(id, clientHandler, dataModel, settings, translate) {
     this.id = id;
+    this.clientHandler = clientHandler;
     this.dataModel = dataModel;
     this.settings = settings;
     this.translate = translate;
@@ -53,11 +54,11 @@ class Command {
     return optionsValues;
   }
 
-  async validateOptionsValues(translate, optionsValues) {
+  async validateOptionsValues(translate, optionsValues, interaction) {
     const issues = [];
     for (const validator of this.validators) {
       issues.push(
-        ...(await validator.validate(translate, optionsValues))
+        ...(await validator.validate(translate, optionsValues, interaction))
       );
     }
     return issues;

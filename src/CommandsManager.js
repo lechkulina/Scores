@@ -25,7 +25,7 @@ class CommandsManager {
 
   async initialize() {
     require('./commands/commands.js').forEach(Command => {
-      const command = new Command(this.dataModel, this.settings, this.translate);
+      const command = new Command(this.clientHandler, this.dataModel, this.settings, this.translate);
       this.commands.set(command.id, command);
     });
     await this.initializeCommands();

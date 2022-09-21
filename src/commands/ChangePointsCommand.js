@@ -1,17 +1,22 @@
 const ReasonOption = require('../options/ReasonOption');
 const RecentlyGivenPointsOption = require('../options/RecentlyGivenPointsOption');
 const {OptionId, UserOption, NumberOption} = require('../options/CommonOptions');
-const {PointsValueValidator, ReasonValidator, PointsValidator} = require('../validators/validators');
+const {
+  PointsValueValidator,
+  ReasonValidator, 
+  PointsValidator,
+  MemberValidator,
+ } = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const Command = require('./Command');
 
 class ChangePointsInteractionHandler extends InteractionHandler {
-  async handleCommandInteraction(interaction) {
-    this.user = await this.clientHandler.findUser(interaction.guildID, this.getOptionValue(OptionId.User));
+  handleCommandInteraction(interaction) {
+    this.member = this.getOptionValue(OptionId.User);
     this.pointsEntry = this.getOptionValue(OptionId.RecentlyGivenPoints);
     return interaction.createMessage({
       content: this.translate('commands.changePoints.messages.confirmation', {
-        userName: this.user.username,
+        userName: this.member.user.username,
         points: this.pointsEntry.points,
         acquireDate: this.pointsEntry.acquireDate,
         reasonName: this.pointsEntry.reasonName,
@@ -26,11 +31,11 @@ class ChangePointsInteractionHandler extends InteractionHandler {
       try {
         await this.dataModel.changePoints(this.pointsEntry.id, pointsValue, reason.id);
         return this.translate('commands.changePoints.messages.success', {
-          userName: this.user.username
+          userName: this.member.user.username
         });
       } catch (error) {
         return this.translate('commands.changePoints.errors.failure', {
-          userName: this.user.username
+          userName: this.member.user.username
         });
       }
     });
@@ -54,6 +59,7 @@ class ChangePointsCommand extends Command {
       new PointsValueValidator(OptionId.Points, OptionId.Reason, this.dataModel, this.options),
       new ReasonValidator(OptionId.Reason, this.dataModel),
       new PointsValidator(OptionId.RecentlyGivenPoints, this.dataModel),
+      new MemberValidator(OptionId.User, this.clientHandler),
     ]);
     return Promise.resolve();
   }

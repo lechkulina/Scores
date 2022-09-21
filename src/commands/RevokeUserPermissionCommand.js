@@ -1,12 +1,12 @@
 const CommandOption = require('../options/CommandOption');
 const {OptionId, UserOption} = require('../options/CommonOptions');
-const {CommandValidator} = require('../validators/validators');
+const {CommandValidator, MemberValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const Command = require('./Command');
 
 class RevokeRolePermissionInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
-    this.member = await this.clientHandler.findMember(interaction.guildID, this.getOptionValue(OptionId.User));
+    this.member = this.getOptionValue(OptionId.User);
     this.command = this.getOptionValue(OptionId.Command);
     return interaction.createMessage({
       content: this.translate('commands.revokeUserPermission.messages.confirmation', {
@@ -46,6 +46,7 @@ class RevokeUserPermissionCommand extends Command {
     ]);
     this.addValidators([
       new CommandValidator(OptionId.Command, this.dataModel),
+      new MemberValidator(OptionId.User, this.clientHandler),
     ]);
     return Promise.resolve();
   }

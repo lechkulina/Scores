@@ -1,6 +1,6 @@
 const ReasonOption = require('../options/ReasonOption');
 const {OptionId, UserOption, NumberOption} = require('../options/CommonOptions');
-const {PointsValueValidator, ReasonValidator} = require('../validators/validators');
+const {PointsValueValidator, ReasonValidator, MemberValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {ButtonId, createActionRow, createButton} = require('../Components');
 const {Entities} = require('../Formatters');
@@ -8,8 +8,8 @@ const Command = require('./Command');
 
 class AddPointsInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
-    this.member = await this.clientHandler.findMember(interaction.guildID, this.getOptionValue(OptionId.User));
-    this.giver = await this.clientHandler.findMember(interaction.guildID, interaction.member.user.id);
+    this.giver = await this.clientHandler.findMember(interaction.guildID, interaction.member.user.id);  // TODO handle errors here
+    this.member = this.getOptionValue(OptionId.User);
     this.reason = this.getOptionValue(OptionId.Reason);
     this.points = this.getOptionValue(OptionId.Points);
     try {
@@ -108,6 +108,7 @@ class AddPointsCommand extends Command {
     this.addValidators([
       new PointsValueValidator(OptionId.Points, OptionId.Reason, this.dataModel, this.settings, this.options),
       new ReasonValidator(OptionId.Reason, this.dataModel),
+      new MemberValidator(OptionId.User, this.clientHandler),
     ])
     return Promise.resolve();
   }

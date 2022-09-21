@@ -9,7 +9,7 @@ class DatesValidator extends Validator {
     this.options = options;
   }
 
-  async validate(translate, optionsValues) {
+  async validate(translate, optionsValues, interaction) {
     const dateInputFormat = await this.settings.get('dateInputFormat');
     const issues = [];
     this.optionsIds.forEach(optionId => {

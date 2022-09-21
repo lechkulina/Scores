@@ -7,7 +7,7 @@ class NumbersValuesValidator extends Validator {
     this.options = options;
   }
 
-  async validate(translate, optionsValues) {
+  async validate(translate, optionsValues, interaction) {
     const issues = [];
     this.optionsIds.forEach(optionId => {
       const option = this.options.get(optionId);

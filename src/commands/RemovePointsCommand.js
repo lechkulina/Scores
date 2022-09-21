@@ -1,16 +1,16 @@
 const RecentlyGivenPointsOption = require('../options/RecentlyGivenPointsOption');
-const {PointsValidator} = require('../validators/validators');
+const {PointsValidator, MemberValidator} = require('../validators/validators');
 const {OptionId, UserOption} = require('../options/CommonOptions');
 const InteractionHandler = require('../InteractionHandler');
 const Command = require('./Command');
 
 class RemovePointsInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
-    this.user = await this.clientHandler.findUser(interaction.guildID, this.getOptionValue(OptionId.User));
+    this.member = this.getOptionValue(OptionId.User);
     this.pointsEntry = this.getOptionValue(OptionId.RecentlyGivenPoints);
     return interaction.createMessage({
       content: this.translate('commands.removePoints.messages.confirmation', {
-        userName: this.user.username,
+        userName: this.member.user.username,
         points: this.pointsEntry.points,
         acquireDate: this.pointsEntry.acquireDate,
         reasonName: this.pointsEntry.reasonName,
@@ -24,11 +24,11 @@ class RemovePointsInteractionHandler extends InteractionHandler {
       try {
         await this.dataModel.removePoints(this.pointsEntry.id);
         return this.translate('commands.removePoints.messages.success', {
-          userName: this.user.username,
+          userName: this.member.user.username,
         });
       } catch (error) {
         return this.translate('commands.removePoints.errors.failure', {
-          userName: this.user.username,
+          userName: this.member.user.username,
         });
       }
     });
@@ -48,6 +48,7 @@ class RemovePointsCommand extends Command {
     ]);
     this.addValidators([
       new PointsValidator(OptionId.RecentlyGivenPoints, this.dataModel),
+      new MemberValidator(OptionId.User, this.clientHandler),
     ]);
     return Promise.resolve();
   }

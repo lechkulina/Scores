@@ -1,5 +1,5 @@
 class Validator {
-  validate(translate, optionsValues) {
+  validate(translate, optionsValues, interaction) {
     return Promise.resolve([]);
   }
 }

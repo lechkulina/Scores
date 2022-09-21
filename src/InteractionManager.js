@@ -66,7 +66,7 @@ class InteractionManager {
     }
     // validate options values
     const optionsValues = command.createOptionsValues(interaction);
-    const issues = await command.validateOptionsValues(translate, optionsValues);
+    const issues = await command.validateOptionsValues(translate, optionsValues, interaction);
     if (issues.length > 0) {
       await interaction.createMessage({
         content: [
@@ -79,7 +79,13 @@ class InteractionManager {
       return;
     }
     // add new interaction handler
-    const interactionHandler = command.createInteractionHandler(this.clientHandler, this.dataModel, this.settings, translate, optionsValues);
+    const interactionHandler = command.createInteractionHandler(
+      this.clientHandler,
+      this.dataModel,
+      this.settings,
+      translate,
+      optionsValues
+    );
     await interactionHandler.initialize(interaction);
     this.interactionHandlers.set(interaction.id, interactionHandler);
     return interactionHandler;

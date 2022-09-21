@@ -8,7 +8,7 @@ class PointsValidator extends Validator {
     this.dataModel = dataModel;
   }
 
-  async validate(translate, optionsValues) {
+  async validate(translate, optionsValues, interaction) {
     const issues = [];
     const pointsId = optionsValues.get(this.optionId);
     try {

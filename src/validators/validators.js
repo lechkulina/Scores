@@ -14,4 +14,6 @@ module.exports = {
   ReasonValidator: require('./ReasonValidator'),
   PointsValidator: require('./PointsValidator'),
   CommandValidator: require('./CommandValidator'),
+  MemberValidator: require('./MemberValidator'),
+  RoleValidator: require('./RoleValidator'),
 }

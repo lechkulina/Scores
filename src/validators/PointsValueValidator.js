@@ -9,7 +9,7 @@ class PointsValueValidator extends Validator {
     this.options = options;
   }
 
-  async validate(translate, optionsValues) {
+  async validate(translate, optionsValues, interaction) {
     const issues = [];
     const reason = await this.dataModel.getReason(optionsValues.get(this.reasonOptionId));
     if (!reason) {
