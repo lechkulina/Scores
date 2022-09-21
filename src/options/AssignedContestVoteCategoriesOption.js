@@ -1,5 +1,6 @@
 const {Constants: {ApplicationCommandOptionTypes}} = require('eris');
 const {autoCompeteResultsLimit} = require('../constants');
+const {formatAutoCompleteName} = require('../Formatters');
 const {OptionId} = require('./CommonOptions');
 const {Option, SuggestionMethod} = require('./Option');
 
@@ -15,7 +16,7 @@ class AssignedContestVoteCategoriesOption extends Option {
     }
     const categories = await dataModel.getAssignedContestVoteCategories(contestId, autoCompeteResultsLimit);
     const response = categories.map(({id, name}) => ({
-      name,
+      name: formatAutoCompleteName(id, name),
       value: id,
     }));
     return interaction.result(response);

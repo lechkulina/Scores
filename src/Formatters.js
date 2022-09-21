@@ -1,4 +1,4 @@
-const {msInSecond, msInMinute, msInHour, msInDay, msInWeek} = require('./constants');
+const {msInSecond, msInMinute, msInHour, msInDay, msInWeek, autoCompeteNameLimit} = require('./constants');
 
 const Entities = {
   NoFormat: '```',
@@ -28,7 +28,8 @@ function formatTable({
         if (!columnsLabels[name]) {
           columnsLabels[name] = name;
         }
-        columnsWidths[name] = columnsLabels[name].length + 1; // one is added to make sure that there is an exptra space on left side
+        // one is added to make sure that there is an exptra space on left side
+        columnsWidths[name] = columnsLabels[name].length + 1;
       }
       const value = `${row[name]}`;
       columnsWidths[name] = Math.max(columnsWidths[name], value.length);
@@ -101,10 +102,15 @@ function formatDuration(translate, duration, includeSeconds = false) {
   return sections.join(' ');
 }
 
+function formatAutoCompleteName(value, name, limit = autoCompeteNameLimit) {
+  return formatEllipsis(`${value} - ${name}`, limit);
+}
+
 module.exports = {
   Entities,
   formatTable,
   formatMessageTable,
   formatEllipsis,
   formatDuration,
+  formatAutoCompleteName,
 };
