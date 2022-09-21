@@ -16,7 +16,7 @@ class SubmitContestEntryHandler extends InteractionHandler {
       OptionId.Url,
     ]);
     try {
-      const authorMember = await this.findMember(interaction.guildID, authorId);
+      const authorMember = await this.clientHandler.findMember(interaction.guildID, authorId);
       await this.dataModel.addUser(authorMember.user.id, authorMember.username, authorMember.user.discriminator, authorMember.guild.id);
       await this.dataModel.submitContestEntry(name, description, url, contestId, authorMember.user.id);
       return interaction.createMessage({

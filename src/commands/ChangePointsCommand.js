@@ -7,7 +7,7 @@ const Command = require('./Command');
 
 class ChangePointsInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
-    this.user = await this.findUser(interaction.guildID, this.getOptionValue(OptionId.User));
+    this.user = await this.clientHandler.findUser(interaction.guildID, this.getOptionValue(OptionId.User));
     this.pointsEntry = this.getOptionValue(OptionId.RecentlyGivenPoints);
     return interaction.createMessage({
       content: this.translate('commands.changePoints.messages.confirmation', {

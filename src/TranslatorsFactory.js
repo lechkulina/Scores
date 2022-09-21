@@ -1,23 +1,17 @@
 const i18next = require('i18next');
-const config = require('../config.js');
 
 const namespace = 'main';
 const fallbackLanguage = 'en';
 
 class TranslatorsFactory {
-  constructor(client, settings) {
-    this.client = client;
+  constructor(settings) {
     this.settings = settings;
   }
 
   async getPreferredLocale(interaction) {
     const preferredLocale = await this.settings.get('preferredLocale');
     const useGuildLocale = await this.settings.get('useGuildLocale');
-    const guild = interaction?.channel.guild || (() => {
-      if (config.discord.guildId) {
-        return this.client.guilds.find(({id}) => id === config.discord.guildId);
-      }
-    })();
+    const guild = interaction?.channel.guild;
     if (useGuildLocale && guild?.preferredLocale) {
       return guild.preferredLocale;
     }

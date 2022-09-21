@@ -12,7 +12,15 @@ const Command = require('./Command');
 class AddContestInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     this.markAsDone();
-    const [name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate] = this.getOptionValues([
+    const [
+      name,
+      description,
+      announcementsThreshold,
+      activeBeginDate,
+      activeEndDate,
+      votingBeginDate,
+      votingEndDate
+    ] = this.getOptionValues([
       OptionId.Name,
       OptionId.Description,
       OptionId.AnnouncementsThreshold,

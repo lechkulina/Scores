@@ -1,8 +1,6 @@
-const config = require('../config.js');
-
 class CommandsManager {
-  constructor(client, dataModel, settings, translate) {
-    this.client = client;
+  constructor(clientHandler, dataModel, settings, translate) {
+    this.clientHandler = clientHandler;
     this.dataModel = dataModel;
     this.settings = settings;
     this.translate = translate;
@@ -20,16 +18,9 @@ class CommandsManager {
     await Promise.all(commandsArray.map(command =>
       command.initialize()
     ));
-    await Promise.all(commandsArray.map(command =>
+    return Promise.all(commandsArray.map(command =>
       this.dataModel.addCommand(command.id, command.description)
     ));
-  }
-
-  registerCommands() {
-    const commandsConfig = this.getConfig();
-    return config.discord.guildId
-      ? this.client.bulkEditGuildCommands(config.discord.guildId, commandsConfig)
-      : this.client.bulkEditCommands(commandsConfig);
   }
 
   async initialize() {
@@ -38,7 +29,7 @@ class CommandsManager {
       this.commands.set(command.id, command);
     });
     await this.initializeCommands();
-    await this.registerCommands();
+    return this.clientHandler.registerCommands(this.getConfig());
   }
 
   findCommand(commandId) {

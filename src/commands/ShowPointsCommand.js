@@ -3,16 +3,13 @@ const {Entities, formatMessageTable} = require('../Formatters');
 const Command = require('./Command');
 
 class ShowPointsInteractionHandler extends InteractionHandler {
-  async initialize(interaction) {
-    this.user = await this.findUser(interaction.guildID, interaction.member.user.id);
-  }
-
   async handleCommandInteraction(interaction) {
     try {
+      const user = await this.clientHandler.findUser(interaction.guildID, interaction.member.user.id);
       const recentPointsLimit = await this.settings.get('recentPointsLimit');
-      const summary = await this.dataModel.getPointsSummary(this.user.id);
-      const recentPointsRows = await this.dataModel.getRecentPoints(this.user.id, recentPointsLimit);
-      const rankingPositionsRows = await this.dataModel.getRankingPositions(this.user.id);
+      const summary = await this.dataModel.getPointsSummary(user.id);
+      const recentPointsRows = await this.dataModel.getRecentPoints(user.id, recentPointsLimit);
+      const rankingPositionsRows = await this.dataModel.getRankingPositions(user.id);
       this.markAsDone();
       return interaction.createMessage({
         content: [

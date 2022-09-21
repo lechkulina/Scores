@@ -8,8 +8,8 @@ const Command = require('./Command');
 
 class AddPointsInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
-    this.member = await this.findMember(interaction.guildID, this.getOptionValue(OptionId.User));
-    this.giver = await this.findMember(interaction.guildID, interaction.member.user.id);
+    this.member = await this.clientHandler.findMember(interaction.guildID, this.getOptionValue(OptionId.User));
+    this.giver = await this.clientHandler.findMember(interaction.guildID, interaction.member.user.id);
     this.reason = this.getOptionValue(OptionId.Reason);
     this.points = this.getOptionValue(OptionId.Points);
     try {
@@ -40,8 +40,9 @@ class AddPointsInteractionHandler extends InteractionHandler {
     });
   }
 
+  // TODO move this to clientHandler
   async sendDirectMessage(interaction) {
-    const channel = await this.createDirectMessagesChannel(interaction.guildID, this.member.user.id);
+    const channel = await this.clientHandler.createDirectMessagesChannel(interaction.guildID, this.member.user.id);
     await channel.createMessage(this.translate('commands.addPoints.messages.directMessage', {
       giverName: this.giver.user.username,
       points: this.points,
@@ -52,8 +53,10 @@ class AddPointsInteractionHandler extends InteractionHandler {
     });
   }
 
+  // TODO move this to clientHandler
   async createPublicMessage(interaction) {
-    const channel = await this.findPublicChannel(interaction.guildID);
+    const publicChannelId = await this.settings.get('publicChannelId');
+    const channel = await this.clientHandler.findChannel(interaction.guildID, publicChannelId);
     if (!channel) {
       console.error('Unable to send public message - public channel is missing');
       return;

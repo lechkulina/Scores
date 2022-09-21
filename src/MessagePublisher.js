@@ -1,6 +1,6 @@
 const md5 = require('md5');
 const {Entities} = require('./Formatters');
-const ClientSupport = require('./ClientSupport');
+const ClientHandlerEvents = require('./ClientHandlerEvents');
 
 const SectionType = {
   Paragraph: 0,
@@ -8,10 +8,11 @@ const SectionType = {
   Word: 2,
 };
 
-class MessagePublisher extends ClientSupport {
-  constructor(client, dataModel, settings) {
-    super(client, settings);
+class MessagePublisher {
+  constructor(clientHandler, dataModel, settings) {
+    this.clientHandler = clientHandler;
     this.dataModel = dataModel;
+    this.settings = settings;
     this.removeMessagesLock = Promise.resolve();
     this.onMessageDeleteCallback = this.onMessageDelete.bind(this);
     this.onMessageDeleteBulkCallback = this.onMessageDeleteBulk.bind(this);
@@ -108,7 +109,7 @@ class MessagePublisher extends ClientSupport {
 
   async createMessage(guildId, channelId, content) {
     // find the given channel
-    const channel = this.findChannel(guildId, channelId);
+    const channel = this.clientHandler.findChannel(guildId, channelId);
     if (!channel) {
       console.error(`Unable to create message - channel ${channelId} is missing`);
       return;
@@ -152,7 +153,7 @@ class MessagePublisher extends ClientSupport {
       console.error(`Unable to update message ${messageId} - unknown message`);
       return;
     }
-    const channel = this.findChannel(message.guildId, message.channelId);
+    const channel = this.clientHandler.findChannel(message.guildId, message.channelId);
     if (!channel) {
       console.error(`Unable to update message - channel ${message.channelId} is missing`);
       return;
@@ -227,7 +228,7 @@ class MessagePublisher extends ClientSupport {
         if (obsoleteMessageChunksIds.length > 0) {
           console.debug(`Removing ${obsoleteMessageChunksIds.length} message chunks from message ${messageId}`);
           try {
-            await this.client.deleteMessages(message.channelId, obsoleteMessageChunksIds);
+            await this.clientHandler.deleteMessages(message.channelId, obsoleteMessageChunksIds);
           } catch (error) {
             console.error(`Failed to delete message chunks from message ${messageId} - got error ${error}`);
             continue;
@@ -262,13 +263,13 @@ class MessagePublisher extends ClientSupport {
   }
 
   initialize() {
-    this.client.on('messageDelete', this.onMessageDeleteCallback);
-    this.client.on('messageDeleteBulk', this.onMessageDeleteBulkCallback);
+    this.clientHandler.on(ClientHandlerEvents.onMessageDelete, this.onMessageDeleteCallback);
+    this.clientHandler.on(ClientHandlerEvents.onMessageDeleteBulk, this.onMessageDeleteBulkCallback);
   }
 
   uninitialize() {
-    this.client.off('messageDelete', this.onMessageDeleteCallback);
-    this.client.off('messageDeleteBulk', this.onMessageDeleteBulkCallback);
+    this.clientHandler.off(ClientHandlerEvents.onMessageDelete, this.onMessageDeleteCallback);
+    this.clientHandler.off(ClientHandlerEvents.onMessageDeleteBulk, this.onMessageDeleteBulkCallback);
   }
 }
 

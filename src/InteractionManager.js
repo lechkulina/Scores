@@ -9,13 +9,13 @@ const TasksScheduler = require('./TasksScheduler');
 const ContestsAnnouncementsManager = require('./ContestsAnnouncementsManager');
 
 class InteractionManager {
-  constructor(client) {
-    this.client = client;
-    this.dataModel = new DataModel(this.client);
+  constructor(clientHandler) {
+    this.clientHandler = clientHandler;
+    this.dataModel = new DataModel();
     this.settings = new Settings(this.dataModel);
     this.tasksScheduler = new TasksScheduler(this.settings);
-    this.translatorsFactory = new TranslatorsFactory(this.client, this.settings);
-    this.messagePublisher = new MessagePublisher(this.client, this.dataModel, this.settings);
+    this.translatorsFactory = new TranslatorsFactory(this.settings);
+    this.messagePublisher = new MessagePublisher(this.clientHandler, this.dataModel, this.settings);
     this.interactionHandlers = new Map();
   }
 
@@ -26,7 +26,7 @@ class InteractionManager {
     await this.translatorsFactory.initialize();
     await this.messagePublisher.initialize();
     this.translate = await this.translatorsFactory.getTranslator();
-    this.commandsManager = new CommandsManager(this.client, this.dataModel, this.settings, this.translate);
+    this.commandsManager = new CommandsManager(this.clientHandler, this.dataModel, this.settings, this.translate);
     this.contestsAnnouncementsManager = new ContestsAnnouncementsManager(
       this.dataModel,
       this.settings,
@@ -36,6 +36,11 @@ class InteractionManager {
     );
     await this.commandsManager.initialize();
     await this.contestsAnnouncementsManager.initialize();
+  }
+
+  uninitialize() {
+    this.contestsAnnouncementsManager.uninitialize();
+    this.messagePublisher.uninitialize();
   }
 
   async createInteractionHandler(interaction) {
@@ -74,7 +79,7 @@ class InteractionManager {
       return;
     }
     // add new interaction handler
-    const interactionHandler = command.createInteractionHandler(this.client, this.dataModel, this.settings, translate, optionsValues);
+    const interactionHandler = command.createInteractionHandler(this.clientHandler, this.dataModel, this.settings, translate, optionsValues);
     await interactionHandler.initialize(interaction);
     this.interactionHandlers.set(interaction.id, interactionHandler);
     return interactionHandler;

@@ -1,11 +1,11 @@
 const {Constants: {ButtonStyles}} = require('eris');
 const {ButtonId, createActionRow, createButton} = require('./Components');
-const ClientSupport = require('./ClientSupport');
 
-class InteractionHandler extends ClientSupport {
-  constructor(client, dataModel, settings, translate, optionsValues) {
-    super(client, settings);
+class InteractionHandler {
+  constructor(clientHandler, dataModel, settings, translate, optionsValues) {
+    this.clientHandler = clientHandler;
     this.dataModel = dataModel;
+    this.settings = settings;
     this.translate = translate;
     this.optionsValues = optionsValues;
     this.done = false;

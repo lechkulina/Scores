@@ -63,7 +63,7 @@ class Command {
     return issues;
   }
 
-  createInteractionHandler(translate, optionsValues) {
+  createInteractionHandler(clientHandler, dataModel, settings, translate, optionsValues) {
     return Promise.resolve();
   }
 };

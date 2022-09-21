@@ -6,7 +6,7 @@ const Command = require('./Command');
 
 class RevokeRolePermissionInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
-    this.role = this.findRole(interaction.guildID, this.getOptionValue(OptionId.Role));
+    this.role = this.clientHandler.findRole(interaction.guildID, this.getOptionValue(OptionId.Role));
     this.command = this.getOptionValue(OptionId.Command);
     return interaction.createMessage({
       content: this.translate('commands.revokeRolePermission.messages.confirmation', {
