@@ -5,14 +5,14 @@ const InteractionHandler = require('../InteractionHandler');
 const {ContestValidator, ContestRewardValidator} = require('../validators/validators');
 const {ContestState} = require('../DataModel');
 const {formatEllipsis} = require('../Formatters');
-const {contestRewardDescriptionLimit} = require('../constants');
+const {autoCompeteNameLimit} = require('../constants');
 const Command = require('./Command');
 
 class UnassignContestRuleHandler extends InteractionHandler {
   handleCommandInteraction(interaction) {
     this.contest = this.getOptionValue(OptionId.Contest);
     this.reward =  this.getOptionValue(OptionId.AssignedContestReward);
-    this.rewardDescription = formatEllipsis(this.reward.description, contestRewardDescriptionLimit);
+    this.rewardDescription = formatEllipsis(this.reward.description, autoCompeteNameLimit);
     return interaction.createMessage({
       content: this.translate('commands.unassignContestReward.messages.confirmation', {
         contestName: this.contest.name,

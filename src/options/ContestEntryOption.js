@@ -9,18 +9,21 @@ class ContestEntryOption extends Option {
     super(id, description, required, ApplicationCommandOptionTypes.INTEGER, SuggestionMethod.Autocomplete);
   }
 
-  async getAutoCompeteResults(interaction, dataModel, translate, optionValue) {
+  async getAutoCompeteResults(interaction, dataModel, optionValue, translate) {
     const authorId = interaction.member.user.id;
     const contestId = interaction.data.options.find(({name}) => name === OptionId.Contest)?.value;
     if (!contestId || !authorId) {
       return [];
     }
     const entries = await dataModel.getContestEntriesNames(contestId, authorId, autoCompeteResultsLimit);
-    const response = entries.map(({id, name}) => ({
-      name: formatAutoCompleteName(id, name),
-      value: id,
-    }));
-    return interaction.result(response);
+    const results = entries
+      .map(({id, name}) => ({
+        name: formatAutoCompleteName(id, name),
+        value: id,
+      }));
+    return interaction.result(
+      this.filterResults(results, optionValue)
+    );
   }
 }
 

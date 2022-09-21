@@ -2,7 +2,7 @@ const {OptionId, StringOption, BooleanOption} = require('../options/CommonOption
 const {StringsLengthsValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {formatEllipsis} = require('../Formatters');
-const {contestRuleDescriptionLimit} = require('../constants');
+const {autoCompeteNameLimit} = require('../constants');
 const Command = require('./Command');
 
 class AddContestRuleHandler extends InteractionHandler {
@@ -12,7 +12,7 @@ class AddContestRuleHandler extends InteractionHandler {
       OptionId.Description,
       OptionId.UseByDefault,
     ]);
-    const ruleDescription = formatEllipsis(description, contestRuleDescriptionLimit);
+    const ruleDescription = formatEllipsis(description, autoCompeteNameLimit);
     try {
       await this.dataModel.addContestRule(description, useByDefault, interaction.guildID);
       return interaction.createMessage({

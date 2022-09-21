@@ -8,13 +8,16 @@ class ContestRuleOption extends Option {
     super(id, description, required, ApplicationCommandOptionTypes.INTEGER, SuggestionMethod.Autocomplete);
   }
 
-  async getAutoCompeteResults(interaction, dataModel, translate, optionValue) {
+  async getAutoCompeteResults(interaction, dataModel, optionValue, translate) {
     const rules = await dataModel.getContestRulesDescriptions(interaction.guildID, autoCompeteResultsLimit);
-    const response = rules.map(({id, description}) => ({
-      name: formatAutoCompleteName(id, description),
-      value: id,
-    }));
-    return interaction.result(response);
+    const results = rules
+      .map(({id, description}) => ({
+        name: formatAutoCompleteName(id, description),
+        value: id,
+      }));
+    return interaction.result(
+      this.filterResults(results, optionValue)
+    );
   }
 }
 

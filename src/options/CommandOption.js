@@ -7,13 +7,16 @@ class CommandOption extends Option {
     super(id, description, required, ApplicationCommandOptionTypes.STRING, SuggestionMethod.Autocomplete);
   }
 
-  async getAutoCompeteResults(interaction, dataModel, translate, optionValue) {
+  async getAutoCompeteResults(interaction, dataModel, optionValue, translate) {
     const commands = await dataModel.getCommands(autoCompeteResultsLimit);
-    const response = commands.map(({id}) => ({
-      name: id,
-      value: id,
-    }));
-    return interaction.result(response);
+    const results = commands
+      .map(({id}) => ({
+        name: id,
+        value: id,
+      }));
+    return interaction.result(
+      this.filterResults(results, optionValue)
+    );
   }
 }
 

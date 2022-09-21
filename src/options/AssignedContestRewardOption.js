@@ -9,17 +9,20 @@ class AssignedContestRewardOption extends Option {
     super(id, description, required, ApplicationCommandOptionTypes.INTEGER, SuggestionMethod.Autocomplete);
   }
 
-  async getAutoCompeteResults(interaction, dataModel, translate, optionValue) {
+  async getAutoCompeteResults(interaction, dataModel, optionValue, translate) {
     const contestId = interaction.data.options.find(({name}) => name === OptionId.Contest)?.value;
     if (!contestId) {
       return [];
     }
     const rewards = await dataModel.getAssignedContestRewards(contestId, autoCompeteResultsLimit);
-    const response = rewards.map(({id, description}) => ({
-      name: formatAutoCompleteName(id, description),
-      value: id,
-    }));
-    return interaction.result(response);
+    const results = rewards
+      .map(({id, description}) => ({
+        name: formatAutoCompleteName(id, description),
+        value: id,
+      }));
+    return interaction.result(
+      this.filterResults(results, optionValue)
+    );
   }
 }
 

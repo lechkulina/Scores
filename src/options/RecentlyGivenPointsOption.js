@@ -9,25 +9,28 @@ class RecentlyGivenPointsOption extends Option {
     super(id, description, required, ApplicationCommandOptionTypes.INTEGER, SuggestionMethod.Autocomplete);
   }
 
-  async getAutoCompeteResults(interaction, dataModel, translate, optionValue) {
+  async getAutoCompeteResults(interaction, dataModel, optionValue, translate) {
     const giverId = interaction.member.user.id;
     const userId = interaction.data.options.find(({name}) => name === OptionId.User)?.value;
     if (!userId) {
       return [];
     }
     const points = await dataModel.getRecentlyGivenPoints(userId, giverId, autoCompeteResultsLimit);
-    const response = points.map(({id, points, acquireDate, reasonName}) => {
-      const name = translate('autoCompete.recentlyGivenPoints', {
-        points,
-        acquireDate,
-        reasonName,
+    const results = points
+      .map(({id, points, acquireDate, reasonName}) => {
+        const name = translate('autoCompete.recentlyGivenPoints', {
+          points,
+          acquireDate,
+          reasonName,
+        });
+        return {
+          name: formatAutoCompleteName(id, name),
+          value: id,
+        };
       });
-      return {
-        name: formatAutoCompleteName(id, name),
-        value: id,
-      };
-    });
-    return interaction.result(response);
+    return interaction.result(
+      this.filterResults(results, optionValue)
+    );
   }
 }
 

@@ -5,14 +5,14 @@ const InteractionHandler = require('../InteractionHandler');
 const {ContestValidator, ContestRuleValidator} = require('../validators/validators');
 const {ContestState} = require('../DataModel');
 const {formatEllipsis} = require('../Formatters');
-const {contestRuleDescriptionLimit} = require('../constants');
+const {autoCompeteNameLimit} = require('../constants');
 const Command = require('./Command');
 
 class AssignContestRuleHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     this.markAsDone();
     const [contest, rule] = this.getOptionValues([OptionId.Contest, OptionId.ContestRule]);
-    const ruleDescription = formatEllipsis(rule.description, contestRuleDescriptionLimit);
+    const ruleDescription = formatEllipsis(rule.description, autoCompeteNameLimit);
     try {
       await this.dataModel.assignContestRule(contest.id, rule.id);
       return interaction.createMessage(

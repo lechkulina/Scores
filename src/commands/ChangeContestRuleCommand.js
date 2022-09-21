@@ -3,13 +3,13 @@ const {StringsLengthsValidator, ContestRuleValidator} = require('../validators/v
 const ContestRuleOption = require('../options/ContestRuleOption');
 const InteractionHandler = require('../InteractionHandler');
 const {formatEllipsis} = require('../Formatters');
-const {contestRuleDescriptionLimit} = require('../constants');
+const {autoCompeteNameLimit} = require('../constants');
 const Command = require('./Command');
 
 class ChangeContestRuleHandler extends InteractionHandler {
   handleCommandInteraction(interaction) {
     this.rule = this.getOptionValue(OptionId.ContestRule);
-    this.ruleDescription = formatEllipsis(this.rule.description, contestRuleDescriptionLimit);
+    this.ruleDescription = formatEllipsis(this.rule.description, autoCompeteNameLimit);
     return interaction.createMessage({
       content: this.translate('commands.changeContestRule.messages.confirmation', {
         ruleDescription: this.ruleDescription,

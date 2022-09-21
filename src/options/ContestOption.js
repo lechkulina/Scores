@@ -9,13 +9,16 @@ class ContestOption extends Option {
     this.contestState = contestState;
   }
 
-  async getAutoCompeteResults(interaction, dataModel, translate, optionValue) {
+  async getAutoCompeteResults(interaction, dataModel, optionValue, translate) {
     const contests = await dataModel.getContestsNames(interaction.guildID, this.contestState, autoCompeteResultsLimit);
-    const response = contests.map(({id, name}) => ({
-      name: formatAutoCompleteName(id, name),
-      value: id,
-    }));
-    return interaction.result(response);
+    const results = contests
+      .map(({id, name}) => ({
+        name: formatAutoCompleteName(id, name),
+        value: id,
+      }));
+    return interaction.result(
+      this.filterResults(results, optionValue)
+    );
   }
 }
 

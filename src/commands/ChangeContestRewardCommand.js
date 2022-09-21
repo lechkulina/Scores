@@ -3,13 +3,13 @@ const {StringsLengthsValidator, ContestRewardValidator} = require('../validators
 const ContestRewardOption = require('../options/ContestRewardOption');
 const InteractionHandler = require('../InteractionHandler');
 const {formatEllipsis} = require('../Formatters');
-const {contestRewardDescriptionLimit} = require('../constants');
+const {autoCompeteNameLimit} = require('../constants');
 const Command = require('./Command');
 
 class ChangeContestRewardHandler extends InteractionHandler {
   handleCommandInteraction(interaction) {
     this.reward = this.getOptionValue(OptionId.ContestReward);
-    this.rewardDescription = formatEllipsis(this.reward.description, contestRewardDescriptionLimit);
+    this.rewardDescription = formatEllipsis(this.reward.description, autoCompeteNameLimit);
     return interaction.createMessage({
       content: this.translate('commands.changeContestReward.messages.confirmation', {
         rewardDescription: this.rewardDescription,

@@ -30,7 +30,15 @@ class Option {
     return [];
   }
 
-  async getAutoCompeteResults(interaction, dataModel, translate, optionValue) {
+  filterResults(results, optionValue) {
+    const referenceName = optionValue.toLowerCase();
+    return results.filter(result => {
+      const name = result.name.toLowerCase();
+      return name.startsWith(referenceName);
+    });
+  }
+
+  async getAutoCompeteResults(interaction, dataModel, optionValue, translate) {
     return interaction.result([]);
   }
 };

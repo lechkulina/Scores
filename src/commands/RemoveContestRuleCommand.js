@@ -3,13 +3,13 @@ const ContestRuleOption = require('../options/ContestRuleOption');
 const {ContestRuleValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {formatEllipsis} = require('../Formatters');
-const {contestRuleDescriptionLimit} = require('../constants');
+const {autoCompeteNameLimit} = require('../constants');
 const Command = require('./Command');
 
 class RemoveContestRuleHandler extends InteractionHandler {
   handleCommandInteraction(interaction) {
     this.rule = this.getOptionValue(OptionId.ContestRule);
-    this.ruleDescription = formatEllipsis(this.rule.description, contestRuleDescriptionLimit);
+    this.ruleDescription = formatEllipsis(this.rule.description, autoCompeteNameLimit);
     return interaction.createMessage({
       content: this.translate('commands.removeContestRule.messages.confirmation', {
         ruleDescription: this.ruleDescription,

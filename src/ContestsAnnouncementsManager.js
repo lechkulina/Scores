@@ -401,7 +401,6 @@ class ContestsAnnouncementsManager {
 
   async onUpdateOpenContestsAnnouncements(guildId) {
     const contests = await this.dataModel.getContests(guildId, ContestState.Open);
-    console.info('QQQQ onUpdateOpenContestsAnnouncements!!!! guildId', guildId, 'contests=', contests);
     return Promise.all(
       contests.map(contest => this.updateContestAnnouncements(contest))
     );

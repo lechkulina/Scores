@@ -8,13 +8,16 @@ class ReasonOption extends Option {
     super(id, description, required, ApplicationCommandOptionTypes.INTEGER, SuggestionMethod.Autocomplete);
   }
 
-  async getAutoCompeteResults(interaction, dataModel, translate, optionValue) {
+  async getAutoCompeteResults(interaction, dataModel, optionValue, translate) {
     const reasons = await dataModel.getReasons(autoCompeteResultsLimit);
-    const response = reasons.map(({id, name}) => ({
-      name: formatAutoCompleteName(id, name),
-      value: id,
-    }));
-    return interaction.result(response);
+    const results = reasons
+      .map(({id, name}) => ({
+        name: formatAutoCompleteName(id, name),
+        value: id,
+      }));
+    return interaction.result(
+      this.filterResults(results, optionValue)
+    );
   }
 }
 
