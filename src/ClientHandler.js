@@ -98,8 +98,16 @@ class ClientHandler extends EventEmitter {
     return (await this.findUser(guildId, userId))?.getDMChannel();
   }
 
-  deleteMessages(channelid, messagesIds) {
-    return this.deleteMessages(channelid, messagesIds);
+  deleteMessages(channelId, messagesIds) {
+    return this.client.deleteMessages(channelId, messagesIds);
+  }
+
+  createMessage(channelId, content) {
+    return this.client.createMessage(channelId, content);
+  }
+
+  editMessage(channelId, messageId, content) {
+    return this.client.editMessage(channelId, messageId, content);
   }
 }
 

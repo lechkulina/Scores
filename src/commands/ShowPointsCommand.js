@@ -5,14 +5,14 @@ const Command = require('./Command');
 class ShowPointsInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     try {
+      this.markAsDone();
       const user = await this.clientHandler.findUser(interaction.guildID, interaction.member.user.id);
       const recentPointsLimit = await this.settings.get('recentPointsLimit');
       const summary = await this.dataModel.getPointsSummary(user.id);
       const recentPointsRows = await this.dataModel.getRecentPoints(user.id, recentPointsLimit);
       const rankingPositionsRows = await this.dataModel.getRankingPositions(user.id);
-      this.markAsDone();
-      return interaction.createMessage({
-        content: [
+      return this.createLongMessage(interaction, 
+        [
           this.translate('commands.showPoints.messages.summary', {
             points: summary.points,
             minAcquireDate: summary.minAcquireDate,
@@ -44,7 +44,7 @@ class ShowPointsInteractionHandler extends InteractionHandler {
             }),
           }),
         ].join(Entities.NewLine),
-      });
+      );
     } catch (error) {
       this.markAsDone();
       return interaction.createMessage(this.translate('commands.showPoints.errors.failure', {

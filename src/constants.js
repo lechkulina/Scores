@@ -6,6 +6,7 @@ const msInWeek = 7 * msInDay;
 
 const autoCompeteNameLimit = 60;
 const autoCompeteResultsLimit = 25;
+const messageLengthLimit = 2000;
 
 module.exports = {
   msInSecond,
@@ -15,4 +16,5 @@ module.exports = {
   msInWeek,
   autoCompeteNameLimit,
   autoCompeteResultsLimit,
+  messageLengthLimit,
 };

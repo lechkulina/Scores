@@ -1,8 +1,10 @@
 const {Constants: {ButtonStyles}} = require('eris');
 const {ButtonId, createActionRow, createButton} = require('./Components');
+const MessageDivider = require('./MessageDivider');
 
 class InteractionHandler {
   constructor(clientHandler, dataModel, settings, translate, optionsValues) {
+    this.messageDivider = new MessageDivider();
     this.clientHandler = clientHandler;
     this.dataModel = dataModel;
     this.settings = settings;
@@ -48,6 +50,17 @@ class InteractionHandler {
       }
     })();
     return interaction.createMessage(content);
+  }
+
+  async createLongMessage(interaction, content) {
+    const contentChunks = this.messageDivider.divideContentIntoChunks(content);
+    if (contentChunks.length === 0) {
+      return;
+    }
+    await interaction.createMessage(contentChunks.shift());
+    while(contentChunks.length > 0) {
+      await this.clientHandler.createMessage(interaction.channel.id, contentChunks.shift());
+    }
   }
 
   initialize() {

@@ -3,37 +3,33 @@ const {Entities} = require('../Formatters');
 const Command = require('./Command');
 
 class ShowHelpInteractionHandler extends InteractionHandler {
-  async initialize(interaction) {
+  async handleCommandInteraction(interaction) {
+    this.markAsDone();
     const userId = interaction.member.user.id;
     const rolesIds = interaction.member.roles;
-    this.commands = await this.dataModel.getCommandsWithPermissions(userId, rolesIds);
-    this.allowedCommandsCount = this.commands.reduce((count, command) => {
+    const commands = await this.dataModel.getCommandsWithPermissions(userId, rolesIds);
+    const allowedCommandsCount = commands.reduce((count, command) => {
       if (command.allowed) {
         count++;
       }
       return count;
     }, 0);
-  }
-
-  async handleCommandInteraction(interaction) {
-    this.markAsDone();
     try {
-      return interaction.createMessage({
-        content: [
+      return this.createLongMessage(interaction,
+        [
           this.translate('commands.showHelp.messages.summary', {
-            allowedCommandsCount: this.allowedCommandsCount,
+            allowedCommandsCount,
           }),
-          ...this.commands.map(command => {
+          ...commands.map(command => {
             const translateKey = `commands.showHelp.messages.${command.allowed ? 'allowedCommand' : 'notAllowedCommand'}`;
             return this.translate(translateKey, {
               id: command.id,
               description: command.description,
             });
           })
-        ].join(Entities.NewLine),
-      });
+        ].join(Entities.NewLine)
+      );
     } catch (error) {
-      this.markAsDone();
       return interaction.createMessage(this.translate('commands.showHelp.errors.failure'));
     }
   }

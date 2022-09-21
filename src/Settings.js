@@ -26,7 +26,6 @@ const converters = {
   maxDescriptionLength: NumberConverter,
   minUrlLength: NumberConverter,
   maxUrlLength: NumberConverter,
-  messageChunkSize: NumberConverter,
   tasksRunInterval: NumberConverter,
   contestsAnnouncementsChannelId: StringConverter,
 };
@@ -52,7 +51,6 @@ class Settings {
       this.set('maxDescriptionLength', 6000),
       this.set('minUrlLength', 3),
       this.set('maxUrlLength', 6000),
-      this.set('messageChunkSize', 2000),
       this.set('tasksRunInterval', 2000),
       this.set('contestsAnnouncementsChannelId', '1017504421200023592'),
     ]);
