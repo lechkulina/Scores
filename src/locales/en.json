@@ -59,10 +59,13 @@
       "unknownUser": "❗ Selected user {{userId}} does not exist! $t(validators.chooseFromAutocompleteList)",
       "userFetchFailure": "❗ Failed to fetch user {{userId}} data! $t(validators.reportIssue)",
       "unknownRole": "❗ Selected role {{roleId}} does not exist! $t(validators.chooseFromAutocompleteList)",
-      "roleFetchFailure": "❗ Failed to fetch role {{roleId}} data! $t(validators.reportIssue)"
+      "roleFetchFailure": "❗ Failed to fetch role {{roleId}} data! $t(validators.reportIssue)",
+      "unknownContestVote": "❗ Selected contest vote {{contestVoteId}} does not exist! $t(validators.chooseFromAutocompleteList)",
+      "contestVoteFetchFailure": "❗ Failed to fetch contest vote {{contestVoteId}} data! $t(validators.reportIssue)"
     },
     "autoCompete": {
-      "recentlyGivenPoints": "{{points}} points added at {{acquireDate}} with reason {{reasonName}}"
+      "recentlyGivenPoints": "{{points}} points added at {{acquireDate}} with reason {{reasonName}}",
+      "contestVote": "Granted {{score}} points in category {{categoryName}}"
     },
     "commands": {
       "errors": {
@@ -516,7 +519,53 @@
           "confirmation": "❓ Are you sure you want to change contest entry **{{entryName}}** submitted to contest  **{{contestName}}**?",
           "success": "✅ Changed contest entry **{{entryName}}** submitted to contest **{{contestName}}**"
         }
+      },
+      "addContestVote": {
+        "description": "Adds contest vote",
+        "options": {
+          "contest": "$t(commands.submitContestEntry.options.contest)",
+          "contestEntry": "$t(commands.submitContestEntry.cancelContestEntry.contestEntry)",
+          "contestVoteCategory": "$t(commands.removeContestVoteCategory.options.contestVoteCategory)",
+          "score": "Score"
+        },
+        "errors": {
+          "failure": "❗ Failed to add vote for entry **{{entryName}}** in contest **{{contestName}}** in cateogry {{categoryName}}"
+        },
+        "messages": {
+          "success": "✅ Added vote for entry **{{entryName}}** in contest  **{{contestName}}** in cateogry {{categoryName}}"
+        }
+      },
+      "removeContestVote": {
+        "description": "Removes contest vote",
+        "options": {
+          "contest": "$t(commands.submitContestEntry.options.contest)",
+          "contestEntry": "$t(commands.submitContestEntry.cancelContestEntry.contestEntry)",
+          "contestVote": "Vote"
+        },
+        "errors": {
+          "failure": "❗ Failed to remove **{{score}}** points from contest entry **{{entryName}}** in category **{{categoryName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to remove **{{score}}** points from contest entry **{{entryName}}** in category **{{categoryName}}**?",
+          "success": "✅ Removed **{{score}}** points from contest entry **{{entryName}}** in category **{{categoryName}}**"
+        }
+      },
+      "changeContestVote": {
+        "description": "Changes contest vote",
+        "options": {
+          "contest": "$t(commands.submitContestEntry.options.contest)",
+          "contestEntry": "$t(commands.submitContestEntry.cancelContestEntry.contestEntry)",
+          "contestVote": "$t(commands.submitContestEntry.removeContestVote.contestVote)"
+        },
+        "errors": {
+          "failure": "❗ Failed to changed **{{score}}** points from contest entry **{{entryName}}** in category **{{categoryName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to change **{{score}}** points from contest entry **{{entryName}}** in category **{{categoryName}}**?",
+          "success": "✅ Changed **{{score}}** points from contest entry **{{entryName}}** in category **{{categoryName}}**"
+        }
       }
+    
     }
   }
 }

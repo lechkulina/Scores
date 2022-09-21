@@ -46,8 +46,8 @@ class CancelContestEntryCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.cancelContestEntry.description'));
     this.addOptions([
-      new ContestOption(ContestState.ReadyToSubmitEntries, OptionId.Contest, this.translate('commands.cancelContestEntry.options.contest')),
-      new ContestEntryOption(OptionId.ContestEntry, this.translate('commands.cancelContestEntry.options.contestEntry')),
+      new ContestOption(ContestState.OpenForSubmittingEntries, OptionId.Contest, this.translate('commands.cancelContestEntry.options.contest')),
+      new ContestEntryOption(true, OptionId.ContestEntry, this.translate('commands.cancelContestEntry.options.contestEntry')),
     ]);
     this.addValidators([
       new ContestValidator(OptionId.Contest, this.dataModel),

@@ -20,7 +20,7 @@ class ContestVoteCategoryValidator extends Validator {
         }));
       }
     } catch(error) {
-      console.info('QQQ', error.message);
+      console.error(`Failed to fetch contest vote category ${contestVoteCategoryId} data - got error`, error);
       issues.push(translate('validators.contestVoteCategoryFetchFailure', {
         contestVoteCategoryId,
       }));

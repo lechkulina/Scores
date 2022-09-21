@@ -20,6 +20,7 @@ class ContestRuleValidator extends Validator {
         }));
       }
     } catch(error) {
+      console.error(`Failed to fetch contest rule ${contestRuleId} data - got error`, error);
       issues.push(translate('validators.contestRuleFetchFailure', {
         contestRuleId,
       }));

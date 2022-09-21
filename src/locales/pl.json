@@ -69,10 +69,13 @@
       "unknownUser": "❗ Wybrany uzytkownik {{userId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
       "userFetchFailure": "❗ Nie udało się pobrać danych uzytkownika {{userId}}! $t(validators.reportIssue)",
       "unknownRole": "❗ Wybrana rola {{roleId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
-      "roleFetchFailure": "❗ Nie udało się pobrać danych o roli {{roleId}}! $t(validators.reportIssue)"
+      "roleFetchFailure": "❗ Nie udało się pobrać danych o roli {{roleId}}! $t(validators.reportIssue)",
+      "unknownContestVote": "❗ Wybrana ocena pracy konkursowej {{contestVoteId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
+      "contestVoteFetchFailure": "❗ Nie udało się pobrać danych o ocenie pracy konkursowej {{contestVoteId}}! $t(validators.reportIssue)"
     },
     "autoCompete": {
-      "recentlyGivenPoints": "{{points}} punkty przyznane dnia {{acquireDate}} z powodu {{reasonName}}"
+      "recentlyGivenPoints": "{{points}} punkty przyznane dnia {{acquireDate}} z powodu {{reasonName}}",
+      "contestVote": "Przyznano {{score}} punktów w kategorii {{categoryName}}"
     },
     "announcements": {
       "contest": {
@@ -560,6 +563,51 @@
         "messages": {
           "confirmation": "❓ Czy na pewno chcesz zmienić zgłoszenie pracy konkursowej **{{entryName}}** do konkursu **{{contestName}}**?",
           "success": "✅ Zmieniono zgłoszenie pracy konkursowej **{{entryName}}** do konkursu **{{contestName}}**"
+        }
+      },
+      "addContestVote": {
+        "description": "Dodaje ocenę pracy konkursowej",
+        "options": {
+          "contest": "$t(commands.submitContestEntry.options.contest)",
+          "contestEntry": "$t(commands.submitContestEntry.cancelContestEntry.contestEntry)",
+          "contestVoteCategory": "$t(commands.removeContestVoteCategory.options.contestVoteCategory)",
+          "score": "Ocena"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się dodać oceny pracy konkursowej **{{entryName}}** w konkursie **{{contestName}}** w kategorii {{categoryName}}"
+        },
+        "messages": {
+          "success": "✅ Dodano ocenę pracy konkursowej **{{entryName}}** w konkursie **{{contestName}}** w kategorii {{categoryName}}"
+        }
+      },
+      "removeContestVote": {
+        "description": "Usuwa ocenę pracy konkursowej",
+        "options": {
+          "contest": "$t(commands.submitContestEntry.options.contest)",
+          "contestEntry": "$t(commands.submitContestEntry.cancelContestEntry.contestEntry)",
+          "contestVote": "Ocena pracy konkursowej"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się usunąć **{{score}}** punktów pracy **{{entryName}}** w kategorii **{{categoryName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz usunąć **{{score}}** punktów pracy **{{entryName}}** w kategorii **{{categoryName}}**?",
+          "success": "✅ Usunięto **{{score}}** punktów pracy **{{entryName}}** w kategorii **{{categoryName}}**"
+        }
+      },
+      "changeContestVote": {
+        "description": "Zmienia ocenę pracy konkursowej",
+        "options": {
+          "contest": "$t(commands.submitContestEntry.options.contest)",
+          "contestEntry": "$t(commands.submitContestEntry.cancelContestEntry.contestEntry)",
+          "contestVote": "$t(commands.submitContestEntry.removeContestVote.contestVote)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się zmienić **{{score}}** punktów pracy **{{entryName}}** w kategorii **{{categoryName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz zmienić **{{score}}** punktów pracy **{{entryName}}** w kategorii **{{categoryName}}**?",
+          "success": "✅ Zmieniono **{{score}}** punktów pracy **{{entryName}}** w kategorii **{{categoryName}}**"
         }
       }
     }

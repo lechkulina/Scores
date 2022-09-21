@@ -20,6 +20,7 @@ class ReasonValidator extends Validator {
         }));
       }
     } catch(error) {
+      console.error(`Failed to fetch reason ${reasonId} data - got error`, error);
       issues.push(translate('validators.reasonFetchFailure', {
         reasonId,
       }));

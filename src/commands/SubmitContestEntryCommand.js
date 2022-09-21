@@ -18,7 +18,7 @@ class SubmitContestEntryHandler extends InteractionHandler {
     try {
       const authorMember = await this.clientHandler.findMember(interaction.guildID, authorId);
       await this.dataModel.addUser(authorMember.user.id, authorMember.username, authorMember.user.discriminator, authorMember.guild.id);
-      await this.dataModel.submitContestEntry(name, description, url, contestId, authorMember.user.id);
+      await this.dataModel.submitContestEntry(name, description, url, contest.id, authorMember.user.id);
       return interaction.createMessage({
         content: this.translate('commands.submitContestEntry.messages.success', {
           entryName: name,
@@ -42,7 +42,7 @@ class SubmitContestEntryCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.submitContestEntry.description'));
     this.addOptions([
-      new ContestOption(ContestState.ReadyToSubmitEntries, OptionId.Contest, this.translate('commands.submitContestEntry.options.contest')),
+      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('commands.submitContestEntry.options.contest')),
       new StringOption(OptionId.Name, this.translate('commands.submitContestEntry.options.name')),
       new StringOption(OptionId.Description, this.translate('commands.submitContestEntry.options.description')),
       new StringOption(OptionId.Url, this.translate('commands.submitContestEntry.options.url')),

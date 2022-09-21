@@ -31,5 +31,8 @@ module.exports = [
   require('./UnassignContestRewardCommand'),
   require('./SubmitContestEntryCommand'),
   require('./CancelContestEntryCommand'),
-  require('./ChangeContestEntryCommand')
+  require('./ChangeContestEntryCommand'),
+  require('./AddContestVoteCommand'),
+  require('./RemoveContestVoteCommand'),
+  require('./ChangeContestVoteCommand'),
 ];

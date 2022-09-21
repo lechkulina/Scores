@@ -20,6 +20,7 @@ class CommandValidator extends Validator {
         }));
       }
     } catch(error) {
+      console.error(`Failed to fetch command ${commandId} data - got error`, error);
       issues.push(translate('validators.commandFetchFailure', {
         commandId,
       }));

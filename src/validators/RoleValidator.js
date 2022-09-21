@@ -20,6 +20,7 @@ class RoleValidator extends Validator {
         }));
       }
     } catch(error) {
+      console.error(`Failed to find role ${roleId} data - got error`, error);
       issues.push(translate('validators.roleFetchFailure', {
         roleId,
       }));

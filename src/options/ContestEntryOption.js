@@ -5,14 +5,15 @@ const {OptionId} = require('./CommonOptions');
 const {Option, SuggestionMethod} = require('./Option');
 
 class ContestEntryOption extends Option {
-  constructor(id, description, required) {
+  constructor(owned, id, description, required) {
     super(id, description, required, ApplicationCommandOptionTypes.INTEGER, SuggestionMethod.Autocomplete);
+    this.owned = owned;
   }
 
   async getAutoCompeteResults(interaction, dataModel, optionValue, translate) {
-    const authorId = interaction.member.user.id;
+    const authorId = this.owned ? interaction.member.user.id : undefined;
     const contestId = interaction.data.options.find(({name}) => name === OptionId.Contest)?.value;
-    if (!contestId || !authorId) {
+    if (!contestId) {
       return [];
     }
     const entries = await dataModel.getContestEntriesNames(contestId, authorId, autoCompeteResultsLimit);

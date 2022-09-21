@@ -11,7 +11,7 @@ class ContestEntryValidator extends Validator {
     const issues = [];
     const contestEntryId = optionsValues.get(this.optionId);
     try {
-      this.entry = await this.dataModel.getContestEntry(contestEntryId);
+      const entry = await this.dataModel.getContestEntry(contestEntryId);
       if (entry) {
         optionsValues.set(this.optionId, entry);
       } else {
@@ -20,6 +20,7 @@ class ContestEntryValidator extends Validator {
         }));
       }
     } catch(error) {
+      console.error(`Failed to fetch contest entry ${contestEntryId} data - got error`, error);
       issues.push(translate('validators.contestEntryFetchFailure', {
         contestEntryId,
       }));

@@ -20,6 +20,7 @@ class MemberValidator extends Validator {
         }));
       }
     } catch(error) {
+      console.error(`Failed to find user ${userId} data - got error`, error);
       issues.push(translate('validators.userFetchFailure', {
         userId,
       }));

@@ -21,6 +21,7 @@ class PointsValidator extends Validator {
         }));
       }
     } catch(error) {
+      console.error(`Failed to fetch points ${pointsId} data - got error`, error);
       issues.push(translate('validators.pointsFetchFailure', {
         pointsId,
       }));

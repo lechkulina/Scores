@@ -28,13 +28,17 @@ const DataModelEvents = {
   onContestEntrySubmitted: 'onContestEntrySubmitted',
   onContestEntryCanceled: 'onContestEntryCanceled',
   onContestEntryChanged: 'onContestEntryChanged',
+  onContestVoteAdded: 'onContestVoteAdded',
+  onContestVoteChanged: 'onContestVoteChanged',
+  onContestVoteRemoved: 'onContestVoteRemoved',
 }
 
 const ContestState = {
   Any: 'Any',
   Active: 'Active',
   Open: 'Open',
-  ReadyToSubmitEntries: 'ReadyToSubmitEntries',
+  OpenForSubmittingEntries: 'OpenForSubmittingEntries',
+  OpenForVoting: 'OpenForVoting',
 };
 
 class DataModel extends EventEmitter {
@@ -341,19 +345,23 @@ class DataModel extends EventEmitter {
     const clause = [];
     const now = Date.now();
     if (guildId) {
-      clause.push(`guildId = "${guildId}"`);
+      clause.push(`Contest.guildId = "${guildId}"`);
     }
     switch (contestState) {
       case ContestState.Active:
-        clause.push(`activeBeginDate >= ${now}`);
-        clause.push(`${now} < activeEndDate`);
+        clause.push(`Contest.activeBeginDate >= ${now}`);
+        clause.push(`${now} < Contest.activeEndDate`);
         break;
       case ContestState.Open:
-        clause.push(`${now} < activeEndDate`);
+        clause.push(`${now} < Contest.activeEndDate`);
         break;
-      case ContestState.ReadyToSubmitEntries:
-        clause.push(`${now} >= activeBeginDate`);
-        clause.push(`${now} < votingBeginDate`);
+      case ContestState.OpenForSubmittingEntries:
+        clause.push(`${now} >= Contest.activeBeginDate`);
+        clause.push(`${now} < Contest.votingBeginDate`);
+        break;
+      case ContestState.OpenForVoting:
+        clause.push(`${now} >= Contest.votingBeginDate`);
+        clause.push(`${now} < Contest.votingEndDate`);
         break;
     }
     return clause.length > 0 ? `WHERE ${clause.join(' AND ')}` : '';
@@ -785,14 +793,24 @@ class DataModel extends EventEmitter {
     `);
   }
 
-  getContestEntries(contestId) {
-    return this.database.all(`
-      SELECT ContestEntry.id, ContestEntry.name, ContestEntry.description, ContestEntry.url, ContestEntry.submitDate, User.name as authorName
-      FROM ContestEntry
-      INNER JOIN User ON User.id = ContestEntry.authorId
-      WHERE ContestEntry.contestId = ${contestId}
-      ORDER BY ContestEntry.submitDate ASC;
-    `);
+  getContestEntriesWhereClause(contestId, authorId) {
+    const clause = [`ContestEntry.contestId = ${contestId}`];
+    if (authorId) {
+      clause.push(`ContestEntry.authorId = ${authorId}`);
+    }
+    return clause.length > 0 ? `WHERE ${clause.join(' AND ')}` : '';
+  }
+
+  getContestEntries(contestId, authorId) {
+    return this.database.all(
+      this.joinClauses([
+        'SELECT ContestEntry.id, ContestEntry.name, ContestEntry.description, ContestEntry.url, ContestEntry.submitDate, User.name as authorName',
+        'FROM ContestEntry',
+        'INNER JOIN User ON User.id = ContestEntry.authorId',
+        this.getContestEntriesWhereClause(contestId, authorId),
+        'ORDER BY ContestEntry.submitDate ASC',
+      ])
+    );
   }
 
   getContestEntriesNames(contestId, authorId, limit) {
@@ -800,7 +818,7 @@ class DataModel extends EventEmitter {
       this.joinClauses([
         'SELECT id, name',
         'FROM ContestEntry',
-        `WHERE contestId = ${contestId} AND authorId = ${authorId}`,
+        this.getContestEntriesWhereClause(contestId, authorId),
         this.getLimitClause(limit),
       ])
     );
@@ -808,9 +826,63 @@ class DataModel extends EventEmitter {
   
   getContestEntry(id) {
     return this.database.get(`
-      SELECT id, name, description, url
+      SELECT id, name, description, url, submitDate, authorId, contestId
       FROM ContestEntry
       WHERE id = "${id}";
+    `);
+  }
+
+  async addContestVote(contestId, contestEntryId, contestVoteCategoryId, voterId, score) {
+    await this.database.run(`
+      INSERT INTO ContestVote(contestEntryId, contestVoteCategoryId, voterId, score)
+      VALUES (${contestEntryId}, ${contestVoteCategoryId}, "${voterId}", ${score});
+    `);
+    this.emit(DataModelEvents.onContestVoteAdded, contestId);
+  }
+
+  async changeContestVote(contestVoteId, contestId, score) {
+    await this.database.run(`
+      UPDATE ContestVote
+      SET score = ${score}
+      WHERE id = ${contestVoteId};
+    `);
+    this.emit(DataModelEvents.onContestVoteChanged, contestId);
+  }
+
+  async removeContestVote(contestVoteId, contestId) {
+    await this.database.run(`
+      DELETE FROM ContestVote
+      WHERE id = ${contestVoteId};
+    `);
+    this.emit(DataModelEvents.onContestVoteRemoved, contestId);
+  }
+
+  getContestVotesWhereClause(contestEntryId, voterId) {
+    const clause = [`ContestVote.contestEntryId = ${contestEntryId}`];
+    if (voterId) {
+      clause.push(`ContestVote.voterId = ${voterId}`);
+    }
+    return clause.length > 0 ? `WHERE ${clause.join(' AND ')}` : '';
+  }
+
+  getContestVotesNames(contestEntryId, voterId, limit) {
+    return this.database.all(
+      this.joinClauses([
+        'SELECT ContestVote.id, ContestVote.score, ContestVoteCategory.name as categoryName',
+        'FROM ContestVote',
+        'INNER JOIN ContestVoteCategory ON ContestVoteCategory.id = ContestVote.contestVoteCategoryId',
+        this.getContestVotesWhereClause(contestEntryId, voterId),
+        this.getLimitClause(limit),
+      ])
+    );
+  }
+
+  getContestVote(id) {
+    return this.database.get(`
+      SELECT ContestVote.id, score, voteDate, contestEntryId, contestVoteCategoryId, voterId, ContestVoteCategory.name as categoryName
+      FROM ContestVote
+      INNER JOIN ContestVoteCategory ON ContestVoteCategory.id = ContestVote.contestVoteCategoryId
+      WHERE ContestVote.id = "${id}";
     `);
   }
 
