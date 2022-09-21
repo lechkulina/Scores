@@ -1,5 +1,6 @@
 const {OptionId} = require('../options/CommonOptions');
 const ContestRewardOption = require('../options/ContestRewardOption');
+const {ContestRewardValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {formatEllipsis} = require('../Formatters');
 const {contestRewardDescriptionLimit} = require('../constants');
@@ -7,7 +8,7 @@ const Command = require('./Command');
 
 class RemoveContestRewardHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
-      this.reward = await this.dataModel.getContestReward(this.getOptionValue(OptionId.ContestReward));
+      this.reward = this.getOptionValue(OptionId.ContestReward);
       this.rewardDescription = formatEllipsis(this.reward.description, contestRewardDescriptionLimit);
       return interaction.createMessage({
         content: this.translate('commands.removeContestReward.messages.confirmation', {
@@ -41,7 +42,10 @@ class RemoveContestRewardCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.removeContestReward.description'));
     this.addOptions([
-      new ContestRewardOption(this.translate('commands.removeContestReward.options.contestReward')),
+      new ContestRewardOption(OptionId.ContestReward, this.translate('commands.removeContestReward.options.contestReward')),
+    ]);
+    this.addValidators([
+      new ContestRewardValidator(OptionId.ContestReward, this.dataModel),
     ]);
     return Promise.resolve();
   }

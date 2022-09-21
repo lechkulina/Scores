@@ -1,14 +1,12 @@
 const ReasonOption = require('../options/ReasonOption');
 const {OptionId} = require('../options/CommonOptions');
+const {ReasonValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const Command = require('./Command');
 
 class RemoveReasonInteractionHandler extends InteractionHandler {
-  async initialize(interaction) {
-    this.reason = await this.dataModel.getReason(this.getOptionValue(OptionId.Reason));
-  }
-
-  async handleCommandInteraction(interaction) {
+  handleCommandInteraction(interaction) {
+    this.reason = this.getOptionValue(OptionId.Reason);
     return interaction.createMessage({
       content: this.translate('commands.removeReason.messages.confirmation', {
         reasonName: this.reason.name,
@@ -41,7 +39,10 @@ class RemoveReasonCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.removeReason.description'));
     this.addOptions([
-      new ReasonOption(this.translate('commands.removeReason.options.reason'))
+      new ReasonOption(OptionId.Reason, this.translate('commands.removeReason.options.reason'))
+    ]);
+    this.addValidators([
+      new ReasonValidator(OptionId.Reason, this.dataModel),
     ]);
     return Promise.resolve();
   }

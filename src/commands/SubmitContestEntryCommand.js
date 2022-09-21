@@ -1,6 +1,6 @@
 const {OptionId, StringOption} = require('../options/CommonOptions');
 const ContestOption = require('../options/ContestOption');
-const {StringsLengthsValidator, FirstLetterValidator} = require('../validators/validators');
+const {StringsLengthsValidator, FirstLetterValidator, ContestValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {ContestState} = require('../DataModel');
 const Command = require('./Command');
@@ -9,14 +9,13 @@ class SubmitContestEntryHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     this.markAsDone();
     const authorId = interaction.member.user.id;
-    const [contestId, name, description, url] = this.getOptionValues([
+    const [contest, name, description, url] = this.getOptionValues([
       OptionId.Contest,
       OptionId.Name,
       OptionId.Description,
       OptionId.Url,
     ]);
     try {
-      const contest = await this.dataModel.getContest(contestId);
       const authorMember = await this.findMember(interaction.guildID, authorId);
       await this.dataModel.addUser(authorMember.user.id, authorMember.username, authorMember.user.discriminator, authorMember.guild.id);
       await this.dataModel.submitContestEntry(name, description, url, contestId, authorMember.user.id);
@@ -43,7 +42,7 @@ class SubmitContestEntryCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.submitContestEntry.description'));
     this.addOptions([
-      new ContestOption(ContestState.ReadyToSubmitEntries, this.translate('commands.submitContestEntry.options.contest')),
+      new ContestOption(ContestState.ReadyToSubmitEntries, OptionId.Contest, this.translate('commands.submitContestEntry.options.contest')),
       new StringOption(OptionId.Name, this.translate('commands.submitContestEntry.options.name')),
       new StringOption(OptionId.Description, this.translate('commands.submitContestEntry.options.description')),
       new StringOption(OptionId.Url, this.translate('commands.submitContestEntry.options.url')),
@@ -53,6 +52,7 @@ class SubmitContestEntryCommand extends Command {
       new StringsLengthsValidator([OptionId.Description], 'minDescriptionLength', 'maxDescriptionLength', this.settings, this.options),
       new StringsLengthsValidator([OptionId.Url], 'minUrlLength', 'maxUrlLength', this.settings, this.options),
       new FirstLetterValidator([OptionId.Name], this.options),
+      new ContestValidator(OptionId.Contest, this.dataModel),
     ]);
     return Promise.resolve();
   }

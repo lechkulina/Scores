@@ -5,7 +5,8 @@ const {
   FirstLetterValidator,
   DatesValidator,
   DatesRangesValidator,
-  NumbersValuesValidator
+  NumbersValuesValidator,
+  ContestValidator,
 } = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {ContestState} = require('../DataModel');
@@ -13,7 +14,7 @@ const Command = require('./Command');
 
 class ChangeContestInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
-    this.contest = await this.dataModel.getContest(this.getOptionValue(OptionId.Contest));
+    this.contest = this.getOptionValue(OptionId.Contest);
     return interaction.createMessage({
       content: this.translate('commands.changeContest.messages.confirmation', {
         contestName: this.contest.name,
@@ -64,7 +65,7 @@ class ChangeContestCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.changeContest.description'));
     this.addOptions([
-      new ContestOption(ContestState.Any, this.translate('common.contest')),
+      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest')),
       new StringOption(OptionId.Name, this.translate('commands.changeContest.options.name')),
       new StringOption(OptionId.Description, this.translate('commands.changeContest.options.description')),
       new StringOption(OptionId.AnnouncementsThreshold, this.translate('commands.changeContest.options.announcementsThreshold')),
@@ -92,6 +93,7 @@ class ChangeContestCommand extends Command {
         [OptionId.ActiveBeginDate, OptionId.VotingBeginDate],
         [OptionId.VotingEndDate, OptionId.ActiveEndDate],
       ], this.options),
+      new ContestValidator(OptionId.Contest, this.dataModel),
     ]);
     return Promise.resolve();
   }

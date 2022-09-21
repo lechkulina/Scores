@@ -37,7 +37,25 @@
       "invalidNumberZero": "❗ **{{description}}** can not be below zero",
       "invalidNumbersRange": "❗ **{{description}}** can not value value greater than **{{secondDescription}}**",
       "invalidDateFormat": "❗ **{{description}}** has invalid date format. Required date format is **{{dateInputFormat}}**",
-      "invalidDatesRange": "❗ **{{min}}** can not be later date than **{{max}}**"
+      "invalidDatesRange": "❗ **{{min}}** can not be later date than **{{max}}**",
+      "reportIssue": "Report this issue the administrator.",
+      "chooseFromAutocompleteList": "**Choose one from the list.**",
+      "unknownContest": "❗ Selected contest {{contestId}} does not exist! $t(validators.chooseFromAutocompleteList)",
+      "contestFetchFailure": "❗ Failedto fetch contest data {{contestId}}! $t(validators.reportIssue)",
+      "unknownContestReward": "❗ Selected contest reward {{contestRewardId}} does not exist! $t(validators.chooseFromAutocompleteList)",
+      "contestRewardFetchFailure": "❗ Failed to fetch contest reward data {{contestRewardId}}! $t(validators.reportIssue)",
+      "unknownContestVoteCategory": "❗ Selected contest vote category {{contestVoteCategoryId}} does not exist! $t(validators.chooseFromAutocompleteList)",
+      "contestVoteCategoryFetchFailure": "❗ Failed to fetch contest vote category data {{contestVoteCategoryId}}! $t(validators.reportIssue)",
+      "unknownContestRule": "❗ Selected contest rule {{contestRuleId}} does not exist! $t(validators.chooseFromAutocompleteList)",
+      "contestRuleFetchFailure": "❗ Failed to fetch contest rule data {{contestRuleId}}! $t(validators.reportIssue)",
+      "unknownContestEntry": "❗ Selected contest entry {{contestEntryId}} does not exist! $t(validators.chooseFromAutocompleteList)",
+      "contestEntryFetchFailure": "❗ Failed to fetch contest entry data {{contestEntryId}}! $t(validators.reportIssue)",
+      "unknownReason": "❗ Selected points add reason {{reasonId}} does not exist! $t(validators.chooseFromAutocompleteList)",
+      "reasonFetchFailure": "❗ Failed to fetch points add reason data {{reasonId}}! $t(validators.reportIssue)",
+      "unknownPoints": "❗ Selected points {{pointsId}} do not exist! $t(validators.chooseFromAutocompleteList)",
+      "pointsFetchFailure": "❗ Failed to fetch points data {{pointsId}}! $t(validators.reportIssue)",
+      "unknownCommand": "❗ Selected command {{commandId}} does not exist! $t(validators.chooseFromAutocompleteList)",
+      "commandFetchFailure": "❗ Failed to fetch command data {{commandId}}! $t(validators.reportIssue)"
     },
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} points added at {{acquireDate}} with reason {{reasonName}}"

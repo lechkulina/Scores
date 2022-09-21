@@ -63,7 +63,6 @@ class ContestsAnnouncementsManager {
       case contest.votingBeginDate <= now:
         sections.push(
           this.translate('announcements.contest.headerDescriptionBeforeFinal', {
-            title,
             contestName: contest.name,
             finalStartsIn: formatDuration(this.translate, contest.activeEndDate - now),
           })

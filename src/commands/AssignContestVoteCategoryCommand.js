@@ -1,6 +1,7 @@
 const {OptionId} = require('../options/CommonOptions');
 const ContestVoteCategoryOption = require('../options/ContestVoteCategoryOption');
 const ContestOption = require('../options/ContestOption');
+const {ContestValidator, ContestVoteCategoryValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {ContestState} = require('../DataModel');
 const Command = require('./Command');
@@ -8,8 +9,7 @@ const Command = require('./Command');
 class AssignContestVoteCategoryHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     this.markAsDone();
-    const contest = await this.dataModel.getContest(this.getOptionValue(OptionId.Contest));
-    const category = await this.dataModel.getContestVoteCategory(this.getOptionValue(OptionId.ContestVoteCategory));
+    const [contest, category] = this.getOptionValues([OptionId.Contest, OptionId.ContestVoteCategory]);
     try {
       await this.dataModel.assignContestVoteCategory(contest.id, category.id);
       return interaction.createMessage(
@@ -37,8 +37,12 @@ class AssignContestVoteCategoryCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.assignContestVoteCategory.description'));
     this.addOptions([
-      new ContestOption(ContestState.Any, this.translate('common.contest')),
-      new ContestVoteCategoryOption(this.translate('commands.assignContestVoteCategory.options.contestVoteCategory')),
+      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest')),
+      new ContestVoteCategoryOption(OptionId.ContestVoteCategory, this.translate('commands.assignContestVoteCategory.options.contestVoteCategory')),
+    ]);
+    this.addValidators([
+      new ContestValidator(OptionId.Contest, this.dataModel),
+      new ContestVoteCategoryValidator(OptionId.ContestVoteCategory, this.dataModel),
     ]);
     return Promise.resolve();
   }

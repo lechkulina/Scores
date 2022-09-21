@@ -2,15 +2,16 @@ const {OptionId} = require('../options/CommonOptions');
 const AssignedContestRewardOption = require('../options/AssignedContestRewardOption');
 const ContestOption = require('../options/ContestOption');
 const InteractionHandler = require('../InteractionHandler');
+const {ContestValidator, ContestRewardValidator} = require('../validators/validators');
 const {ContestState} = require('../DataModel');
 const {formatEllipsis} = require('../Formatters');
 const {contestRewardDescriptionLimit} = require('../constants');
 const Command = require('./Command');
 
 class UnassignContestRuleHandler extends InteractionHandler {
-  async handleCommandInteraction(interaction) {
-    this.contest = await this.dataModel.getContest(this.getOptionValue(OptionId.Contest));
-    this.reward = await this.dataModel.getContestReward(this.getOptionValue(OptionId.AssignedContestReward));
+  handleCommandInteraction(interaction) {
+    this.contest = this.getOptionValue(OptionId.Contest);
+    this.reward =  this.getOptionValue(OptionId.AssignedContestReward);
     this.rewardDescription = formatEllipsis(this.reward.description, contestRewardDescriptionLimit);
     return interaction.createMessage({
       content: this.translate('commands.unassignContestReward.messages.confirmation', {
@@ -47,8 +48,12 @@ class UnassignContestRewardCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.unassignContestReward.description'));
     this.addOptions([
-      new ContestOption(ContestState.Any, this.translate('common.contest')),
-      new AssignedContestRewardOption(this.translate('commands.unassignContestReward.options.contestReward')),
+      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest')),
+      new AssignedContestRewardOption(OptionId.AssignedContestReward, this.translate('commands.unassignContestReward.options.contestReward')),
+    ]);
+    this.addValidators([
+      new ContestValidator(OptionId.Contest, this.dataModel),
+      new ContestRewardValidator(OptionId.AssignedContestReward, this.dataModel),
     ]);
     return Promise.resolve();
   }

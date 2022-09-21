@@ -66,7 +66,7 @@ class InteractionManager {
       await interaction.createMessage({
         content: [
           translate('commands.errors.validationFailed', {
-            issuesCount: issues.length,
+            count: issues.length,
           }),
           ...issues
         ].join(Entities.NewLine),

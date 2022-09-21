@@ -1,20 +1,17 @@
 const ReasonOption = require('../options/ReasonOption');
 const {OptionId, UserOption, NumberOption} = require('../options/CommonOptions');
-const {PointsValidator} = require('../validators/validators');
+const {PointsValueValidator, ReasonValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {ButtonId, createActionRow, createButton} = require('../Components');
 const {Entities} = require('../Formatters');
 const Command = require('./Command');
 
 class AddPointsInteractionHandler extends InteractionHandler {
-  async initialize(interaction) {
+  async handleCommandInteraction(interaction) {
     this.member = await this.findMember(interaction.guildID, this.getOptionValue(OptionId.User));
     this.giver = await this.findMember(interaction.guildID, interaction.member.user.id);
-    this.reason = await this.dataModel.getReason(this.getOptionValue(OptionId.Reason));
+    this.reason = this.getOptionValue(OptionId.Reason);
     this.points = this.getOptionValue(OptionId.Points);
-  }
-
-  async handleCommandInteraction(interaction) {
     try {
       await this.dataModel.addUser(this.member.user.id, this.member.user.username, this.member.user.discriminator, this.member.guild.id);
       await this.dataModel.addUser(this.giver.user.id, this.giver.user.username, this.giver.user.discriminator, this.giver.guild.id);
@@ -101,12 +98,13 @@ class AddPointsCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.addPoints.description'));
     this.addOptions([
-      new UserOption(this.translate('commands.addPoints.options.user')),
-      new ReasonOption(this.translate('commands.addPoints.options.reason')),
+      new UserOption(OptionId.User, this.translate('commands.addPoints.options.user')),
+      new ReasonOption(OptionId.Reason, this.translate('commands.addPoints.options.reason')),
       new NumberOption(OptionId.Points, this.translate('commands.addPoints.options.points')),
     ]);
     this.addValidators([
-      new PointsValidator(OptionId.Points, OptionId.Reason, this.dataModel, this.settings, this.options),
+      new PointsValueValidator(OptionId.Points, OptionId.Reason, this.dataModel, this.settings, this.options),
+      new ReasonValidator(OptionId.Reason, this.dataModel),
     ])
     return Promise.resolve();
   }

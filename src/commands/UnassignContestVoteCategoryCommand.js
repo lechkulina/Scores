@@ -2,13 +2,14 @@ const {OptionId} = require('../options/CommonOptions');
 const AssignedContestVoteCategoriesOption = require('../options/AssignedContestVoteCategoriesOption');
 const ContestOption = require('../options/ContestOption');
 const InteractionHandler = require('../InteractionHandler');
+const {ContestValidator, ContestVoteCategoryValidator} = require('../validators/validators');
 const {ContestState} = require('../DataModel');
 const Command = require('./Command');
 
 class UnassignContestVoteCategoryHandler extends InteractionHandler {
-  async handleCommandInteraction(interaction) {
-    this.contest = await this.dataModel.getContest(this.getOptionValue(OptionId.Contest));
-    this.category = await this.dataModel.getContestVoteCategory(this.getOptionValue(OptionId.AssignedContestVoteCategory));
+  handleCommandInteraction(interaction) {
+    this.contest = this.getOptionValue(OptionId.Contest);
+    this.category = this.getOptionValue(OptionId.AssignedContestVoteCategory);
     return interaction.createMessage({
       content: this.translate('commands.unassignContestVoteCategory.messages.confirmation', {
         contestName: this.contest.name,
@@ -44,8 +45,12 @@ class UnassignContestVoteCategoryCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.unassignContestVoteCategory.description'));
     this.addOptions([
-      new ContestOption(ContestState.Any, this.translate('common.contest')),
-      new AssignedContestVoteCategoriesOption(this.translate('commands.unassignContestVoteCategory.options.contestVoteCategory')),
+      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest')),
+      new AssignedContestVoteCategoriesOption(OptionId.AssignedContestVoteCategory, this.translate('commands.unassignContestVoteCategory.options.contestVoteCategory')),
+    ]);
+    this.addValidators([
+      new ContestValidator(OptionId.Contest, this.dataModel),
+      new ContestVoteCategoryValidator(OptionId.AssignedContestVoteCategory, this.dataModel),
     ]);
     return Promise.resolve();
   }

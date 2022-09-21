@@ -1,14 +1,15 @@
 const {OptionId} = require('../options/CommonOptions');
 const ContestOption = require('../options/ContestOption');
 const ContestEntryOption = require('../options/ContestEntryOption');
+const {ContestValidator, ContestEntryValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {ContestState} = require('../DataModel');
 const Command = require('./Command');
 
 class CancelContestEntryHandler extends InteractionHandler {
-  async handleCommandInteraction(interaction) {
-    this.contest = await this.dataModel.getContest(this.getOptionValue(OptionId.Contest));
-    this.entry = await this.dataModel.getContestEntry(this.getOptionValue(OptionId.ContestEntry));
+  handleCommandInteraction(interaction) {
+    this.contest = this.getOptionValue(OptionId.Contest);
+    this.entry = this.getOptionValue(OptionId.ContestEntry);
     return interaction.createMessage({
       content: this.translate('commands.cancelContestEntry.messages.confirmation', {
         entryName: this.entry.name,
@@ -45,8 +46,12 @@ class CancelContestEntryCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.cancelContestEntry.description'));
     this.addOptions([
-      new ContestOption(ContestState.ReadyToSubmitEntries, this.translate('commands.cancelContestEntry.options.contest')),
-      new ContestEntryOption(this.translate('commands.cancelContestEntry.options.contestEntry')),
+      new ContestOption(ContestState.ReadyToSubmitEntries, OptionId.Contest, this.translate('commands.cancelContestEntry.options.contest')),
+      new ContestEntryOption(OptionId.ContestEntry, this.translate('commands.cancelContestEntry.options.contestEntry')),
+    ]);
+    this.addValidators([
+      new ContestValidator(OptionId.Contest, this.dataModel),
+      new ContestEntryValidator(OptionId.ContestEntry, this.dataModel),
     ]);
     return Promise.resolve();
   }

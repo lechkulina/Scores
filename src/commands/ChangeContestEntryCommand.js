@@ -1,15 +1,20 @@
 const {OptionId, StringOption} = require('../options/CommonOptions');
 const ContestOption = require('../options/ContestOption');
 const ContestEntryOption = require('../options/ContestEntryOption');
-const {StringsLengthsValidator, FirstLetterValidator} = require('../validators/validators');
+const {
+  StringsLengthsValidator,
+  FirstLetterValidator,
+  ContestValidator,
+  ContestEntryValidator,
+} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {ContestState} = require('../DataModel');
 const Command = require('./Command');
 
 class ChangeContestEntryHandler extends InteractionHandler {
-  async handleCommandInteraction(interaction) {
-    this.contest = await this.dataModel.getContest(this.getOptionValue(OptionId.Contest));
-    this.entry = await this.dataModel.getContestEntry(this.getOptionValue(OptionId.ContestEntry));
+  handleCommandInteraction(interaction) {
+    this.contest = this.getOptionValue(OptionId.Contest);
+    this.entry = this.getOptionValue(OptionId.ContestEntry);
     return interaction.createMessage({
       content: this.translate('commands.changeContestEntry.messages.confirmation', {
         entryName: this.entry.name,
@@ -50,8 +55,8 @@ class ChangeContestEntryCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.changeContestEntry.description'));
     this.addOptions([
-      new ContestOption(ContestState.ReadyToSubmitEntries, this.translate('commands.changeContestEntry.options.contest')),
-      new ContestEntryOption(this.translate('commands.changeContestEntry.options.contestEntry')),
+      new ContestOption(ContestState.ReadyToSubmitEntries, OptionId.Contest, this.translate('commands.changeContestEntry.options.contest')),
+      new ContestEntryOption(OptionId.ContestEntry, this.translate('commands.changeContestEntry.options.contestEntry')),
       new StringOption(OptionId.Name, this.translate('commands.changeContestEntry.options.name')),
       new StringOption(OptionId.Description, this.translate('commands.changeContestEntry.options.description')),
       new StringOption(OptionId.Url, this.translate('commands.changeContestEntry.options.url')),
@@ -61,6 +66,8 @@ class ChangeContestEntryCommand extends Command {
       new StringsLengthsValidator([OptionId.Description], 'minDescriptionLength', 'maxDescriptionLength', this.settings, this.options),
       new StringsLengthsValidator([OptionId.Url], 'minUrlLength', 'maxUrlLength', this.settings, this.options),
       new FirstLetterValidator([OptionId.Name], this.options),
+      new ContestValidator(OptionId.Contest, this.dataModel),
+      new ContestEntryValidator(OptionId.ContestEntry, this.dataModel),
     ]);
     return Promise.resolve();
   }

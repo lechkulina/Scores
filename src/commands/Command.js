@@ -56,7 +56,9 @@ class Command {
   async validateOptionsValues(translate, optionsValues) {
     const issues = [];
     for (const validator of this.validators) {
-      issues.push(...(await validator.validate(translate, optionsValues)));      
+      issues.push(
+        ...(await validator.validate(translate, optionsValues))
+      );
     }
     return issues;
   }

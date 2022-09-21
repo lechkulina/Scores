@@ -1,3 +1,5 @@
+const {Constants: {ApplicationCommandOptionTypes}} = require('eris');
+
 const SuggestionMethod = {
   None: 0,
   Autocomplete: 1,
@@ -5,7 +7,7 @@ const SuggestionMethod = {
 };
 
 class Option {
-  constructor(id, description, type, required = true, suggestionMethod = SuggestionMethod.None) {
+  constructor(id, description, required = true, type = ApplicationCommandOptionTypes.NUMBER, suggestionMethod = SuggestionMethod.None) {
     this.id = id;
     this.description = description;
     this.type = type;

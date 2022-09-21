@@ -1,5 +1,5 @@
 const {OptionId, StringOption, BooleanOption} = require('../options/CommonOptions');
-const {StringsLengthsValidator} = require('../validators/validators');
+const {StringsLengthsValidator, ContestRuleValidator} = require('../validators/validators');
 const ContestRuleOption = require('../options/ContestRuleOption');
 const InteractionHandler = require('../InteractionHandler');
 const {formatEllipsis} = require('../Formatters');
@@ -7,8 +7,8 @@ const {contestRuleDescriptionLimit} = require('../constants');
 const Command = require('./Command');
 
 class ChangeContestRuleHandler extends InteractionHandler {
-  async handleCommandInteraction(interaction) {
-    this.rule = await this.dataModel.getContestRule(this.getOptionValue(OptionId.ContestRule));
+  handleCommandInteraction(interaction) {
+    this.rule = this.getOptionValue(OptionId.ContestRule);
     this.ruleDescription = formatEllipsis(this.rule.description, contestRuleDescriptionLimit);
     return interaction.createMessage({
       content: this.translate('commands.changeContestRule.messages.confirmation', {
@@ -46,12 +46,13 @@ class ChangeContestRuleCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.changeContestRule.description'));
     this.addOptions([
-      new ContestRuleOption(this.translate('commands.changeContestRule.options.contestRule')),
+      new ContestRuleOption(OptionId.ContestRule, this.translate('commands.changeContestRule.options.contestRule')),
       new StringOption(OptionId.Description, this.translate('commands.changeContestRule.options.description')),
       new BooleanOption(OptionId.UseByDefault, this.translate('commands.changeContestRule.options.useByDefault')),
     ]);
     this.addValidators([
       new StringsLengthsValidator([OptionId.Description], 'minDescriptionLength', 'maxDescriptionLength', this.settings, this.options),
+      new ContestRuleValidator(OptionId.ContestRule, this.dataModel),
     ]);
     return Promise.resolve();
   }

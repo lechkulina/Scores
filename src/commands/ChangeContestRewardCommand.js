@@ -1,5 +1,5 @@
 const {OptionId, StringOption, BooleanOption} = require('../options/CommonOptions');
-const {StringsLengthsValidator} = require('../validators/validators');
+const {StringsLengthsValidator, ContestRewardValidator} = require('../validators/validators');
 const ContestRewardOption = require('../options/ContestRewardOption');
 const InteractionHandler = require('../InteractionHandler');
 const {formatEllipsis} = require('../Formatters');
@@ -7,8 +7,8 @@ const {contestRewardDescriptionLimit} = require('../constants');
 const Command = require('./Command');
 
 class ChangeContestRewardHandler extends InteractionHandler {
-  async handleCommandInteraction(interaction) {
-    this.reward = await this.dataModel.getContestReward(this.getOptionValue(OptionId.ContestReward));
+  handleCommandInteraction(interaction) {
+    this.reward = this.getOptionValue(OptionId.ContestReward);
     this.rewardDescription = formatEllipsis(this.reward.description, contestRewardDescriptionLimit);
     return interaction.createMessage({
       content: this.translate('commands.changeContestReward.messages.confirmation', {
@@ -46,12 +46,13 @@ class ChangeContestRewardCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.changeContestReward.description'));
     this.addOptions([
-      new ContestRewardOption(this.translate('commands.changeContestReward.options.contestReward')),
+      new ContestRewardOption(OptionId.ContestReward, this.translate('commands.changeContestReward.options.contestReward')),
       new StringOption(OptionId.Description, this.translate('commands.changeContestReward.options.description')),
       new BooleanOption(OptionId.UseByDefault, this.translate('commands.changeContestReward.options.useByDefault')),
     ]);
     this.addValidators([
       new StringsLengthsValidator([OptionId.Description], 'minDescriptionLength', 'maxDescriptionLength', this.settings, this.options),
+      new ContestRewardValidator(OptionId.ContestReward, this.dataModel),
     ]);
     return Promise.resolve();
   }

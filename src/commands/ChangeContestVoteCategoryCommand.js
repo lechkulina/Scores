@@ -1,12 +1,12 @@
 const {OptionId, StringOption, NumberOption, BooleanOption} = require('../options/CommonOptions');
 const ContestVoteCategoryOption = require('../options/ContestVoteCategoryOption');
-const {StringsLengthsValidator, FirstLetterValidator, NumbersValuesValidator} = require('../validators/validators');
+const {StringsLengthsValidator, FirstLetterValidator, NumbersValuesValidator, ContestVoteCategoryValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const Command = require('./Command');
 
 class AddContestVoteCategoryHandler extends InteractionHandler {
-  async handleCommandInteraction(interaction) {
-    this.category = await this.dataModel.getContestVoteCategory(this.getOptionValue(OptionId.ContestVoteCategory));
+  handleCommandInteraction(interaction) {
+    this.category = this.getOptionValue(OptionId.ContestVoteCategory);
     return interaction.createMessage({
       content: this.translate('commands.changeContestVoteCategory.messages.confirmation', {
         categoryName: this.category.name,
@@ -45,7 +45,7 @@ class ChangeContestVoteCategoryCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.changeContestVoteCategory.description'));
     this.addOptions([
-      new ContestVoteCategoryOption(this.translate('commands.changeContestVoteCategory.options.contestVoteCategory')),
+      new ContestVoteCategoryOption(OptionId.ContestVoteCategory, this.translate('commands.changeContestVoteCategory.options.contestVoteCategory')),
       new StringOption(OptionId.Name, this.translate('commands.changeContestVoteCategory.options.name')),
       new StringOption(OptionId.Description, this.translate('commands.changeContestVoteCategory.options.description')),
       new NumberOption(OptionId.Max, this.translate('commands.changeContestVoteCategory.options.max')),
@@ -56,6 +56,7 @@ class ChangeContestVoteCategoryCommand extends Command {
       new StringsLengthsValidator([OptionId.Description], 'minDescriptionLength', 'maxDescriptionLength', this.settings, this.options),
       new FirstLetterValidator([OptionId.Name], this.options),
       new NumbersValuesValidator([OptionId.Max], this.options),
+      new ContestVoteCategoryValidator(OptionId.ContestVoteCategory, this.dataModel),
     ]);
     return Promise.resolve();
   }

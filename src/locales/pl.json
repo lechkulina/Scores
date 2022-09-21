@@ -47,7 +47,25 @@
       "invalidNumberZero": "❗ **{{description}}** nie moze byc ponizej zera",
       "invalidNumbersRange": "❗ **{{min}}** nie mieć wartości wiekszej lub równej **{{max}}**",
       "invalidDateFormat": "❗ **{{description}}** ma nieprawidłowy format daty. Wymagany format to **{{dateInputFormat}}**",
-      "invalidDatesRange": "❗ **{{min}}** nie moze być pózniejszą datą niz **{{max}}**"
+      "invalidDatesRange": "❗ **{{min}}** nie moze być pózniejszą datą niz **{{max}}**",
+      "reportIssue": "Zgłoś problem administratorowi.",
+      "chooseFromAutocompleteList": "**Wybierz z listy dostępnych.**",
+      "unknownContest": "❗ Wybrany konkurs {{contestId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
+      "contestFetchFailure": "❗ Nie udało się pobrać danych konkursu {{contestId}}! $t(validators.reportIssue)",
+      "unknownContestReward": "❗ Wybrana nagroda konkursowa {{contestRewardId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
+      "contestRewardFetchFailure": "❗ Nie udało się pobrać danych nagrody konkursowej {{contestRewardId}}! $t(validators.reportIssue)",
+      "unknownContestVoteCategory": "❗ Wybrana kategoria głosowania na prace konkursowe {{contestVoteCategoryId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
+      "contestVoteCategoryFetchFailure": "❗ Nie udało się pobrać danych kategorii głosowania na prace konkursowe {{contestVoteCategoryId}}! $t(validators.reportIssue)",
+      "unknownContestRule": "❗ Wybrana reguła konkursu {{contestRuleId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
+      "contestRuleFetchFailure": "❗ Nie udało się pobrać danych reguły konkursu {{contestRuleId}}! $t(validators.reportIssue)",
+      "unknownContestEntry": "❗ Wybrana praca konkursowa {{contestEntryId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
+      "contestEntryFetchFailure": "❗ Nie udało się pobrać danych pracy konkursowej {{contestEntryId}}! $t(validators.reportIssue)",
+      "unknownReason": "❗ Wybrany powód przyznawania punktów {{reasonId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
+      "reasonFetchFailure": "❗ Nie udało się pobrać danych powodu przyznawania punktów {{reasonId}}! $t(validators.reportIssue)",
+      "unknownPoints": "❗ Wybrane punkty {{pointsId}} nie istnieją! $t(validators.chooseFromAutocompleteList)",
+      "pointsFetchFailure": "❗ Nie udało się pobrać danych punktów {{pointsId}}! $t(validators.reportIssue)",
+      "unknownCommand": "❗ Wybrane polecenie {{commandId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
+      "commandFetchFailure": "❗ Nie udało się pobrać danych polecenia {{commandId}}! $t(validators.reportIssue)"
     },
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} punkty przyznane dnia {{acquireDate}} z powodu {{reasonName}}"
@@ -152,34 +170,34 @@
         }
       },
       "addReason": {
-        "description": "Dodaje nowy powód do przyznawania punktów",
+        "description": "Dodaje nowy powód przyznawania punktów",
         "options": {
           "name": "Nazwa powodu dodania punktów",
           "min": "Minimalna liczba punktów jaką mozna przyznać",
           "max": "Maksymalna liczba punktów jaką mozna przyznać"
         },
         "errors": {
-          "failure": "❗ Nie udało się dodać nowego powodu do przyznawania punktów."
+          "failure": "❗ Nie udało się dodać nowego powodu przyznawania punktów."
         },
         "messages": {
-          "success": "✅ Dodano nowy powód do przynawania punktów **{{reasonName}}**"
+          "success": "✅ Dodano nowy powód przynawania punktów **{{reasonName}}**"
         }
       },
       "removeReason": {
-        "description": "Usuwa istniejący powód do przyznawania punktów",
+        "description": "Usuwa istniejący powód przyznawania punktów",
         "options": {
           "reason": "Powód dodania punktów"
         },
         "errors": {
-          "failure": "❗ Nie udało się usunąć powodu do przyznawania punktów **{{reasonName}}**"
+          "failure": "❗ Nie udało się usunąć powodu przyznawania punktów **{{reasonName}}**"
         },
         "messages": {
-          "confirmation": "❓ Czy na pewno chcesz usunąć powód do przyznania punktów **{{reasonName}}**?",
+          "confirmation": "❓ Czy na pewno chcesz usunąć powód przyznania punktów **{{reasonName}}**?",
           "success": "✅ Usunięto powód przyznania punktów **{{reasonName}}**"
         }
       },
       "changeReason": {
-        "description": "Zmienia istniejący powód do przyznawania punktów",
+        "description": "Zmienia istniejący powód przyznawania punktów",
         "options": {
           "reason": "$t(commands.removeReason.options.reason)",
           "name": "$t(commands.addReason.options.name)",

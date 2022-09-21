@@ -1,29 +1,28 @@
+
 const Validator = require('./Validator');
 
 class PointsValidator extends Validator {
-  constructor(optionId, reasonOptionId, dataModel, options) {
+  constructor(optionId, dataModel) {
     super();
     this.optionId = optionId;
-    this.reasonOptionId = reasonOptionId;
     this.dataModel = dataModel;
-    this.options = options;
   }
 
   async validate(translate, optionsValues) {
     const issues = [];
-    const reason = await this.dataModel.getReason(optionsValues.get(this.reasonOptionId));
-    if (!reason) {
-      return issues;
-    }
-    const optionValue = optionsValues.get(this.optionId);
-    const option = this.options.get(this.optionId);
-    if (optionValue < reason.min || optionValue > reason.max) {
-      optionsValues.delete(this.optionId);
-      issues.push(translate('validators.invalidPointsRange', {
-        description: option.description,
-        reasonName: reason.name,
-        min: reason.min,
-        max: reason.max,
+    const pointsId = optionsValues.get(this.optionId);
+    try {
+      const points = await this.dataModel.getPoints(pointsId);
+      if (points) {
+        optionsValues.set(this.optionId, points);
+      } else {
+        issues.push(translate('validators.unknownPoints', {
+          pointsId,
+        }));
+      }
+    } catch(error) {
+      issues.push(translate('validators.pointsFetchFailure', {
+        pointsId,
       }));
     }
     return issues;
@@ -31,3 +30,4 @@ class PointsValidator extends Validator {
 }
 
 module.exports = PointsValidator;
+

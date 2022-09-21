@@ -1,18 +1,16 @@
 const CommandOption = require('../options/CommandOption');
 const {OptionId, UserOption} = require('../options/CommonOptions');
+const {CommandValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const Command = require('./Command');
 
 class RevokeRolePermissionInteractionHandler extends InteractionHandler {
-  async initialize(interaction) {
-    this.member = await this.findMember(interaction.guildID, this.getOptionValue(OptionId.User));
-    this.commandId = this.getOptionValue(OptionId.Command);
-  }
-
   async handleCommandInteraction(interaction) {
+    this.member = await this.findMember(interaction.guildID, this.getOptionValue(OptionId.User));
+    this.command = this.getOptionValue(OptionId.Command);
     return interaction.createMessage({
       content: this.translate('commands.revokeUserPermission.messages.confirmation', {
-        commandId: this.commandId,
+        commandId: this.command.id,
         userName: this.member.user.username,
       }),
       components: this.createConfirmationForm(),
@@ -22,13 +20,13 @@ class RevokeRolePermissionInteractionHandler extends InteractionHandler {
   async handleComponentInteraction(interaction) {
     return this.handleConfirmationForm(interaction, async () => {
       try {
-        await this.dataModel.revokeUserPermission(this.member.user.id, this.commandId);
+        await this.dataModel.revokeUserPermission(this.member.user.id, this.command.id);
         return this.translate('commands.revokeUserPermission.messages.success', {
-          commandId: this.commandId,
+          commandId: this.command.id,
         });
       } catch (error) {
         return this.translate('commands.revokeUserPermission.errors.failure', {
-          commandId: this.commandId,
+          commandId: this.command.id,
         });
       }
     });
@@ -43,8 +41,11 @@ class RevokeUserPermissionCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.revokeUserPermission.description'));
     this.addOptions([
-      new UserOption(this.translate('common.user')),
-      new CommandOption(this.translate('common.command')),
+      new UserOption(OptionId.User, this.translate('common.user')),
+      new CommandOption(OptionId.Command, this.translate('common.command')),
+    ]);
+    this.addValidators([
+      new CommandValidator(OptionId.Command, this.dataModel),
     ]);
     return Promise.resolve();
   }

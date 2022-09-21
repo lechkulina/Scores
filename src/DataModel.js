@@ -215,8 +215,16 @@ class DataModel extends EventEmitter {
 
   getCommands() {
     return this.database.all(`
-      SELECT Command.id AS id, Command.description AS description
+      SELECT id, description
       FROM Command;
+    `);
+  }
+
+  getCommand(id) {
+    return this.database.get(`
+      SELECT id, description
+      FROM Command
+      WHERE id = "${id}";
     `);
   }
 

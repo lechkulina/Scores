@@ -30,32 +30,32 @@ const OptionId = {
 };
 
 class NumberOption extends Option {
-  constructor(name, description, required) {
-    super(name, description, ApplicationCommandOptionTypes.NUMBER, required);
+  constructor(id, description, required) {
+    super(id, description, required, ApplicationCommandOptionTypes.INTEGER);
   }
 }
 
 class StringOption extends Option {
-  constructor(name, description, required) {
-    super(name, description, ApplicationCommandOptionTypes.STRING, required);
+  constructor(id, description, required) {
+    super(id, description, required, ApplicationCommandOptionTypes.STRING);
   }
 }
 
 class BooleanOption extends Option {
-  constructor(name, description, required) {
-    super(name, description, ApplicationCommandOptionTypes.BOOLEAN, required);
+  constructor(id, description, required) {
+    super(id, description, required, ApplicationCommandOptionTypes.BOOLEAN);
   }
 }
 
 class UserOption extends Option {
-  constructor(description, required) {
-    super(OptionId.User, description, ApplicationCommandOptionTypes.USER, required);
+  constructor(id, description, required) {
+    super(id, description, required, ApplicationCommandOptionTypes.USER);
   }
 }
 
 class RoleOption extends Option {
-  constructor(description, required) {
-    super(OptionId.Role, description, ApplicationCommandOptionTypes.ROLE, required);
+  constructor(id, description, required) {
+    super(id, description, required, ApplicationCommandOptionTypes.ROLE);
   }
 }
 

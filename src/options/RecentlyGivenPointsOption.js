@@ -3,8 +3,8 @@ const {OptionId} = require('./CommonOptions');
 const {Option, SuggestionMethod} = require('./Option');
 
 class RecentlyGivenPointsOption extends Option {
-  constructor(description, required) {
-    super(OptionId.RecentlyGivenPoints, description, ApplicationCommandOptionTypes.NUMBER, required, SuggestionMethod.Autocomplete);
+  constructor(id, description, required) {
+    super(id, description, required, ApplicationCommandOptionTypes.INTEGER, SuggestionMethod.Autocomplete);
   }
 
   async getAutoCompeteResults(interaction, dataModel, translate, optionValue) {
