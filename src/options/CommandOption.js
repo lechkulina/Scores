@@ -1,5 +1,5 @@
 const {Constants: {ApplicationCommandOptionTypes}} = require('eris');
-const {OptionId} = require('./CommonOptions');
+const {autoCompeteResultsLimit} = require('../constants');
 const {Option, SuggestionMethod} = require('./Option');
 
 class CommandOption extends Option {
@@ -8,7 +8,7 @@ class CommandOption extends Option {
   }
 
   async getAutoCompeteResults(interaction, dataModel, translate, optionValue) {
-    const commands = await dataModel.getCommands();
+    const commands = await dataModel.getCommands(autoCompeteResultsLimit);
     const response = commands.map(({id}) => ({
       name: id,
       value: id,

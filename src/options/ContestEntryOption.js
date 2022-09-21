@@ -1,4 +1,5 @@
 const {Constants: {ApplicationCommandOptionTypes}} = require('eris');
+const {autoCompeteResultsLimit} = require('../constants');
 const {OptionId} = require('./CommonOptions');
 const {Option, SuggestionMethod} = require('./Option');
 
@@ -13,7 +14,7 @@ class ContestEntryOption extends Option {
     if (!contestId || !authorId) {
       return [];
     }
-    const entries = await dataModel.getContestEntriesNames(contestId, authorId);
+    const entries = await dataModel.getContestEntriesNames(contestId, authorId, autoCompeteResultsLimit);
     const response = entries.map(({id, name}) => ({
       name,
       value: id,

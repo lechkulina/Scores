@@ -41,65 +41,63 @@ class DataModel extends EventEmitter {
   constructor() {
     super();
     this.database = new Database();
-    this.reasonsCache = new Map();
+  }
+
+  getLimitClause(limit) {
+    return !!limit ? `LIMIT ${limit}` : '';
+  }
+
+  joinClauses(clauses) {
+    return clauses
+      .filter(clause => !!clause)
+      .join('\n')
+      .concat(';');
   }
 
   createSchema() {
     return this.database.exec(require('./schema.js'));
   }
 
-  async addReason(name, min, max) {
-    await this.database.run(`
+  addReason(name, min, max) {
+    return this.database.run(`
       INSERT INTO Reason(name, min, max)
       VALUES ("${name}", ${min}, ${max});
     `);
-    this.reasonsCache.clear();
   }
 
-  async removeReason(reasonId) {
-    await this.database.run(`
+  removeReason(reasonId) {
+    return this.database.run(`
       DELETE FROM Reason
       WHERE id = ${reasonId};
     `);
-    this.reasonsCache.delete(reasonId);
   }
 
-  async changeReason(reasonId, name, min, max) {
-    await this.database.run(`
+  changeReason(reasonId, name, min, max) {
+    return this.database.run(`
       UPDATE Reason
       SET name = "${name}",
           min = ${min},
           max = ${max}
       WHERE id = ${reasonId};
     `);
-    this.reasonsCache.clear();
   }
 
-  async getReasons() {
-    if (this.reasonsCache.size > 0) {
-      return Array.from(this.reasonsCache.values());
-    }
-    const reasons = await this.database.all(`
-      SELECT id, name, min, max
-      FROM Reason;
-    `);
-    reasons.forEach(reason => this.reasonsCache.set(reason.id, reason));
-    return reasons;
+  getReasons(limit) {
+    return this.database.all(
+      this.joinClauses([
+        'SELECT id, name, min, max',
+        'FROM Reason',
+        this.getLimitClause(limit),
+      ])
+    );
   }
 
-  async getReason(reasonId) {
-    if (this.reasonsCache.size > 0) {
-      return this.reasonsCache.get(reasonId);
-    }
-    const reason = await this.database.get(`
+  getReason(reasonId) {
+    return this.database.get(`
       SELECT id, name, min, max
       FROM Reason
       WHERE id = ${reasonId};
     `);
-    if (reason) {
-      this.reasonsCache.set(reason.id, reason);
-    }
-    return reason;
   }
   
   addPoints(points, userId, giverId, reasonId) {
@@ -170,14 +168,16 @@ class DataModel extends EventEmitter {
   }
 
   getRecentlyGivenPoints(userId, giverId, limit) {
-    return this.database.all(`
-      SELECT Points.id, Points.points as points, Points.acquireDate as acquireDate, Reason.name AS reasonName
-      FROM Points
-      INNER JOIN Reason ON Reason.id = Points.reasonId
-      WHERE Points.userId = "${userId}" AND Points.giverId = ${giverId}
-      ORDER BY Points.acquireDate DESC
-      LIMIT ${limit};
-    `);
+    return this.database.all(
+      this.joinClauses([
+        'SELECT Points.id, Points.points as points, Points.acquireDate as acquireDate, Reason.name AS reasonName',
+        'FROM Points',
+        'INNER JOIN Reason ON Reason.id = Points.reasonId',
+        `WHERE Points.userId = "${userId}" AND Points.giverId = ${giverId}`,
+        'ORDER BY Points.acquireDate DESC',
+        this.getLimitClause(limit),
+      ])
+    );
   }
 
   getPoints(pointsId) {
@@ -197,8 +197,8 @@ class DataModel extends EventEmitter {
     `);
   }
 
-  async getSetting(key) {
-    return await this.database.get(`
+  getSetting(key) {
+    return this.database.get(`
       SELECT value
       FROM Settings
       WHERE key="${key}"
@@ -213,11 +213,14 @@ class DataModel extends EventEmitter {
     `);
   }
 
-  getCommands() {
-    return this.database.all(`
-      SELECT id, description
-      FROM Command;
-    `);
+  getCommands(limit) {
+    return this.database.all(
+      this.joinClauses([
+        'SELECT id, description',
+        'FROM Command',
+        this.getLimitClause(limit),
+      ])
+    );
   }
 
   getCommand(id) {
@@ -271,12 +274,12 @@ class DataModel extends EventEmitter {
   }
 
   async isAllowed(userId, roleIds, commandId) {
-    return await this.database.get(`
+    return (await this.database.get(`
       SELECT 1 AS allowed
       FROM UserPermission AS U, RolePermission AS R
       WHERE (U.userId = "${userId}" AND U.commandId = "${commandId}")
         OR (R.roleId IN (${roleIds.map(roldId => `"${roldId}"`).join(', ')}) AND R.commandId = "${commandId}")
-    `) ? true : false;
+    `)) ? true : false;
   }
 
   getCommandsWithPermissions(userId, roleIds) {
@@ -356,27 +359,24 @@ class DataModel extends EventEmitter {
     return clause.length > 0 ? `WHERE ${clause.join(' AND ')}` : '';
   }
 
-  getContestsNames(guildId, contestState) {
+  getContestsNames(guildId, contestState, limit) {
     return this.database.all(
-      [
+      this.joinClauses([
         'SELECT id, name',
         'FROM Contest',
-        this.getContestWhereClause(guildId, contestState)
-      ]
-      .join('\n')
-      .concat(';')
+        this.getContestWhereClause(guildId, contestState),
+        this.getLimitClause(limit),
+      ])
     );
   }
 
   getContests(guildId, contestState) {
     return this.database.all(
-      [
+      this.joinClauses([
         'SELECT id, name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId',
         'FROM Contest',
         this.getContestWhereClause(guildId, contestState)
-      ]
-      .join('\n')
-      .concat(';')
+      ])
     );
   }
 
@@ -517,21 +517,27 @@ class DataModel extends EventEmitter {
     this.emit(DataModelEvents.onContestVoteCategoryAdded, guildId);
   }
 
-  getAssignedContestVoteCategories(contestId) {
-    return this.database.all(`
-      SELECT id, name, description, max
-      FROM ContestVoteCategory
-      INNER JOIN ContestVoteCategories ON ContestVoteCategories.contestVoteCategoryId = ContestVoteCategory.id
-      WHERE ContestVoteCategories.contestId = ${contestId};
-    `);
+  getAssignedContestVoteCategories(contestId, limit) {
+    return this.database.all(
+      this.joinClauses([
+        'SELECT id, name, description, max',
+        'FROM ContestVoteCategory',
+        'INNER JOIN ContestVoteCategories ON ContestVoteCategories.contestVoteCategoryId = ContestVoteCategory.id',
+        `WHERE ContestVoteCategories.contestId = ${contestId}`,
+        this.getLimitClause(limit),
+      ])
+    );
   }
 
-  getContestVoteCategoriesNames(guildId) {
-    return this.database.all(`
-      SELECT id, name
-      FROM ContestVoteCategory
-      WHERE guildId = "${guildId}";
-    `);
+  getContestVoteCategoriesNames(guildId, limit) {
+    return this.database.all(
+      this.joinClauses([
+        'SELECT id, name',
+        'FROM ContestVoteCategory',
+        `WHERE guildId = "${guildId}"`,
+        this.getLimitClause(limit),
+      ])
+    );
   }
 
   getContestVoteCategory(id) {
@@ -591,21 +597,27 @@ class DataModel extends EventEmitter {
     this.emit(DataModelEvents.onContestRuleAdded, guildId);
   }
 
-  getAssignedContestRules(contestId) {
-    return this.database.all(`
-      SELECT ContestRule.id, ContestRule.description
-      FROM ContestRule
-      INNER JOIN ContestRules ON ContestRules.contestRuleId = ContestRule.id
-      WHERE ContestRules.contestId = ${contestId};
-    `);
+  getAssignedContestRules(contestId, limit) {
+    return this.database.all(
+      this.joinClauses([
+        'SELECT ContestRule.id, ContestRule.description',
+        'FROM ContestRule',
+        'INNER JOIN ContestRules ON ContestRules.contestRuleId = ContestRule.id',
+        `WHERE ContestRules.contestId = ${contestId}`,
+        this.getLimitClause(limit),
+      ])
+    );
   }
 
-  getContestRulesDescriptions(guildId) {
-    return this.database.all(`
-      SELECT id, description
-      FROM ContestRule
-      WHERE guildId = "${guildId}";
-    `);
+  getContestRulesDescriptions(guildId, limit) {
+    return this.database.all(
+      this.joinClauses([
+        'SELECT id, description',
+        'FROM ContestRule',
+        `WHERE guildId = "${guildId}"`,
+        this.getLimitClause(limit),
+      ])
+    );
   }
 
   getContestRule(id) {
@@ -663,21 +675,27 @@ class DataModel extends EventEmitter {
     this.emit(DataModelEvents.onContestRewardAdded, guildId);
   }
 
-  getAssignedContestRewards(contestId) {
-    return this.database.all(`
-      SELECT ContestReward.id, ContestReward.description
-      FROM ContestReward
-      INNER JOIN ContestRewards ON ContestRewards.contestRewardId = ContestReward.id
-      WHERE ContestRewards.contestId = ${contestId};
-    `);
+  getAssignedContestRewards(contestId, limit) {
+    return this.database.all(
+      this.joinClauses([
+        'SELECT ContestReward.id, ContestReward.description',
+        'FROM ContestReward',
+        'INNER JOIN ContestRewards ON ContestRewards.contestRewardId = ContestReward.id',
+        `WHERE ContestRewards.contestId = ${contestId}`,
+        this.getLimitClause(limit),
+      ])
+    );
   }
 
-  getContestRewardsDescriptions(guildId) {
-    return this.database.all(`
-      SELECT id, description
-      FROM ContestReward
-      WHERE guildId = "${guildId}";
-    `);
+  getContestRewardsDescriptions(guildId, limit) {
+    return this.database.all(
+      this.joinClauses([
+        'SELECT id, description',
+        'FROM ContestReward',
+        `WHERE guildId = "${guildId}"`,
+        this.getLimitClause(limit),
+      ])
+    );
   }
 
   getContestReward(id) {
@@ -777,12 +795,15 @@ class DataModel extends EventEmitter {
     `);
   }
 
-  getContestEntriesNames(contestId, authorId) {
-    return this.database.all(`
-      SELECT id, name
-      FROM ContestEntry
-      WHERE contestId = ${contestId} AND authorId = ${authorId};
-    `);
+  getContestEntriesNames(contestId, authorId, limit) {
+    return this.database.all(
+      this.joinClauses([
+        'SELECT id, name',
+        'FROM ContestEntry',
+        `WHERE contestId = ${contestId} AND authorId = ${authorId}`,
+        this.getLimitClause(limit),
+      ])
+    );
   }
   
   getContestEntry(id) {

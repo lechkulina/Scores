@@ -1,4 +1,5 @@
 const {Constants: {ApplicationCommandOptionTypes}} = require('eris');
+const {autoCompeteResultsLimit} = require('../constants');
 const {OptionId} = require('./CommonOptions');
 const {Option, SuggestionMethod} = require('./Option');
 
@@ -13,7 +14,7 @@ class RecentlyGivenPointsOption extends Option {
     if (!userId) {
       return [];
     }
-    const points = await dataModel.getRecentlyGivenPoints(userId, giverId, 20);
+    const points = await dataModel.getRecentlyGivenPoints(userId, giverId, autoCompeteResultsLimit);
     const response = points.map(({id, points, acquireDate, reasonName}) => ({
       name: translate('autoCompete.recentlyGivenPoints', {
         points,

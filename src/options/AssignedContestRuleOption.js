@@ -1,6 +1,6 @@
 const {Constants: {ApplicationCommandOptionTypes}} = require('eris');
 const {formatEllipsis} = require('../Formatters');
-const {contestRuleDescriptionLimit} = require('../constants');
+const {contestRuleDescriptionLimit, autoCompeteResultsLimit} = require('../constants');
 const {OptionId} = require('./CommonOptions');
 const {Option, SuggestionMethod} = require('./Option');
 
@@ -14,7 +14,7 @@ class AssignedContestRuleOption extends Option {
     if (!contestId) {
       return [];
     }
-    const rules = await dataModel.getAssignedContestRules(contestId);
+    const rules = await dataModel.getAssignedContestRules(contestId, autoCompeteResultsLimit);
     const response = rules.map(({id, description}) => ({
       name: formatEllipsis(description, contestRuleDescriptionLimit),
       value: id,

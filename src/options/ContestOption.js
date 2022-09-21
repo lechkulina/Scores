@@ -1,4 +1,5 @@
 const {Constants: {ApplicationCommandOptionTypes}} = require('eris');
+const {autoCompeteResultsLimit} = require('../constants');
 const {Option, SuggestionMethod} = require('./Option');
 
 class ContestOption extends Option {
@@ -8,7 +9,7 @@ class ContestOption extends Option {
   }
 
   async getAutoCompeteResults(interaction, dataModel, translate, optionValue) {
-    const contests = await dataModel.getContestsNames(interaction.guildID, this.contestState);
+    const contests = await dataModel.getContestsNames(interaction.guildID, this.contestState, autoCompeteResultsLimit);
     const response = contests.map(({id, name}) => ({
       name,
       value: id,

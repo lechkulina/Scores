@@ -6,6 +6,7 @@ const msInWeek = 7 * msInDay;
 
 const contestRuleDescriptionLimit = 40;
 const contestRewardDescriptionLimit = 40;
+const autoCompeteResultsLimit = 25;
 
 module.exports = {
   msInSecond,
@@ -15,4 +16,5 @@ module.exports = {
   msInWeek,
   contestRuleDescriptionLimit,
   contestRewardDescriptionLimit,
+  autoCompeteResultsLimit,
 };
