@@ -85,7 +85,7 @@
           "user": "User which points should be changed",
           "recentlyGivenPoints": "$t(commands.removePoints.options.recentlyGivenPoints)",
           "reason": "$t(commands.addPoints.options.reason)",
-          "points": "$(commands.addPoints.options.points)"
+          "points": "$t(commands.addPoints.options.points)"
         },
         "errors": {
           "failure": "❗ Failed to change **{{points}}** points from user **{{userName}}**"
@@ -136,10 +136,10 @@
       "changeReason": {
         "description": "Changes existing points add reason.",
         "options": {
-          "reason": "$(commands.removeReason.options.reason)",
-          "name": "$(commands.addReason.options.name)",
-          "min": "$(commands.addReason.options.min)",
-          "max": "$(commands.addReason.options.max)"
+          "reason": "$t(commands.removeReason.options.reason)",
+          "name": "$t(commands.addReason.options.name)",
+          "min": "$t(commands.addReason.options.min)",
+          "max": "$t(commands.addReason.options.max)"
         },
         "errors": {
           "failure": "❗ Failed to change points add reason **{{reasonName}}**"
@@ -221,13 +221,13 @@
       "changeContest": {
         "description": "Changes existing contest",
         "options": {
-          "name": "$(commands.addContest.options.name)",
-          "description": "$(commands.addContest.options.description)",
-          "announcementDate": "$(commands.addContest.options.announcementDate)",
-          "activeBeginDate": "$(commands.addContest.options.activeBeginDate)",
-          "activeEndDate": "$(commands.addContest.options.activeEndDate)",
-          "votingBeginDate": "$(commands.v.options.votingBeginDate)",
-          "votingEndDate": "$(commands.addContest.options.votingEndDate)"
+          "name": "$t(commands.addContest.options.name)",
+          "description": "$t(commands.addContest.options.description)",
+          "announcementDate": "$t(commands.addContest.options.announcementDate)",
+          "activeBeginDate": "$t(commands.addContest.options.activeBeginDate)",
+          "activeEndDate": "$t(commands.addContest.options.activeEndDate)",
+          "votingBeginDate": "$t(commands.v.options.votingBeginDate)",
+          "votingEndDate": "$t(commands.addContest.options.votingEndDate)"
         },
         "errors": {
           "failure": "❗ Failed to changed contest **{{contestName}}**"
@@ -278,11 +278,11 @@
       "changeContestVoteCategory": {
         "description": "Changes contest vote category",
         "options": {
-          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.contestVoteCategory)",
-          "name": "$(commands.addContestVoteCategory.options.name)",
-          "description": "$(commands.addContestVoteCategory.options.description)",
-          "max": "$(commands.addContestVoteCategory.options.max)",
-          "useByDefault": "$(commands.addContestVoteCategory.options.useByDefault)"
+          "contestVoteCategory": "$t(commands.removeContestVoteCategory.options.contestVoteCategory)",
+          "name": "$t(commands.addContestVoteCategory.options.name)",
+          "description": "$t(commands.addContestVoteCategory.options.description)",
+          "max": "$t(commands.addContestVoteCategory.options.max)",
+          "useByDefault": "$t(commands.addContestVoteCategory.options.useByDefault)"
         },
         "errors": {
           "failure": "❗ Failed to changed contest vote category **{{categoryName}}**"
@@ -295,7 +295,7 @@
       "assignContestVoteCategory": {
         "description": "Assigns contest vote category to an existing contest",
         "options": {
-          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.contestVoteCategory)"
+          "contestVoteCategory": "$t(commands.removeContestVoteCategory.options.contestVoteCategory)"
         },
         "errors": {
           "failure": "❗ Failed to assign contest vote category **{{categoryName}}** to contest **{{contestName}}**"
@@ -307,7 +307,7 @@
       "unassignContestVoteCategory": {
         "description": "Unassigns contest vote category from an existing contest",
         "options": {
-          "contestVoteCategory": "$(commands.removeContestVoteCategory.options.contestVoteCategory)"
+          "contestVoteCategory": "$t(commands.removeContestVoteCategory.options.contestVoteCategory)"
         },
         "errors": {
           "failure": "❗ Failed to unassign contest vote category **{{categoryName}}** from contest **{{contestName}}**"
@@ -346,9 +346,9 @@
       "changeContestRule": {
         "description": "Changes contest rule",
         "options": {
-          "contestRule": "$(commands.removeContestRule.options.contestRule)",
-          "description": "$(commands.addContestRule.options.description)",
-          "useByDefault": "$(commands.addContestRule.options.useByDefault)"
+          "contestRule": "$t(commands.removeContestRule.options.contestRule)",
+          "description": "$t(commands.addContestRule.options.description)",
+          "useByDefault": "$t(commands.addContestRule.options.useByDefault)"
         },
         "errors": {
           "failure": "❗ Failed to changed contest rule **{{ruleDescription}}**"
@@ -361,7 +361,7 @@
       "assignContestRule": {
         "description": "Assigns contest rule to an existing contest",
         "options": {
-          "contestRule": "$(commands.removeContestRule.options.contestRule)"
+          "contestRule": "$t(commands.removeContestRule.options.contestRule)"
         },
         "errors": {
           "failure": "❗ Failed to assign contest rule **{{ruleDescription}}** to contest **{{contestName}}**"
@@ -373,7 +373,7 @@
       "unassignContestRule": {
         "description": "Unassigns contest rule from an existing contest",
         "options": {
-          "contestRule": "$(commands.removeContestRule.options.contestRule)"
+          "contestRule": "$t(commands.removeContestRule.options.contestRule)"
         },
         "errors": {
           "failure": "❗ Failed to unassign contest rule **{{ruleDescription}}** from contest **{{contestName}}**"
@@ -412,9 +412,9 @@
       "changeContestReward": {
         "description": "Changes contest reward",
         "options": {
-          "contestReward": "$(commands.removeContestReward.options.contestReward)",
-          "description": "$(commands.addContestReward.options.description)",
-          "useByDefault": "$(commands.addContestReward.options.useByDefault)"
+          "contestReward": "$t(commands.removeContestReward.options.contestReward)",
+          "description": "$t(commands.addContestReward.options.description)",
+          "useByDefault": "$t(commands.addContestReward.options.useByDefault)"
         },
         "errors": {
           "failure": "❗ Failed to changed contest reward **{{rewardDescription}}**"
@@ -427,7 +427,7 @@
       "assignContestReward": {
         "description": "Assigns contest reward to an existing contest",
         "options": {
-          "contestReward": "$(commands.removeContestReward.options.contestReward)"
+          "contestReward": "$t(commands.removeContestReward.options.contestReward)"
         },
         "errors": {
           "failure": "❗ Failed to assign contest reward **{{rewardDescription}}** to contest **{{contestName}}**"
@@ -439,7 +439,7 @@
       "unassignContestReward": {
         "description": "Unassigns contest reward from an existing contest",
         "options": {
-          "contestReward": "$(commands.removeContestReward.options.contestReward)"
+          "contestReward": "$t(commands.removeContestReward.options.contestReward)"
         },
         "errors": {
           "failure": "❗ Failed to unassign contest reward **{{rewardDescription}}** from contest **{{contestName}}**"
@@ -467,7 +467,7 @@
       "cancelContestEntry": {
         "description": "Cancels submitted contest entry",
         "options": {
-          "contest": "$(commands.submitContestEntry.options.contest)",
+          "contest": "$t(commands.submitContestEntry.options.contest)",
           "contestEntry": "Submitted contest entry"
         },
         "errors": {
@@ -481,11 +481,11 @@
       "changeContestEntry": {
         "description": "Changes submitted contest entry",
         "options": {
-          "contest": "$(commands.submitContestEntry.options.contest)",
-          "contestEntry": "$(commands.submitContestEntry.cancelContestEntry.contestEntry)",
-          "name": "$(commands.submitContestEntry.cancelContestEntry.name)",
-          "description": "$(commands.submitContestEntry.cancelContestEntry.description)",
-          "url": "$(commands.submitContestEntry.cancelContestEntry.url)"
+          "contest": "$t(commands.submitContestEntry.options.contest)",
+          "contestEntry": "$t(commands.submitContestEntry.cancelContestEntry.contestEntry)",
+          "name": "$t(commands.submitContestEntry.cancelContestEntry.name)",
+          "description": "$t(commands.submitContestEntry.cancelContestEntry.description)",
+          "url": "$t(commands.submitContestEntry.cancelContestEntry.url)"
         },
         "errors": {
           "failure": "❗ Failed to changed contest entry **{{entryName}}** submitted to contest **{{contestName}}**"
