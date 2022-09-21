@@ -5,6 +5,7 @@ const ClientSupport = require('./ClientSupport');
 const SectionType = {
   Paragraph: 0,
   Line: 1,
+  Word: 2,
 };
 
 class MessagePublisher extends ClientSupport {
@@ -25,8 +26,9 @@ class MessagePublisher extends ClientSupport {
       const paragraphEntity = lastParagraph ? '' : Entities.EmptyLine;
       if (paragraph.length + paragraphEntity.length <= sectionSize) {
         sections.push({
-          content: paragraph + paragraphEntity,
+          content: paragraph,
           type: SectionType.Paragraph,
+          entity: paragraphEntity,
         });
         return;
       }
@@ -37,21 +39,23 @@ class MessagePublisher extends ClientSupport {
         const lineEntity = lastLine ? paragraphEntity : Entities.NewLine;
         if (line.length + lineEntity <= sectionSize) {
           sections.push({
-            content: line + lineEntity,
+            content: line,
             type: SectionType.Line,
+            entity: lineEntity,
           });
           return;
         }
-        // line it too long it needs to be sliced into fragments
-        let fragmentIndex = 0;
-        while (fragmentIndex < line.length) {
-          const fragment = line.slice(fragmentIndex, fragmentIndex + sectionSize);
+        // line is too long it needs to be sliced into fragments
+        const words = line.split(' ');
+        words.forEach((word, wordIndex) => {
+          const lastWord = wordIndex === words.length - 1;
+          const wordEntity = lastWord ? lineEntity : ' ';
           sections.push({
-            content: fragment,
-            type: SectionType.Line,
+            content: word,
+            type: SectionType.Word,
+            entity: wordEntity,
           });
-          fragmentIndex += sectionSize;
-        }
+        });
       });
     });
     return sections;
@@ -65,17 +69,19 @@ class MessagePublisher extends ClientSupport {
       const section = sections[sectionIndex];
       let subSectionIndex = sectionIndex;
       let subSectionContent = '';
+      let previousEntity = '';
       while (subSectionIndex <= sections.length) {
         const subSection = sections[subSectionIndex];
         if (subSectionIndex === sections.length  // end of content
-          || subSection.type !== section.type  // section type is changing
-          || subSectionContent.length + subSection.content > chunkSize // chunk overflow
+          || (subSection.type !== section.type && subSection.type !== SectionType.Word)  // section type is changing
+          || subSectionContent.length + subSection.content.length + previousEntity.length > chunkSize // chunk overflow
         ) {
           chunks.push(subSectionContent);
           subSectionContent = '';
           break;
         }
-        subSectionContent += subSection.content;
+        subSectionContent += previousEntity + subSection.content;
+        previousEntity = subSection.entity;
         subSectionIndex++;
       }
       sectionIndex = subSectionIndex;
