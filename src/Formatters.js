@@ -13,12 +13,20 @@ const Entities = {
 
 const defaultRoundWidthTo = 8;
 
+const padText = (length, string) => {
+  return ' '.repeat(length - string.length) + `${string}`;
+};
+
 function formatTable({
   rows,
   columnsOrder: propsColumnsOrder,
   columnsLabels: propsColumnsLabels,
   roundWidthTo = defaultRoundWidthTo
 }) {
+  if (rows.length === 0) {
+    return '';
+  }
+  // calculate columns widths, labels and order
   const columnsWidths = {};
   const columnsLabels = propsColumnsLabels ?? {};
   rows.forEach(row => {
@@ -35,32 +43,32 @@ function formatTable({
       columnsWidths[name] = Math.max(columnsWidths[name], value.length);
     });
   });
-  const columnsOrder = propsColumnsOrder ?? Object.keys(columnsWidths);
   Object.keys(columnsWidths).forEach(name => {
     columnsWidths[name] = Math.ceil(columnsWidths[name] / roundWidthTo) * roundWidthTo;
   });
-  const fixed = (length, string) => {
-    return ' '.repeat(length - string.length) + `${string}`;
-  };
-  const header = columnsOrder.map(name => (
-    fixed(columnsWidths[name], columnsLabels[name])
-  )).join(` ${Entities.VerticalSeparator}`);
-  const separator = columnsOrder.map(name => (
-    Entities.HorizontalSeparator.repeat(columnsWidths[name])
-  )).join(`${Entities.HorizontalSeparator}${Entities.JointSeparator}`);
-  const content = rows.map(row => (
-    columnsOrder.map(name => {
-      const value = row[name];
-      return fixed(columnsWidths[name], `${value}`);
-    }).join(` ${Entities.VerticalSeparator}`)
-  )).join(Entities.NewLine);
-  return [
-    Entities.NoFormat,
-    header,
-    separator,
-    content,
-    Entities.NoFormat,
-  ].join(Entities.NewLine);
+  const columnsOrder = propsColumnsOrder ?? Object.keys(columnsWidths);
+  // generate header section
+  const sections = [];
+  sections.push(
+    columnsOrder
+      .map(name => padText(columnsWidths[name], columnsLabels[name]))
+      .join(` ${Entities.VerticalSeparator}`)
+  );
+  // generate horizontal separator
+  sections.push(
+    columnsOrder
+      .map(name => Entities.HorizontalSeparator.repeat(columnsWidths[name]))
+      .join(`${Entities.HorizontalSeparator}${Entities.JointSeparator}`)
+  );
+  // generate table content
+  rows.forEach(row => {
+    sections.push(
+      columnsOrder
+        .map(name => padText(columnsWidths[name], `${row[name]}`))
+        .join(` ${Entities.VerticalSeparator}`)
+    );
+  });
+  return `${Entities.NoFormat}${sections.join(Entities.NewLine)}${Entities.NoFormat}`;
 }
 
 function formatMessageTable({message, ...props}) {
