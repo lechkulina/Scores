@@ -24,10 +24,20 @@ class ChangeContestInteractionHandler extends InteractionHandler {
   }
 
   async handleComponentInteraction(interaction) {
-    const [name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate] = this.getOptionValues([
+    const [
+      name,
+      description,
+      announcementsThreshold,
+      requiredVotesCount,
+      activeBeginDate,
+      activeEndDate,
+      votingBeginDate,
+      votingEndDate
+    ] = this.getOptionValues([
       OptionId.Name,
       OptionId.Description,
       OptionId.AnnouncementsThreshold,
+      OptionId.RequiredVotesCount,
       OptionId.ActiveBeginDate,
       OptionId.ActiveEndDate,
       OptionId.VotingBeginDate,
@@ -40,6 +50,7 @@ class ChangeContestInteractionHandler extends InteractionHandler {
           name,
           description,
           announcementsThreshold,
+          requiredVotesCount,
           activeBeginDate.valueOf(),
           activeEndDate.valueOf(),
           votingBeginDate.valueOf(),
@@ -69,6 +80,7 @@ class ChangeContestCommand extends Command {
       new StringOption(OptionId.Name, this.translate('commands.changeContest.options.name')),
       new StringOption(OptionId.Description, this.translate('commands.changeContest.options.description')),
       new StringOption(OptionId.AnnouncementsThreshold, this.translate('commands.changeContest.options.announcementsThreshold')),
+      new StringOption(OptionId.RequiredVotesCount, this.translate('commands.changeContest.options.requiredVotesCount')),
       new StringOption(OptionId.ActiveBeginDate, this.translate('commands.changeContest.options.activeBeginDate')),
       new StringOption(OptionId.ActiveEndDate, this.translate('commands.changeContest.options.activeEndDate')),
       new StringOption(OptionId.VotingBeginDate, this.translate('commands.changeContest.options.votingBeginDate')),
@@ -77,7 +89,7 @@ class ChangeContestCommand extends Command {
     this.addValidators([
       new StringsLengthsValidator([OptionId.Name], 'minNameLength', 'maxNameLength', this.settings, this.options),
       new StringsLengthsValidator([OptionId.Description], 'minDescriptionLength', 'maxDescriptionLength', this.settings, this.options),
-      new NumbersValuesValidator([OptionId.AnnouncementsThreshold], this.options),
+      new NumbersValuesValidator([OptionId.AnnouncementsThreshold, OptionId.RequiredVotesCount], this.options),
       new FirstLetterValidator([OptionId.Name, OptionId.Description], this.options),
       new DatesValidator([
         OptionId.AnnouncementDate,

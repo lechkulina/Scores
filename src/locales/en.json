@@ -230,7 +230,8 @@
         "options": {
           "name": "Contest name",
           "description": "Contest description",
-          "announcementDate": "Contest announcement date", 
+          "announcementThreshold": "Number of hours before publishing the announcements", 
+          "requiredVotesCount": "Number of votes require to finish the voting process",
           "activeBeginDate": "Contest begin date",
           "activeEndDate": "Contest end date",
           "votingBeginDate": "Voting begin date",
@@ -248,7 +249,8 @@
         "options": {
           "name": "$t(commands.addContest.options.name)",
           "description": "$t(commands.addContest.options.description)",
-          "announcementDate": "$t(commands.addContest.options.announcementDate)",
+          "announcementThreshold": "$t(commands.addContest.options.announcementThreshold)",
+          "requiredVotesCount": "$t(commands.addContest.options.requiredVotesCount)",
           "activeBeginDate": "$t(commands.addContest.options.activeBeginDate)",
           "activeEndDate": "$t(commands.addContest.options.activeEndDate)",
           "votingBeginDate": "$t(commands.v.options.votingBeginDate)",

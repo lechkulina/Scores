@@ -298,12 +298,22 @@ class DataModel extends EventEmitter {
     `);
   }
 
-  async addContest(name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId) {
+  async addContest(
+    name,
+    description,
+    announcementsThreshold,
+    requiredVotesCount,
+    activeBeginDate,
+    activeEndDate,
+    votingBeginDate,
+    votingEndDate,
+    guildId
+  ) {
     await this.database.exec(`
       PRAGMA temp_store = 2;
       BEGIN TRANSACTION;
-        INSERT INTO Contest(name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId)
-        VALUES ("${name}", "${description}", ${announcementsThreshold}, ${activeBeginDate}, ${activeEndDate}, ${votingBeginDate}, ${votingEndDate}, "${guildId}");
+        INSERT INTO Contest(name, description, announcementsThreshold, requiredVotesCount, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId)
+        VALUES ("${name}", "${description}", ${announcementsThreshold}, ${requiredVotesCount}, ${activeBeginDate}, ${activeEndDate}, ${votingBeginDate}, ${votingEndDate}, "${guildId}");
 
         CREATE TEMP TABLE Variables AS SELECT last_insert_rowid() as contestId;
 
@@ -318,12 +328,23 @@ class DataModel extends EventEmitter {
     this.emit(DataModelEvents.onContestAdded, guildId);
   }
 
-  async changeContest(contestId, name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate) {
+  async changeContest(
+    contestId,
+    name,
+    description,
+    announcementsThreshold,
+    requiredVotesCount,
+    activeBeginDate,
+    activeEndDate,
+    votingBeginDate,
+    votingEndDate
+  ) {
     await this.database.run(`
       UPDATE Contest
       SET name = "${name}",
           description = "${description}",
-          announcementsThreshold = "${announcementsThreshold}",
+          announcementsThreshold = ${announcementsThreshold},
+          requiredVotesCount = ${requiredVotesCount},
           activeBeginDate = ${activeBeginDate},
           activeEndDate = ${activeEndDate},
           votingBeginDate = ${votingBeginDate},
