@@ -564,8 +564,24 @@
           "confirmation": "❓ Are you sure you want to change **{{score}}** points from contest entry **{{entryName}}** in category **{{categoryName}}**?",
           "success": "✅ Changed **{{score}}** points from contest entry **{{entryName}}** in category **{{categoryName}}**"
         }
+      },
+      "showMyContestVotes": {
+        "description": "Show contest votes you have added",
+        "options": {
+          "contest": "$t(commands.submitContestEntry.options.contest)"
+        },
+        "errors": {
+          "failure": "❗ Failed to fetch contest votes data."
+        },
+        "messages": {
+          "missingVotes_one": "You have to add **{{count}} missing** point",
+          "missingVotes_many": "You have to add **{{count}} missing** points",
+          "summary": "➡ You have added **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** of required points in contest **{{contestName}}**. $t(commands.showMyContestVotes.messages.missingVotes, count)",
+          "entryHeader": "⬇ Votes added for entry **{{entryName}}** by **{{authorName}}**",
+          "score": "Points",
+          "noScore": "NONE"
+        }
       }
-    
     }
   }
 }

@@ -16,7 +16,8 @@
       "role": "Rola",
       "command": "Polecenie",
       "user": "Uzytkownik",
-      "contest": "Konkurs"
+      "contest": "Konkurs",
+      "category": "Kategoria"
     },
     "formatters": {
       "weeks_one": "{{count}} tydzień",
@@ -608,6 +609,24 @@
         "messages": {
           "confirmation": "❓ Czy na pewno chcesz zmienić **{{score}}** punktów pracy **{{entryName}}** w kategorii **{{categoryName}}**?",
           "success": "✅ Zmieniono **{{score}}** punktów pracy **{{entryName}}** w kategorii **{{categoryName}}**"
+        }
+      },
+      "showMyContestVotes": {
+        "description": "Pokazuje przyznane głosy",
+        "options": {
+          "contest": "$t(commands.submitContestEntry.options.contest)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się pobrać informacji o głosach."
+        },
+        "messages": {
+          "missingVotes_one": "Musisz jeszcze oddać **{{count}} brakujący** głos",
+          "missingVotes_few": "Musisz jeszcze oddać **{{count}} brakujące** głosy",
+          "missingVotes_many": "Musisz jeszcze oddać **{{count}} brakujących** głosów",
+          "summary": "➡ Oddanych zostało **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** potrzebnych głosów w konkursie **{{contestName}}**. $t(commands.showMyContestVotes.messages.missingVotes, count)",
+          "entryHeader": "⬇ Głosy oddane na pracę **{{entryName}}** autorstwa **{{authorName}}**",
+          "score": "Punkty",
+          "noScore": "BRAK"
         }
       }
     }

@@ -886,6 +886,20 @@ class DataModel extends EventEmitter {
     `);
   }
 
+  getContestVotes(contestId, voterId) {
+    return this.database.all(`
+      SELECT entryId, entryName, User.name as authorName, categoryId, categoryName, ContestVote.score
+      FROM (
+        SELECT ContestEntry.id as entryId, ContestEntry.authorId, ContestEntry.name as entryName, ContestVoteCategory.id as categoryId, ContestVoteCategory.name as categoryName
+        FROM ContestEntry
+        CROSS JOIN ContestVoteCategory
+        WHERE ContestEntry.contestId = ${contestId}
+      )
+      INNER JOIN User ON User.id = authorId
+      LEFT OUTER JOIN ContestVote ON ContestVote.contestEntryId = entryId AND ContestVote.contestVoteCategoryId = categoryId AND ContestVote.voterId = "${voterId}";
+    `);
+  }
+
   async initialize() {
     await this.database.open();
     await this.createSchema();
