@@ -20,17 +20,21 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
   generateHeaderSection(contest, votersSummary) {
     const completedVotingsCount = this.calculateCompletedVotingsCount(votersSummary);
     const missingVotingsCount = Math.max(0, contest.requiredCompletedVotingsCount - completedVotingsCount);
-    return  this.translate('commands.showContestVotesSummary.messages.header', {
-      contestName: contest.name,
-      completedVotingsCount,
-      missingVotingsCount,
-    });
+    return votersSummary.length > 0
+      ? this.translate('commands.showContestVotesSummary.messages.headerWithVotings', {
+          contestName: contest.name,
+          completedVotingsCount,
+          missingVotingsCount,
+        })
+      : this.translate('commands.showContestVotesSummary.messages.headerWithoutVotings', {
+          contestName: contest.name,
+        });
   }
 
   groupVotersEntries(votersSummary) {
     return votersSummary.map(({voterName, votesCount, entriesCount, categoriesCount}) => {
       const requiredVotesCount = entriesCount * categoriesCount;
-      const requiredVotesPercentage = (votesCount / requiredVotesCount) * 100;
+      const requiredVotesPercentage = requiredVotesCount > 0 ? (votesCount / requiredVotesCount) * 100 : 0;
       return {
         voterName,
         votesCount,
@@ -41,6 +45,9 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
 
   generateVotersSection(votersSummary) {
     const votersEntries = this.groupVotersEntries(votersSummary);
+    if (votersEntries.length === 0) {
+      return '';
+    }
     const sections = [
       this.translate('commands.showContestVotesSummary.messages.votersDescription', {
         count: votersSummary.length,
@@ -80,8 +87,14 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
 
   generateVotesSections(votesSummary) {
     const votesEntries = this.groupVotesEntries(votesSummary);
+    if (votesEntries.length === 0) {
+      return '';
+    }
     const sections = [];
     votesEntries.forEach(({entryName, authorName, categories}) => {
+      if (categories.length === 0) {
+        return;
+      }
       const subSections = [
         this.translate('commands.showContestVotesSummary.messages.votesDescription', {
           entryName,
@@ -112,12 +125,17 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
       const contest = this.getOptionValue(OptionId.Contest);
       const votersSummary = await this.dataModel.getContestVotersSummary(contest.id);
       const votesSummary = await this.dataModel.getContestVotesSummary(contest.id);
+      const sections = [
+        this.generateHeaderSection(contest, votersSummary),
+        this.generateVotersSection(votersSummary),
+      ];
+      if (votersSummary.length > 0) {
+        sections.push(
+          ...this.generateVotesSections(votesSummary)
+        );
+      }
       return this.createLongMessage(interaction,
-        [
-          this.generateHeaderSection(contest, votersSummary),
-          this.generateVotersSection(votersSummary),
-          ...this.generateVotesSections(votesSummary),
-        ]
+        sections
           .filter(section => !!section)
           .join(Entities.EmptyLine)
       );

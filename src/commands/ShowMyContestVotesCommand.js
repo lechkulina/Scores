@@ -7,24 +7,28 @@ const {ContestState} = require('../DataModel');
 const Command = require('./Command');
 
 class ShowMyContestVotesHandler extends InteractionHandler {
-  calculateMissingVotesCount(votesSummary) {
+  calculateAddedVotesCount(votesSummary) {
     return votesSummary.reduce((count, {score}) => {
-      if (score == null) {
+      if (score != null) {
         count++;
       }
       return count;
     }, 0);
   }
 
-  generateHeaderSection(contest, votesSummary) {
-    const votesCount = votesSummary.length;
-    const missingVotesCount = this.calculateMissingVotesCount(votesSummary);
-    const addedVotesPercentage = votesCount > 0 ? 100 * (votesCount - missingVotesCount) / votesCount : 0;
-    return this.translate('commands.showMyContestVotes.messages.header', {
-      contestName: contest.name,
-      addedVotesPercentage,
-      missingVotesCount,
-    })
+  generateHeaderSection(contest, votesSummary, addedVotesCount) {
+    const requiredvotesCount = votesSummary.length;
+    const missingVotesCount = Math.max(0, requiredvotesCount - addedVotesCount);
+    const addedVotesPercentage = requiredvotesCount > 0 ? 100 * (addedVotesCount / requiredvotesCount) : 0;
+    return addedVotesCount > 0
+      ? this.translate('commands.showMyContestVotes.messages.headerWithVotes', {
+          contestName: contest.name,
+          addedVotesPercentage,
+          missingVotesCount,
+        })
+      : this.translate('commands.showMyContestVotes.messages.headerWithoutVotes', {
+          contestName: contest.name,
+        });
   }
 
   groupVotesEntries(votesSummary) {
@@ -48,8 +52,14 @@ class ShowMyContestVotesHandler extends InteractionHandler {
 
   generateVotesSections(votesSummary) {
     const votesEntries = this.groupVotesEntries(votesSummary);
+    if (votesEntries.length === 0) {
+      return '';
+    }
     const sections = [];
     votesEntries.forEach(({entryName, authorName, categories}) => {
+      if (categories.length === 0) {
+        return;
+      }
       const subSections = [
         this.translate('commands.showMyContestVotes.messages.votesDescription', {
           entryName,
@@ -78,11 +88,17 @@ class ShowMyContestVotesHandler extends InteractionHandler {
     try {
       const contest = this.getOptionValue(OptionId.Contest);
       const votesSummary = await this.dataModel.getVoterContestVotesSummary(contest.id, interaction.member.user.id);
+      const addedVotesCount = this.calculateAddedVotesCount(votesSummary);
+      const sections = [
+        this.generateHeaderSection(contest, votesSummary, addedVotesCount),
+      ];
+      if (addedVotesCount > 0) {
+        sections.push(
+          ...this.generateVotesSections(votesSummary)
+        );
+      }
       return this.createLongMessage(interaction,
-        [
-          this.generateHeaderSection(contest, votesSummary),
-          ...this.generateVotesSections(votesSummary),
-        ]
+        sections
           .filter(section => !!section)
           .join(Entities.EmptyLine)
       );

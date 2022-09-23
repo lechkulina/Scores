@@ -588,7 +588,8 @@
           "failure": "❗ Failed to fetch contest votes data."
         },
         "messages": {
-          "header": "➡ You have added **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** of required points in contest **{{contestName}}**. There are **$t(common.missingVotes, {\"count\": {{missingVotesCount}} })** still remaining",
+          "headerWithVotes": "➡ You have added **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** of required points in contest **{{contestName}}**. There are **$t(common.missingVotes, {\"count\": {{missingVotesCount}} })** still remaining",
+          "headerWithoutVotes": "😮 You have not added any votes for any of the entries in contest **{{contestName}}**.",
           "votesDescription": "⬇ Votes added for contest entry **{{entryName}}** by {{authorName}}:",
           "voteDescriptionWithScore": "- in category *{{categoryName}}* **$t(common.points, {\"count\": {{score}} })** have been added",
           "voteDescriptionWithoutScore": "- in category *{{categoryName}}* no points have been added"
@@ -603,7 +604,8 @@
           "failure": "$t(commands.showMyContestVotes.errors.failure)"
         },
         "messages": {
-          "header": "➡ **$t(common.person, {\"count\": {{completedVotingsCount}} })** finished voting in contest **{{contestName}}**. There are **$t(common.missingVotings, {\"count\": {{missingVotingsCount}} })** still remaining",
+          "headerWithVotings": "➡ **$t(common.person, {\"count\": {{completedVotingsCount}} })** finished voting in contest **{{contestName}}**. There are **$t(common.missingVotings, {\"count\": {{missingVotingsCount}} })** still remaining",
+          "headerWithoutVotings": "😮 Nobody voted for any of the entries in contest **{{contestName}}**.",
           "votersDescription": "⬇ Until now **$t(common.person, {\"count\": {{count}} })** voted:",
           "voterDescription": "- **{{voterName}}** added **$t(common.votes, {\"count\": {{votesCount}} })** that is **{{requiredVotesPercentage, number(maximumFractionDigits: 1)}}%** of the required ones",
           "votesDescription": "$t(commands.showMyContestVotes.messages.votesDescription)",

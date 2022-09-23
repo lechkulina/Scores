@@ -639,7 +639,8 @@
           "failure": "❗ Nie udało się pobrać informacji o głosach."
         },
         "messages": {
-          "header": "➡ Oddanych zostało **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** potrzebnych głosów w konkursie **{{contestName}}**. Musisz oddać jeszcze **$t(common.missingVotes, {\"count\": {{missingVotesCount}} })**",
+          "headerWithVotes": "➡ Oddanych zostało **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** potrzebnych głosów w konkursie **{{contestName}}**. Musisz oddać jeszcze **$t(common.missingVotes, {\"count\": {{missingVotesCount}} })**",
+          "headerWithoutVotes": "😮 Brak oddanych głosów w konkursie **{{contestName}}**.",
           "votesDescription": "⬇ Głosy oddane na pracę **{{entryName}}** autorstwa {{authorName}}:",
           "voteDescriptionWithScore": "- w kategorii *{{categoryName}}* oddano **$t(common.points, {\"count\": {{score}} })**",
           "voteDescriptionWithoutScore": "- w kategorii *{{categoryName}}* **nie oddano** jeszcze głosów"
@@ -654,7 +655,8 @@
           "failure": "$t(commands.showMyContestVotes.errors.failure)"
         },
         "messages": {
-          "header": "➡ Głosowanie zakończyło **$t(common.person, {\"count\": {{completedVotingsCount}} })** w konkursie **{{contestName}}**. Nalezy zakończyć jeszcze **$t(common.missingVotings, {\"count\": {{missingVotingsCount}} })**",
+          "headerWithVotings": "➡ Głosowanie zakończyło **$t(common.person, {\"count\": {{completedVotingsCount}} })** w konkursie **{{contestName}}**. Nalezy zakończyć jeszcze **$t(common.missingVotings, {\"count\": {{missingVotingsCount}} })**",
+          "headerWithoutVotings": "😮 Nikt jeszcze nie zagłosował w konkursie **{{contestName}}**.",
           "votersDescription": "⬇ Do tej pory **$t(common.person, {\"count\": {{count}} })** głosująca oddała swoje głosy:",
           "voterDescription": "- **{{voterName}}** oddał **$t(common.votes, {\"count\": {{votesCount}} })** czyli **{{requiredVotesPercentage, number(maximumFractionDigits: 1)}}%** wymaganych",
           "votesDescription": "$t(commands.showMyContestVotes.messages.votesDescription)",
