@@ -13,7 +13,7 @@ const Entities = {
 
 const defaultRoundWidthTo = 8;
 
-const padText = (length, string) => {
+function padText(length, string) {
   return ' '.repeat(length - string.length) + `${string}`;
 };
 

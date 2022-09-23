@@ -18,6 +18,7 @@ class AddContestVoteHandler extends InteractionHandler {
       OptionId.Score,
     ]);
     try {
+      await this.dataModel.addUser(voter.user.id, voter.user.username, voter.user.discriminator, voter.guild.id);
       await this.dataModel.addContestVote(contest.id, entry.id, category.id, voter.id, score);
       return interaction.createMessage(
         this.translate('commands.addContestVote.messages.success', {

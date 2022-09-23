@@ -7,7 +7,6 @@
       "canceled": "Canceled",
       "rankingPosition": "Ranking position",
       "acquireDate": "Acquired date",
-      "points": "Points",
       "giverName": "Giver name",
       "sendHimDirectMessage": "Send him a direct message",
       "createPublicMessage": "Create a public message",
@@ -16,7 +15,19 @@
       "role": "Role",
       "command": "Command",
       "user": "User",
-      "contest": "Contest"
+      "contest": "Contest",
+      "category": "Kategoria",
+      "none": "Brak",
+      "points_one": "{{count}} point",
+      "points_other": "{{count}} points",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} votes",
+      "person_one": "{{count}} person",
+      "person_other": "{{count}} persons",
+      "missingVotings_one": "{{count}} missing voting",
+      "missingVotings_other": "{{count}} missing votings",
+      "missingVotes_one": "{{count}} missing vote",
+      "missingVotes_other": "{{count}} missing votes"
     },
     "formatters": {
       "weeks_one": "{{count}} week",
@@ -231,7 +242,7 @@
           "name": "Contest name",
           "description": "Contest description",
           "announcementThreshold": "Number of hours before publishing the announcements", 
-          "requiredVotesCount": "Number of votes require to finish the voting process",
+          "requiredCompletedVotingsCount": "Number of votes require to finish the voting process",
           "activeBeginDate": "Contest begin date",
           "activeEndDate": "Contest end date",
           "votingBeginDate": "Voting begin date",
@@ -250,7 +261,7 @@
           "name": "$t(commands.addContest.options.name)",
           "description": "$t(commands.addContest.options.description)",
           "announcementThreshold": "$t(commands.addContest.options.announcementThreshold)",
-          "requiredVotesCount": "$t(commands.addContest.options.requiredVotesCount)",
+          "requiredCompletedVotingsCount": "$t(commands.addContest.options.requiredCompletedVotingsCount)",
           "activeBeginDate": "$t(commands.addContest.options.activeBeginDate)",
           "activeEndDate": "$t(commands.addContest.options.activeEndDate)",
           "votingBeginDate": "$t(commands.v.options.votingBeginDate)",
@@ -576,12 +587,27 @@
           "failure": "❗ Failed to fetch contest votes data."
         },
         "messages": {
-          "missingVotes_one": "You have to add **{{count}} missing** point",
-          "missingVotes_many": "You have to add **{{count}} missing** points",
-          "summary": "➡ You have added **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** of required points in contest **{{contestName}}**. $t(commands.showMyContestVotes.messages.missingVotes, count)",
-          "entryHeader": "⬇ Votes added for entry **{{entryName}}** by **{{authorName}}**",
-          "score": "Points",
-          "noScore": "NONE"
+          "summary": "➡ You have added **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** of required points in contest **{{contestName}}**. There are **$t(common.missingVotes, {\"count\": {{missingVotesCount}} })** still remaining",
+          "votesDescription": "⬇ Votes added for contest entry **{{entryName}}** by {{authorName}}:",
+          "voteDescriptionWithScore": "- in category *{{categoryName}}* **$t(common.points, {\"count\": {{score}} })** have been added",
+          "voteDescriptionWithoutScore": "- in category *{{categoryName}}* no points have been added"
+        }
+      },
+      "showContestVotesSummary": {
+        "description": "Show voting summary of currently active contest",
+        "options": {
+          "contest": "$t(commands.submitContestEntry.options.contest)"
+        },
+        "errors": {
+          "failure": "$t(commands.showMyContestVotes.errors.failure)"
+        },
+        "messages": {
+          "summary": "➡ **$t(common.person, {\"count\": {{completedVotingsCount}} })** finished voting in contest **{{contestName}}**. There are **$t(common.missingVotings, {\"count\": {{missingVotingsCount}} })** still remaining",
+          "votersDescription": "⬇ Until now **$t(common.person, {\"count\": {{count}} })** voted:",
+          "voterDescription": "- **{{voterName}}** added **$t(common.votes, {\"count\": {{votesCount}} })** that is **{{requiredVotesPercentage, number(maximumFractionDigits: 1)}}%** of the required ones",
+          "votesDescription": "$t(commands.showMyContestVotes.messages.votesDescription)",
+          "voteDescriptionWithScore": "- in category *{{categoryName}}* **$t(common.votes, {\"count\": {{votesCount}} })** have been added which gives **$t(common.points, {\"count\": {{scores}} })** in total",
+          "voteDescriptionWithoutScore": "$t(commands.showMyContestVotes.messages.voteDescriptionWithoutScore)"
         }
       }
     }

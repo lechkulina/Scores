@@ -14,7 +14,7 @@ const OptionId = {
   Description: 'description',
   Url: 'url',
   AnnouncementsThreshold: 'announcements-threshold',
-  RequiredVotesCount: 'required-votes-count',
+  RequiredCompletedVotingsCount: 'required-completed-votings-count',
   ActiveBeginDate: 'active-begin-date',
   ActiveEndDate: 'active-end-date',
   VotingBeginDate: 'voting-begin-date',

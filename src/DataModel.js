@@ -302,7 +302,7 @@ class DataModel extends EventEmitter {
     name,
     description,
     announcementsThreshold,
-    requiredVotesCount,
+    requiredCompletedVotingsCount,
     activeBeginDate,
     activeEndDate,
     votingBeginDate,
@@ -312,8 +312,8 @@ class DataModel extends EventEmitter {
     await this.database.exec(`
       PRAGMA temp_store = 2;
       BEGIN TRANSACTION;
-        INSERT INTO Contest(name, description, announcementsThreshold, requiredVotesCount, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId)
-        VALUES ("${name}", "${description}", ${announcementsThreshold}, ${requiredVotesCount}, ${activeBeginDate}, ${activeEndDate}, ${votingBeginDate}, ${votingEndDate}, "${guildId}");
+        INSERT INTO Contest(name, description, announcementsThreshold, requiredCompletedVotingsCount, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId)
+        VALUES ("${name}", "${description}", ${announcementsThreshold}, ${requiredCompletedVotingsCount}, ${activeBeginDate}, ${activeEndDate}, ${votingBeginDate}, ${votingEndDate}, "${guildId}");
 
         CREATE TEMP TABLE Variables AS SELECT last_insert_rowid() as contestId;
 
@@ -333,7 +333,7 @@ class DataModel extends EventEmitter {
     name,
     description,
     announcementsThreshold,
-    requiredVotesCount,
+    requiredCompletedVotingsCount,
     activeBeginDate,
     activeEndDate,
     votingBeginDate,
@@ -344,7 +344,7 @@ class DataModel extends EventEmitter {
       SET name = "${name}",
           description = "${description}",
           announcementsThreshold = ${announcementsThreshold},
-          requiredVotesCount = ${requiredVotesCount},
+          requiredCompletedVotingsCount = ${requiredCompletedVotingsCount},
           activeBeginDate = ${activeBeginDate},
           activeEndDate = ${activeEndDate},
           votingBeginDate = ${votingBeginDate},
@@ -402,7 +402,7 @@ class DataModel extends EventEmitter {
   getContests(guildId, contestState) {
     return this.database.all(
       this.joinClauses([
-        'SELECT id, name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId',
+        'SELECT id, name, description, announcementsThreshold, requiredCompletedVotingsCount, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId',
         'FROM Contest',
         this.getContestWhereClause(guildId, contestState)
       ])
@@ -411,7 +411,7 @@ class DataModel extends EventEmitter {
 
   getContest(contestId) {
     return this.database.get(`
-      SELECT id, name, description, announcementsThreshold, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId
+      SELECT id, name, description, announcementsThreshold, requiredCompletedVotingsCount, activeBeginDate, activeEndDate, votingBeginDate, votingEndDate, guildId
       FROM Contest
       WHERE id = ${contestId};
     `);
@@ -907,17 +907,48 @@ class DataModel extends EventEmitter {
     `);
   }
 
-  getContestVotes(contestId, voterId) {
+  getVoterContestVotesSummary(contestId, voterId) {
     return this.database.all(`
-      SELECT entryId, entryName, User.name as authorName, categoryId, categoryName, ContestVote.score
+      SELECT entryId, entryName, User.name as authorName, categoryId, ContestVoteCategory.name as categoryName, ContestVote.score
       FROM (
-        SELECT ContestEntry.id as entryId, ContestEntry.authorId, ContestEntry.name as entryName, ContestVoteCategory.id as categoryId, ContestVoteCategory.name as categoryName
+        SELECT ContestEntry.id as entryId, ContestEntry.authorId, ContestEntry.name as entryName, ContestVoteCategories.contestVoteCategoryId as categoryId
         FROM ContestEntry
-        CROSS JOIN ContestVoteCategory
+        CROSS JOIN ContestVoteCategories
         WHERE ContestEntry.contestId = ${contestId}
       )
       INNER JOIN User ON User.id = authorId
+      INNER JOIN ContestVoteCategory ON ContestVoteCategory.id = categoryId
       LEFT OUTER JOIN ContestVote ON ContestVote.contestEntryId = entryId AND ContestVote.contestVoteCategoryId = categoryId AND ContestVote.voterId = "${voterId}";
+    `);
+  }
+
+  getContestVotersSummary(contestId) {
+    return this.database.all(`
+      SELECT User.name as voterName, COUNT(ContestVote.id) as votesCount,
+        (SELECT COUNT(1) FROM ContestVoteCategories WHERE ContestVoteCategories.contestId = ContestEntry.contestId) AS categoriesCount,
+        (SELECT COUNT(1) FROM ContestEntry AS A WHERE A.contestId = ContestEntry.contestId) as entriesCount
+      FROM ContestVote
+      INNER JOIN User ON User.id = ContestVote.voterId
+      INNER JOIN ContestEntry on ContestEntry.id = ContestVote.contestEntryId
+      GROUP BY User.id;
+      WHERE ContestEntry.contestId = ${contestId}
+      ORDER BY votesCount DESC;
+    `);
+  }
+
+  getContestVotesSummary(contestId) {
+    return this.database.all(`
+      SELECT entryId, entryName, User.name as authorName, categoryId, ContestVoteCategory.name as categoryName, SUM(ContestVote.score) as scores, COUNT(ContestVote.id) as votesCount
+      FROM (
+        SELECT ContestEntry.id as entryId, ContestEntry.authorId, ContestEntry.name as entryName, ContestVoteCategories.contestVoteCategoryId as categoryId
+        FROM ContestEntry
+        CROSS JOIN ContestVoteCategories
+        WHERE ContestEntry.contestId = ${contestId}
+      )
+      INNER JOIN User ON User.id = authorId
+      INNER JOIN ContestVoteCategory ON ContestVoteCategory.id = categoryId
+      LEFT OUTER JOIN ContestVote ON ContestVote.contestEntryId = entryId AND ContestVote.contestVoteCategoryId = categoryId
+      GROUP BY entryId, categoryId;
     `);
   }
 

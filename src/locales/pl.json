@@ -7,7 +7,6 @@
       "canceled": "Anulowano",
       "rankingPosition": "Pozycja w rankingu",
       "acquireDate": "Data przyznania",
-      "points": "Punkty",
       "giverName": "Osoba przynająca",
       "sendHimDirectMessage": "Wyślij mu prywatną wiadomość",
       "createPublicMessage": "Stwórz wiadomość na kanale publicznym",
@@ -17,7 +16,23 @@
       "command": "Polecenie",
       "user": "Uzytkownik",
       "contest": "Konkurs",
-      "category": "Kategoria"
+      "category": "Kategoria",
+      "none": "Brak",
+      "points_one": "{{count}} punkt",
+      "points_few": "{{count}} punkty",
+      "points_many": "{{count}} punktów",
+      "votes_one": "{{count}} głos",
+      "votes_few": "{{count}} głosy",
+      "votes_many": "{{count}} głosów",
+      "person_one": "{{count}} osoba",
+      "person_few": "{{count}} osoby",
+      "person_many": "{{count}} osób",
+      "missingVotings_one": "{{count}} brakujące głosowanie",
+      "missingVotings_few": "{{count}} brakujące głosowania",
+      "missingVotings_many": "{{count}} brakujących głosowań",
+      "missingVotes_one": "{{count}} brakujące głos",
+      "missingVotes_few": "{{count}} brakujące głosy",
+      "missingVotes_many": "{{count}} brakujących głosów"
     },
     "formatters": {
       "weeks_one": "{{count}} tydzień",
@@ -277,7 +292,7 @@
           "name": "Nazwa konkursu",
           "description": "Opis konkursu",
           "announcementThreshold": "Liczba godzin poprzedzająca opublikowanianie ogłoszeń", 
-          "requiredVotesCount": "Liczba głosów wymagana do zakończenia głosowania",
+          "requiredCompletedVotingsCount": "Liczba głosów wymagana do zakończenia głosowania",
           "activeBeginDate": "Data rozpoczęcia konkursu",
           "activeEndDate": "Data zakończenia konkursu",
           "votingBeginDate": "Data rozpoczęcia głosowania",
@@ -296,7 +311,7 @@
           "name": "$t(commands.addContest.options.name)",
           "description": "$t(commands.addContest.options.description)",
           "announcementThreshold": "$t(commands.addContest.options.announcementThreshold)",
-          "requiredVotesCount": "$t(commands.addContest.options.requiredVotesCount)",
+          "requiredCompletedVotingsCount": "$t(commands.addContest.options.requiredCompletedVotingsCount)",
           "activeBeginDate": "$t(commands.addContest.options.activeBeginDate)",
           "activeEndDate": "$t(commands.addContest.options.activeEndDate)",
           "votingBeginDate": "$t(commands.v.options.votingBeginDate)",
@@ -622,13 +637,27 @@
           "failure": "❗ Nie udało się pobrać informacji o głosach."
         },
         "messages": {
-          "missingVotes_one": "Musisz jeszcze oddać **{{count}} brakujący** głos",
-          "missingVotes_few": "Musisz jeszcze oddać **{{count}} brakujące** głosy",
-          "missingVotes_many": "Musisz jeszcze oddać **{{count}} brakujących** głosów",
-          "summary": "➡ Oddanych zostało **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** potrzebnych głosów w konkursie **{{contestName}}**. $t(commands.showMyContestVotes.messages.missingVotes, count)",
-          "entryHeader": "⬇ Głosy oddane na pracę **{{entryName}}** autorstwa **{{authorName}}**",
-          "score": "Punkty",
-          "noScore": "BRAK"
+          "summary": "➡ Oddanych zostało **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** potrzebnych głosów w konkursie **{{contestName}}**. Musisz oddać jeszcze **$t(common.missingVotes, {\"count\": {{missingVotesCount}} })**",
+          "votesDescription": "⬇ Głosy oddane na pracę **{{entryName}}** autorstwa {{authorName}}:",
+          "voteDescriptionWithScore": "- w kategorii *{{categoryName}}* oddano **$t(common.points, {\"count\": {{score}} })**",
+          "voteDescriptionWithoutScore": "- w kategorii *{{categoryName}}* **nie oddano** jeszcze głosów"
+        }
+      },
+      "showContestVotesSummary": {
+        "description": "Pokazuje podsumowanie aktualnie prowadzonego głosowania",
+        "options": {
+          "contest": "$t(commands.submitContestEntry.options.contest)"
+        },
+        "errors": {
+          "failure": "$t(commands.showMyContestVotes.errors.failure)"
+        },
+        "messages": {
+          "summary": "➡ Głosowanie zakończyło **$t(common.person, {\"count\": {{completedVotingsCount}} })** w konkursie **{{contestName}}**. Nalezy zakończyć jeszcze **$t(common.missingVotings, {\"count\": {{missingVotingsCount}} })**",
+          "votersDescription": "⬇ Do tej pory **$t(common.person, {\"count\": {{count}} })** głosująca oddała swoje głosy:",
+          "voterDescription": "- **{{voterName}}** oddał **$t(common.votes, {\"count\": {{votesCount}} })** czyli **{{requiredVotesPercentage, number(maximumFractionDigits: 1)}}%** wymaganych",
+          "votesDescription": "$t(commands.showMyContestVotes.messages.votesDescription)",
+          "voteDescriptionWithScore": "- w kategorii *{{categoryName}}* oddano **$t(common.votes, {\"count\": {{votesCount}} })** dając łącznie **$t(common.points, {\"count\": {{scores}} })**",
+          "voteDescriptionWithoutScore": "$t(commands.showMyContestVotes.messages.voteDescriptionWithoutScore)"
         }
       }
     }

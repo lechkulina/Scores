@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS Contest(
   name TEXT NOT NULL,
   description TEXT NOT NULL,
   announcementsThreshold INTEGER NOT NULL,
-  requiredVotesCount INTEGER NOT NULL,
+  requiredCompletedVotingsCount INTEGER NOT NULL,
   activeBeginDate INTEGER NOT NULL,
   activeEndDate INTEGER NOT NULL,
   votingBeginDate INTEGER NOT NULL,
