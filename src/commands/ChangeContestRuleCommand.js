@@ -46,7 +46,7 @@ class ChangeContestRuleCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.changeContestRule.description'));
     this.addOptions([
-      new ContestRuleOption(OptionId.ContestRule, this.translate('commands.changeContestRule.options.contestRule')),
+      new ContestRuleOption(OptionId.ContestRule, this.translate('commands.changeContestRule.options.contestRule'), this.dataModel),
       new StringOption(OptionId.Description, this.translate('commands.changeContestRule.options.description')),
       new BooleanOption(OptionId.UseByDefault, this.translate('commands.changeContestRule.options.useByDefault')),
     ]);

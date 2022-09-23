@@ -43,7 +43,7 @@ class GrantRolePermissionCommand extends Command {
     this.setDescription(this.translate('commands.grantRolePermission.description'));
     this.addOptions([
       new RoleOption(OptionId.Role, this.translate('common.role')),
-      new CommandOption(OptionId.Command, this.translate('common.command')),
+      new CommandOption(OptionId.Command, this.translate('common.command'), this.dataModel),
     ]);
     this.addValidators([
       new CommandValidator(OptionId.Command, this.dataModel),

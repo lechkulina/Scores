@@ -1,3 +1,4 @@
+const moment = require('moment');
 const RecentlyGivenPointsOption = require('../options/RecentlyGivenPointsOption');
 const {PointsValidator, MemberValidator} = require('../validators/validators');
 const {OptionId, UserOption} = require('../options/CommonOptions');
@@ -8,11 +9,12 @@ class RemovePointsInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     this.member = this.getOptionValue(OptionId.User);
     this.pointsEntry = this.getOptionValue(OptionId.RecentlyGivenPoints);
+    const dateAndTimeOutputFormat = await this.settings.get('dateAndTimeOutputFormat');
     return interaction.createMessage({
       content: this.translate('commands.removePoints.messages.confirmation', {
         userName: this.member.user.username,
         points: this.pointsEntry.points,
-        acquireDate: this.pointsEntry.acquireDate,
+        acquireDate: moment(this.pointsEntry.acquireDate).format(dateAndTimeOutputFormat),
         reasonName: this.pointsEntry.reasonName,
       }),
       components: this.createConfirmationForm(),
@@ -44,7 +46,7 @@ class RemovePointsCommand extends Command {
     this.setDescription(this.translate('commands.removePoints.description'));
     this.addOptions([
       new UserOption(OptionId.User, this.translate('commands.removePoints.options.user')),
-      new RecentlyGivenPointsOption(OptionId.RecentlyGivenPoints, this.translate('commands.removePoints.options.recentlyGivenPoints')),
+      new RecentlyGivenPointsOption(OptionId.RecentlyGivenPoints, this.translate('commands.removePoints.options.recentlyGivenPoints'), this.dataModel, this.settings),
     ]);
     this.addValidators([
       new PointsValidator(OptionId.RecentlyGivenPoints, this.dataModel),

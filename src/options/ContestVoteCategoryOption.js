@@ -4,12 +4,13 @@ const {formatAutoCompleteName} = require('../Formatters');
 const {Option, SuggestionMethod} = require('./Option');
 
 class ContestVoteCategoryOption extends Option {
-  constructor(id, description, required) {
-    super(id, description, required, ApplicationCommandOptionTypes.INTEGER, SuggestionMethod.Autocomplete);
+  constructor(id, description, dataModel) {
+    super(id, description, ApplicationCommandOptionTypes.INTEGER, SuggestionMethod.Autocomplete);
+    this.dataModel = dataModel;
   }
 
-  async getAutoCompeteResults(interaction, dataModel, optionValue, translate) {
-    const categories = await dataModel.getContestVoteCategoriesNames(interaction.guildID, autoCompeteResultsLimit);
+  async getAutoCompeteResults(interaction, optionValue, translate) {
+    const categories = await this.dataModel.getContestVoteCategoriesNames(interaction.guildID, autoCompeteResultsLimit);
     const results = categories
       .map(({id, name}) => ({
         name: formatAutoCompleteName(id, name),

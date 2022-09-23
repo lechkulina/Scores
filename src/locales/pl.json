@@ -186,7 +186,7 @@
           "failure": "❗ Nie udało się pobrać punktów!"
         },
         "messages": {
-          "headerWithPoints": "➡ Masz łącznie **$t(common.acquiredPoints, {\"count\": {{points}} })** pomiędzy {{minAcquireDate}} a {{maxAcquireDate}}",
+          "headerWithPoints": "➡ Masz łącznie **$t(common.acquiredPoints, {\"count\": {{points}} })** pomiędzy *{{minAcquireDate}}* a *{{maxAcquireDate}}*",
           "headerWithoutPoints": "😮 Nie zdobyłeś jeszcze punktów.",
           "recentlyGivenDescription": "⬇ Ostatnio przyznane punkty:",
           "recentlyGivenEntry": "- *{{acquireDate}}* przyznano **$t(common.points, {\"count\": {{points}} })** z powodu **{{reasonName}}** przez *{{giverName}}*",

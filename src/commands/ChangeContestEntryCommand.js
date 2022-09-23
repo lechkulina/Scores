@@ -55,8 +55,8 @@ class ChangeContestEntryCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.changeContestEntry.description'));
     this.addOptions([
-      new ContestOption(ContestState.OpenForSubmittingEntries, OptionId.Contest, this.translate('commands.changeContestEntry.options.contest')),
-      new ContestEntryOption(true, OptionId.ContestEntry, this.translate('commands.changeContestEntry.options.contestEntry')),
+      new ContestOption(ContestState.OpenForSubmittingEntries, OptionId.Contest, this.translate('commands.changeContestEntry.options.contest'), this.dataModel),
+      new ContestEntryOption(true, OptionId.ContestEntry, this.translate('commands.changeContestEntry.options.contestEntry'), this.dataModel),
       new StringOption(OptionId.Name, this.translate('commands.changeContestEntry.options.name')),
       new StringOption(OptionId.Description, this.translate('commands.changeContestEntry.options.description')),
       new StringOption(OptionId.Url, this.translate('commands.changeContestEntry.options.url')),

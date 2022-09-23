@@ -1,3 +1,4 @@
+const moment = require('moment');
 const ReasonOption = require('../options/ReasonOption');
 const RecentlyGivenPointsOption = require('../options/RecentlyGivenPointsOption');
 const {OptionId, UserOption, NumberOption} = require('../options/CommonOptions');
@@ -11,14 +12,15 @@ const InteractionHandler = require('../InteractionHandler');
 const Command = require('./Command');
 
 class ChangePointsInteractionHandler extends InteractionHandler {
-  handleCommandInteraction(interaction) {
+  async handleCommandInteraction(interaction) {
     this.member = this.getOptionValue(OptionId.User);
     this.pointsEntry = this.getOptionValue(OptionId.RecentlyGivenPoints);
+    const dateAndTimeOutputFormat = await this.settings.get('dateAndTimeOutputFormat');
     return interaction.createMessage({
       content: this.translate('commands.changePoints.messages.confirmation', {
         userName: this.member.user.username,
         points: this.pointsEntry.points,
-        acquireDate: this.pointsEntry.acquireDate,
+        acquireDate: moment(this.pointsEntry.acquireDate).format(dateAndTimeOutputFormat),
         reasonName: this.pointsEntry.reasonName,
       }),
       components: this.createConfirmationForm(),
@@ -51,8 +53,8 @@ class ChangePointsCommand extends Command {
     this.setDescription(this.translate('commands.changePoints.description'));
     this.addOptions([
       new UserOption(OptionId.User, this.translate('commands.changePoints.options.user')),
-      new RecentlyGivenPointsOption(OptionId.RecentlyGivenPoints, this.translate('commands.changePoints.options.recentlyGivenPoints')),
-      new ReasonOption(OptionId.Reason, this.translate('commands.changePoints.options.reason')),
+      new RecentlyGivenPointsOption(OptionId.RecentlyGivenPoints, this.translate('commands.changePoints.options.recentlyGivenPoints'), this.dataModel, this.settings),
+      new ReasonOption(OptionId.Reason, this.translate('commands.changePoints.options.reason'), this.dataModel),
       new NumberOption(OptionId.Points, this.translate('commands.changePoints.options.points')),
     ]);
     this.addValidators([

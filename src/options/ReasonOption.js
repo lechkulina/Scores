@@ -4,12 +4,13 @@ const {formatAutoCompleteName} = require('../Formatters');
 const {Option, SuggestionMethod} = require('./Option');
 
 class ReasonOption extends Option {
-  constructor(id, description, required) {
-    super(id, description, required, ApplicationCommandOptionTypes.INTEGER, SuggestionMethod.Autocomplete);
+  constructor(id, description, dataModel) {
+    super(id, description, ApplicationCommandOptionTypes.INTEGER, SuggestionMethod.Autocomplete);
+    this.dataModel = dataModel;
   }
 
-  async getAutoCompeteResults(interaction, dataModel, optionValue, translate) {
-    const reasons = await dataModel.getReasons(autoCompeteResultsLimit);
+  async getAutoCompeteResults(interaction, optionValue, translate) {
+    const reasons = await this.dataModel.getReasons(autoCompeteResultsLimit);
     const results = reasons
       .map(({id, name}) => ({
         name: formatAutoCompleteName(id, name),

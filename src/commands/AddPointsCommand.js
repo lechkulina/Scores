@@ -102,7 +102,7 @@ class AddPointsCommand extends Command {
     this.setDescription(this.translate('commands.addPoints.description'));
     this.addOptions([
       new UserOption(OptionId.User, this.translate('commands.addPoints.options.user')),
-      new ReasonOption(OptionId.Reason, this.translate('commands.addPoints.options.reason')),
+      new ReasonOption(OptionId.Reason, this.translate('commands.addPoints.options.reason'), this.dataModel),
       new NumberOption(OptionId.Points, this.translate('commands.addPoints.options.points')),
     ]);
     this.addValidators([

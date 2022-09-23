@@ -48,8 +48,8 @@ class UnassignContestRuleCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.unassignContestRule.description'));
     this.addOptions([
-      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest')),
-      new AssignedContestRuleOption(OptionId.AssignedContestRule, this.translate('commands.unassignContestRule.options.contestRule')),
+      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest'), this.dataModel),
+      new AssignedContestRuleOption(OptionId.AssignedContestRule, this.translate('commands.unassignContestRule.options.contestRule'), this.dataModel),
     ]);
     this.addValidators([
       new ContestValidator(OptionId.Contest, this.dataModel),

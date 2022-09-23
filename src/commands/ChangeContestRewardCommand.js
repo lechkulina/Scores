@@ -46,7 +46,7 @@ class ChangeContestRewardCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.changeContestReward.description'));
     this.addOptions([
-      new ContestRewardOption(OptionId.ContestReward, this.translate('commands.changeContestReward.options.contestReward')),
+      new ContestRewardOption(OptionId.ContestReward, this.translate('commands.changeContestReward.options.contestReward'), this.dataModel),
       new StringOption(OptionId.Description, this.translate('commands.changeContestReward.options.description')),
       new BooleanOption(OptionId.UseByDefault, this.translate('commands.changeContestReward.options.useByDefault')),
     ]);

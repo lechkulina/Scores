@@ -135,7 +135,7 @@
           "failure": "❗ Faield get points!"
         },
         "messages": {
-          "headerWithPoints": "➡ You have **$t(common.acquiredPoints, {\"count\": {{points}} })** in total, acquired between {{minAcquireDate}} and {{maxAcquireDate}}",
+          "headerWithPoints": "➡ You have **$t(common.acquiredPoints, {\"count\": {{points}} })** in total, acquired between *{{minAcquireDate}}* and *{{maxAcquireDate}}*",
           "headerWithoutPoints": "😮 You do not have any points",
           "recentlyGivenDescription": "⬇ Recently given points:",
           "recentlyGivenEntry": "- *{{acquireDate}}* added **$t(common.points, {\"count\": {{points}} })** for reason **{{reasonName}}** by *{{giverName}}*",

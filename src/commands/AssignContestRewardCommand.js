@@ -40,8 +40,8 @@ class AssignContestRewardCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.assignContestReward.description'));
     this.addOptions([
-      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest')),
-      new ContestRewardOption(OptionId.ContestReward, this.translate('commands.assignContestReward.options.contestReward')),
+      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest'), this.dataModel),
+      new ContestRewardOption(OptionId.ContestReward, this.translate('commands.assignContestReward.options.contestReward'), this.dataModel),
     ]);
     this.addValidators([
       new ContestValidator(OptionId.Contest, this.dataModel),

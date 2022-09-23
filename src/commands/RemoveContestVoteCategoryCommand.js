@@ -39,7 +39,7 @@ class RemoveContestVoteCategoryCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.removeContestVoteCategory.description'));
     this.addOptions([
-      new ContestVoteCategoryOption(OptionId.ContestVoteCategory, this.translate('commands.removeContestVoteCategory.options.contestVoteCategory')),
+      new ContestVoteCategoryOption(OptionId.ContestVoteCategory, this.translate('commands.removeContestVoteCategory.options.contestVoteCategory'), this.dataModel),
     ]);
     this.addValidators([
       new ContestVoteCategoryValidator(OptionId.ContestVoteCategory, this.dataModel),

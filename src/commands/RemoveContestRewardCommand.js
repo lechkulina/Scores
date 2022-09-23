@@ -42,7 +42,7 @@ class RemoveContestRewardCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.removeContestReward.description'));
     this.addOptions([
-      new ContestRewardOption(OptionId.ContestReward, this.translate('commands.removeContestReward.options.contestReward')),
+      new ContestRewardOption(OptionId.ContestReward, this.translate('commands.removeContestReward.options.contestReward'), this.dataModel),
     ]);
     this.addValidators([
       new ContestRewardValidator(OptionId.ContestReward, this.dataModel),

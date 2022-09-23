@@ -37,8 +37,8 @@ class AssignContestVoteCategoryCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.assignContestVoteCategory.description'));
     this.addOptions([
-      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest')),
-      new ContestVoteCategoryOption(OptionId.ContestVoteCategory, this.translate('commands.assignContestVoteCategory.options.contestVoteCategory')),
+      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest'), this.dataModel),
+      new ContestVoteCategoryOption(OptionId.ContestVoteCategory, this.translate('commands.assignContestVoteCategory.options.contestVoteCategory'), this.dataModel),
     ]);
     this.addValidators([
       new ContestValidator(OptionId.Contest, this.dataModel),

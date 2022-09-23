@@ -40,7 +40,7 @@ class RemoveContestCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.removeContest.description'));
     this.addOptions([
-      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest')),
+      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest'), this.dataModel),
     ]);
     this.addValidators([
       new ContestValidator(OptionId.Contest, this.dataModel),

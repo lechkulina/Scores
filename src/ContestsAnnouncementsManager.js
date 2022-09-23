@@ -209,6 +209,7 @@ class ContestsAnnouncementsManager {
     if (entries.length === 0) {
       return '';
     }
+    const dateAndTimeOutputFormat = await this.settings.get('dateAndTimeOutputFormat');
     const sections = [
       this.translate('announcements.contest.entriesTitle'),
       this.translate('announcements.contest.entriesDescription', {
@@ -220,7 +221,7 @@ class ContestsAnnouncementsManager {
         this.translate('announcements.contest.entryDescription', {
           entryName: name,
           authorName,
-          submitDate,
+          submitDate: moment(submitDate).format(dateAndTimeOutputFormat),
         })
       );
     });

@@ -42,7 +42,7 @@ class RevokeUserPermissionCommand extends Command {
     this.setDescription(this.translate('commands.revokeUserPermission.description'));
     this.addOptions([
       new UserOption(OptionId.User, this.translate('common.user')),
-      new CommandOption(OptionId.Command, this.translate('common.command')),
+      new CommandOption(OptionId.Command, this.translate('common.command'), this.dataModel),
     ]);
     this.addValidators([
       new CommandValidator(OptionId.Command, this.dataModel),

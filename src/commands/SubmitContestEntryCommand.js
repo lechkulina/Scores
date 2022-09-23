@@ -42,7 +42,7 @@ class SubmitContestEntryCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.submitContestEntry.description'));
     this.addOptions([
-      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('commands.submitContestEntry.options.contest')),
+      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('commands.submitContestEntry.options.contest'), this.dataModel),
       new StringOption(OptionId.Name, this.translate('commands.submitContestEntry.options.name')),
       new StringOption(OptionId.Description, this.translate('commands.submitContestEntry.options.description')),
       new StringOption(OptionId.Url, this.translate('commands.submitContestEntry.options.url')),

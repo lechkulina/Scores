@@ -46,7 +46,7 @@ class ChangeReasonCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.changeReason.description'));
     this.addOptions([
-      new ReasonOption(OptionId.Reason, this.translate('commands.changeReason.options.reason')),
+      new ReasonOption(OptionId.Reason, this.translate('commands.changeReason.options.reason'), this.dataModel),
       new StringOption(OptionId.Name, this.translate('commands.changeReason.options.name')),
       new NumberOption(OptionId.Min, this.translate('commands.changeReason.options.min')),
       new NumberOption(OptionId.Max, this.translate('commands.changeReason.options.max')),

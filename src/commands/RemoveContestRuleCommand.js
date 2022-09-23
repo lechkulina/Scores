@@ -42,7 +42,7 @@ class RemoveContestRuleCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.removeContestRule.description'));
     this.addOptions([
-      new ContestRuleOption(OptionId.ContestRule, this.translate('commands.removeContestRule.options.contestRule')),
+      new ContestRuleOption(OptionId.ContestRule, this.translate('commands.removeContestRule.options.contestRule'), this.dataModel),
     ]);
     this.addValidators([
       new ContestRuleValidator(OptionId.ContestRule, this.dataModel),

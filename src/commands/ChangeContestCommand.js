@@ -76,7 +76,7 @@ class ChangeContestCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.changeContest.description'));
     this.addOptions([
-      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest')),
+      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest'), this.dataModel),
       new StringOption(OptionId.Name, this.translate('commands.changeContest.options.name')),
       new StringOption(OptionId.Description, this.translate('commands.changeContest.options.description')),
       new StringOption(OptionId.AnnouncementsThreshold, this.translate('commands.changeContest.options.announcementsThreshold')),

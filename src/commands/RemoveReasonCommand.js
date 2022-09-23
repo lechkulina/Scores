@@ -39,7 +39,7 @@ class RemoveReasonCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.removeReason.description'));
     this.addOptions([
-      new ReasonOption(OptionId.Reason, this.translate('commands.removeReason.options.reason'))
+      new ReasonOption(OptionId.Reason, this.translate('commands.removeReason.options.reason'), this.dataModel)
     ]);
     this.addValidators([
       new ReasonValidator(OptionId.Reason, this.dataModel),

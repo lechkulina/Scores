@@ -105,7 +105,7 @@ class InteractionManager {
     }
     const optionValue = focusedOption?.value || '';
     const translate = await this.translatorsFactory.getTranslator(interaction);
-    return option.getAutoCompeteResults(interaction, this.dataModel, optionValue, translate);
+    return option.getAutoCompeteResults(interaction, optionValue, translate);
   }
   
   async handleCommandInteraction(interaction) {

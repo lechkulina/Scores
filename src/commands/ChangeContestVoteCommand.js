@@ -43,9 +43,9 @@ class ChangeContestVoteCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.changeContestVote.description'));
     this.addOptions([
-      new ContestOption(ContestState.OpenForVoting, OptionId.Contest, this.translate('commands.changeContestVote.options.contest')),
-      new ContestEntryOption(false, OptionId.ContestEntry, this.translate('commands.changeContestVote.options.contestEntry')),
-      new ContestVoteOption(true, OptionId.ContestVote, this.translate('commands.changeContestVote.options.contestVote')),
+      new ContestOption(ContestState.OpenForVoting, OptionId.Contest, this.translate('commands.changeContestVote.options.contest'), this.dataModel),
+      new ContestEntryOption(false, OptionId.ContestEntry, this.translate('commands.changeContestVote.options.contestEntry'), this.dataModel),
+      new ContestVoteOption(true, OptionId.ContestVote, this.translate('commands.changeContestVote.options.contestVote'), this.dataModel),
       new NumberOption(OptionId.Score, this.translate('commands.changeContestVote.options.score')),
     ]);
     this.addValidators([

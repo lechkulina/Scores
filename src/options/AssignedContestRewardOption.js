@@ -5,16 +5,17 @@ const {OptionId} = require('./CommonOptions');
 const {Option, SuggestionMethod} = require('./Option');
 
 class AssignedContestRewardOption extends Option {
-  constructor(id, description, required) {
-    super(id, description, required, ApplicationCommandOptionTypes.INTEGER, SuggestionMethod.Autocomplete);
+  constructor(id, description, dataModel) {
+    super(id, description, ApplicationCommandOptionTypes.INTEGER, SuggestionMethod.Autocomplete);
+    this.dataModel = dataModel;
   }
 
-  async getAutoCompeteResults(interaction, dataModel, optionValue, translate) {
+  async getAutoCompeteResults(interaction, optionValue, translate) {
     const contestId = interaction.data.options.find(({name}) => name === OptionId.Contest)?.value;
     if (!contestId) {
       return [];
     }
-    const rewards = await dataModel.getAssignedContestRewards(contestId, autoCompeteResultsLimit);
+    const rewards = await this.dataModel.getAssignedContestRewards(contestId, autoCompeteResultsLimit);
     const results = rewards
       .map(({id, description}) => ({
         name: formatAutoCompleteName(id, description),

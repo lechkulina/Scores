@@ -101,7 +101,7 @@ class ShowMyContestVotesCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.showMyContestVotes.description'));
     this.addOptions([
-      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('commands.showMyContestVotes.options.contest')),
+      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('commands.showMyContestVotes.options.contest'), this.dataModel),
     ]);
     this.addValidators([
       new ContestValidator(OptionId.Contest, this.dataModel),

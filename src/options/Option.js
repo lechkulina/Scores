@@ -7,12 +7,12 @@ const SuggestionMethod = {
 };
 
 class Option {
-  constructor(id, description, required = true, type = ApplicationCommandOptionTypes.NUMBER, suggestionMethod = SuggestionMethod.None) {
+  constructor(id, description, type, suggestionMethod = SuggestionMethod.None, required = true) {
     this.id = id;
     this.description = description;
     this.type = type;
-    this.required = required;
     this.suggestionMethod = suggestionMethod;
+    this.required = required;
   }
 
   getConfig() {
@@ -38,7 +38,7 @@ class Option {
     });
   }
 
-  async getAutoCompeteResults(interaction, dataModel, optionValue, translate) {
+  async getAutoCompeteResults(interaction, optionValue, translate) {
     return interaction.result([]);
   }
 };

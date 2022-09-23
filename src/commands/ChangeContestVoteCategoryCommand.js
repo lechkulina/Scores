@@ -45,7 +45,7 @@ class ChangeContestVoteCategoryCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.changeContestVoteCategory.description'));
     this.addOptions([
-      new ContestVoteCategoryOption(OptionId.ContestVoteCategory, this.translate('commands.changeContestVoteCategory.options.contestVoteCategory')),
+      new ContestVoteCategoryOption(OptionId.ContestVoteCategory, this.translate('commands.changeContestVoteCategory.options.contestVoteCategory'), this.dataModel),
       new StringOption(OptionId.Name, this.translate('commands.changeContestVoteCategory.options.name')),
       new StringOption(OptionId.Description, this.translate('commands.changeContestVoteCategory.options.description')),
       new NumberOption(OptionId.Max, this.translate('commands.changeContestVoteCategory.options.max')),

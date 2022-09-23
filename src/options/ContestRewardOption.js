@@ -4,12 +4,13 @@ const {autoCompeteResultsLimit} = require('../constants');
 const {Option, SuggestionMethod} = require('./Option');
 
 class ContestRewardOption extends Option {
-  constructor(id, description, required) {
-    super(id, description, required, ApplicationCommandOptionTypes.INTEGER, SuggestionMethod.Autocomplete);
+  constructor(id, description, dataModel) {
+    super(id, description, ApplicationCommandOptionTypes.INTEGER, SuggestionMethod.Autocomplete);
+    this.dataModel = dataModel;
   }
 
-  async getAutoCompeteResults(interaction, dataModel, optionValue, translate) {
-    const rewards = await dataModel.getContestRewardsDescriptions(interaction.guildID, autoCompeteResultsLimit);
+  async getAutoCompeteResults(interaction, optionValue, translate) {
+    const rewards = await this.dataModel.getContestRewardsDescriptions(interaction.guildID, autoCompeteResultsLimit);
     const results = rewards
       .map(({id, description}) => ({
         name: formatAutoCompleteName(id, description),

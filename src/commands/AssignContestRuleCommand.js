@@ -40,8 +40,8 @@ class AssignContestRuleCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.assignContestRule.description'));
     this.addOptions([
-      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest')),
-      new ContestRuleOption(OptionId.ContestRule, this.translate('commands.assignContestRule.options.contestRule')),
+      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest'), this.dataModel),
+      new ContestRuleOption(OptionId.ContestRule, this.translate('commands.assignContestRule.options.contestRule'), this.dataModel),
     ]);
     this.addValidators([
       new ContestValidator(OptionId.Contest, this.dataModel),
