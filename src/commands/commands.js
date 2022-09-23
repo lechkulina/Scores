@@ -2,7 +2,7 @@ module.exports = [
   require('./AddPointsCommand'),
   require('./RemovePointsCommand'),
   require('./ChangePointsCommand'),
-  require('./ShowPointsCommand'),
+  require('./ShowMyPointsCommand'),
   require('./AddReasonCommand'),
   require('./RemoveReasonCommand'),
   require('./ChangeReasonCommand'),

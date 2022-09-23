@@ -5,13 +5,9 @@
       "yes": "Yes",
       "done": "Done",
       "canceled": "Canceled",
-      "rankingPosition": "Ranking position",
-      "acquireDate": "Acquired date",
-      "giverName": "Giver name",
       "sendHimDirectMessage": "Send him a direct message",
       "createPublicMessage": "Create a public message",
       "doBoth": "Do both",
-      "reasonName": "Reason for granting",
       "role": "Role",
       "command": "Command",
       "user": "User",
@@ -27,7 +23,9 @@
       "missingVotings_one": "{{count}} missing voting",
       "missingVotings_other": "{{count}} missing votings",
       "missingVotes_one": "{{count}} missing vote",
-      "missingVotes_other": "{{count}} missing votes"
+      "missingVotes_other": "{{count}} missing votes",
+      "acquiredPoints_one": "{{count}} acquired point",
+      "acquiredPoints_other": "{{count}} acquired points"
     },
     "formatters": {
       "weeks_one": "{{count}} week",
@@ -131,15 +129,18 @@
           "success": "✅ Changed points from user **{{userName}}**"
         }
       },
-      "showPoints": {
+      "showMyPoints": {
         "description": "Shows user points",
         "errors": {
-          "failure": "❗ Faield get points for user **{{userName}}**"
+          "failure": "❗ Faield get points!"
         },
         "messages": {
-          "summary": "➡ You have **{{points}}** points acquired between {{minAcquireDate}} and {{maxAcquireDate}}",
-          "recentPoints": "⬇ {{pointsCount}} most recently given points",
-          "rankingPositions": "⬇ Ranking positions"
+          "headerWithPoints": "➡ You have **$t(common.acquiredPoints, {\"count\": {{points}} })** in total, acquired between {{minAcquireDate}} and {{maxAcquireDate}}",
+          "headerWithoutPoints": "😮 You do not have any points",
+          "recentlyGivenDescription": "⬇ Recently given points:",
+          "recentlyGivenEntry": "- *{{acquireDate}}* added **$t(common.points, {\"count\": {{points}} })** for reason **{{reasonName}}** by *{{giverName}}*",
+          "rankingsDescription": "⬇ Ranking positions:",
+          "rankingsEntry": "- in category *{{reasonName}}* you take **{{rankingPosition}} position** in which you have **$t(common.points, {\"count\": {{points}} })**"
         }
       },
       "addReason": {
@@ -587,7 +588,7 @@
           "failure": "❗ Failed to fetch contest votes data."
         },
         "messages": {
-          "summary": "➡ You have added **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** of required points in contest **{{contestName}}**. There are **$t(common.missingVotes, {\"count\": {{missingVotesCount}} })** still remaining",
+          "header": "➡ You have added **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** of required points in contest **{{contestName}}**. There are **$t(common.missingVotes, {\"count\": {{missingVotesCount}} })** still remaining",
           "votesDescription": "⬇ Votes added for contest entry **{{entryName}}** by {{authorName}}:",
           "voteDescriptionWithScore": "- in category *{{categoryName}}* **$t(common.points, {\"count\": {{score}} })** have been added",
           "voteDescriptionWithoutScore": "- in category *{{categoryName}}* no points have been added"
@@ -602,7 +603,7 @@
           "failure": "$t(commands.showMyContestVotes.errors.failure)"
         },
         "messages": {
-          "summary": "➡ **$t(common.person, {\"count\": {{completedVotingsCount}} })** finished voting in contest **{{contestName}}**. There are **$t(common.missingVotings, {\"count\": {{missingVotingsCount}} })** still remaining",
+          "header": "➡ **$t(common.person, {\"count\": {{completedVotingsCount}} })** finished voting in contest **{{contestName}}**. There are **$t(common.missingVotings, {\"count\": {{missingVotingsCount}} })** still remaining",
           "votersDescription": "⬇ Until now **$t(common.person, {\"count\": {{count}} })** voted:",
           "voterDescription": "- **{{voterName}}** added **$t(common.votes, {\"count\": {{votesCount}} })** that is **{{requiredVotesPercentage, number(maximumFractionDigits: 1)}}%** of the required ones",
           "votesDescription": "$t(commands.showMyContestVotes.messages.votesDescription)",

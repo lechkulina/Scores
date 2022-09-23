@@ -127,30 +127,29 @@ class DataModel extends EventEmitter {
     `);
   }
 
-  getPointsSummary(userId) {
+  getPointsAccumulatedSummary(userId) {
     return this.database.get(`
       SELECT SUM(points) AS points, COUNT(1) as pointsCount, MIN(acquireDate) AS minAcquireDate, MAX(acquireDate) AS maxAcquireDate
-      FROM (
-        SELECT points, acquireDate
-        FROM Points
-        WHERE userId = "${userId}"
-      );
-    `);
-  }
-
-  getRecentPoints(userId, limit) {
-    return this.database.all(`
-      SELECT Points.points as points, Points.acquireDate as acquireDate, Giver.name AS giverName, Reason.name AS reasonName
       FROM Points
-      INNER JOIN User AS Giver ON Giver.id = giverId
-      INNER JOIN Reason ON Reason.id = Points.reasonId
-      WHERE Points.userId = "${userId}"
-      ORDER BY Points.acquireDate DESC
-      LIMIT ${limit};
+      WHERE userId = "${userId}"
     `);
   }
 
-  getRankingPositions(userId) {
+  getPointsRecentlyGivenSummary(userId, limit) {
+    return this.database.all(
+      this.joinClauses([
+        'SELECT Points.points as points, Points.acquireDate as acquireDate, G.name AS giverName, Reason.name AS reasonName',
+        'FROM Points',
+        'INNER JOIN User AS G ON G.id = giverId',
+        'INNER JOIN Reason ON Reason.id = Points.reasonId',
+        `WHERE Points.userId = "${userId}"`,
+        'ORDER BY Points.acquireDate DESC',
+        this.getLimitClause(limit),
+      ])
+    );
+  }
+
+  getPointsRankingsSummary(userId) {
     return this.database.all(`
       SELECT COUNT(sumPointsPerReason) + 1 as rankingPosition, SUM(D.points) as points, Reason.name AS reasonName
       FROM Points as D
@@ -201,13 +200,13 @@ class DataModel extends EventEmitter {
     `);
   }
 
-  getSetting(key) {
-    return this.database.get(`
+  async getSetting(key) {
+    return (await this.database.get(`
       SELECT value
       FROM Settings
       WHERE key="${key}"
       LIMIT 1;
-    `)?.value;
+    `))?.value;
   }
 
   addCommand(id, description) {

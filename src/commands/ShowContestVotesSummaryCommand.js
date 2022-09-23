@@ -2,7 +2,7 @@ const {OptionId} = require('../options/CommonOptions');
 const ContestOption = require('../options/ContestOption');
 const {ContestValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
-const {Entities, formatMessageTable} = require('../Formatters');
+const {Entities} = require('../Formatters');
 const {ContestState} = require('../DataModel');
 const Command = require('./Command');
 
@@ -17,10 +17,10 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
     }, 0);
   }
 
-  generateSummarySection(contest, votersSummary) {
+  generateHeaderSection(contest, votersSummary) {
     const completedVotingsCount = this.calculateCompletedVotingsCount(votersSummary);
     const missingVotingsCount = Math.max(0, contest.requiredCompletedVotingsCount - completedVotingsCount);
-    return  this.translate('commands.showContestVotesSummary.messages.summary', {
+    return  this.translate('commands.showContestVotesSummary.messages.header', {
       contestName: contest.name,
       completedVotingsCount,
       missingVotingsCount,
@@ -114,7 +114,7 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
       const votesSummary = await this.dataModel.getContestVotesSummary(contest.id);
       return this.createLongMessage(interaction,
         [
-          this.generateSummarySection(contest, votersSummary),
+          this.generateHeaderSection(contest, votersSummary),
           this.generateVotersSection(votersSummary),
           ...this.generateVotesSections(votesSummary),
         ]

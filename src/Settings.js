@@ -19,7 +19,9 @@ const converters = {
   useGuildLocale: BooleanConverter,
   recentPointsLimit: NumberConverter,
   dateInputFormat: StringConverter,
-  dateOuputFormat: StringConverter,
+  dateAndTimeInputFormat: StringConverter,
+  dateOutputFormat: StringConverter,
+  dateAndTimeOutputFormat: StringConverter,
   minNameLength: NumberConverter,
   maxNameLength: NumberConverter,
   minDescriptionLength: NumberConverter,
@@ -40,11 +42,14 @@ class Settings {
     // temporary settings
     return Promise.all([
       this.set('publicChannelId', '1017504421200023592'),
+      this.set('contestsAnnouncementsChannelId', '1017504421200023592'),
       this.set('preferredLocale', 'pl'),
       this.set('useGuildLocale', false),
-      this.set('recentPointsLimit', 6),
-      this.set('dateInputFormat', 'DD.MM.YYYY HH:mm'),
-      this.set('dateOuputFormat', 'DD.MM.YYYY HH:mm:ss'),
+      this.set('recentPointsLimit', 20),
+      this.set('dateInputFormat', 'DD.MM.YYYY'),
+      this.set('dateAndTimeInputFormat', 'DD.MM.YYYY HH:mm'),
+      this.set('dateOutputFormat', 'DD.MM.YYYY'),
+      this.set('dateAndTimeOutputFormat', 'DD.MM.YYYY HH:mm:ss'),
       this.set('minNameLength', 3),
       this.set('maxNameLength', 200),
       this.set('minDescriptionLength', 20),
@@ -52,7 +57,6 @@ class Settings {
       this.set('minUrlLength', 3),
       this.set('maxUrlLength', 6000),
       this.set('tasksRunInterval', 2000),
-      this.set('contestsAnnouncementsChannelId', '1017504421200023592'),
     ]);
   }
 

@@ -5,13 +5,9 @@
       "yes": "Tak",
       "done": "Zrobiono",
       "canceled": "Anulowano",
-      "rankingPosition": "Pozycja w rankingu",
-      "acquireDate": "Data przyznania",
-      "giverName": "Osoba przynająca",
       "sendHimDirectMessage": "Wyślij mu prywatną wiadomość",
       "createPublicMessage": "Stwórz wiadomość na kanale publicznym",
       "doBoth": "Wykonaj jedno i drugie",
-      "reasonName": "Powód przyznania",
       "role": "Rola",
       "command": "Polecenie",
       "user": "Uzytkownik",
@@ -32,7 +28,10 @@
       "missingVotings_many": "{{count}} brakujących głosowań",
       "missingVotes_one": "{{count}} brakujące głos",
       "missingVotes_few": "{{count}} brakujące głosy",
-      "missingVotes_many": "{{count}} brakujących głosów"
+      "missingVotes_many": "{{count}} brakujących głosów",
+      "acquiredPoints_one": "{{count}} zdobyty punkt",
+      "acquiredPoints_few": "{{count}} zdobyte punkty",
+      "acquiredPoints_many": "{{count}} zdobytych punktów"
     },
     "formatters": {
       "weeks_one": "{{count}} tydzień",
@@ -181,15 +180,18 @@
           "success": "✅ Zmieniono punkty uzytkownikowi **{{userName}}**"
         }
       },
-      "showPoints": {
-        "description": "Pokazuje punkty przyznane uzytkownikowi",
+      "showMyPoints": {
+        "description": "Pokazuje twoje punkty",
         "errors": {
-          "failure": "❗ Nie udało się pobrać punktów dla uzytkownika **{{userName}}**"
+          "failure": "❗ Nie udało się pobrać punktów!"
         },
         "messages": {
-          "summary": "➡ Masz **{{points}}** punktów zdobytych pomiędzy {{minAcquireDate}} a {{maxAcquireDate}}",
-          "recentPoints": "⬇ {{pointsCount}} ostatnio przyznane punkty",
-          "rankingPositions": "⬇ Pozycje w rankingu"
+          "headerWithPoints": "➡ Masz łącznie **$t(common.acquiredPoints, {\"count\": {{points}} })** pomiędzy {{minAcquireDate}} a {{maxAcquireDate}}",
+          "headerWithoutPoints": "😮 Nie zdobyłeś jeszcze punktów.",
+          "recentlyGivenDescription": "⬇ Ostatnio przyznane punkty:",
+          "recentlyGivenEntry": "- *{{acquireDate}}* przyznano **$t(common.points, {\"count\": {{points}} })** z powodu **{{reasonName}}** przez *{{giverName}}*",
+          "rankingsDescription": "⬇ Pozycje w rankingu:",
+          "rankingsEntry": "- w kategorii *{{reasonName}}* zajmujesz **{{rankingPosition}} pozycję**, w której masz **$t(common.points, {\"count\": {{points}} })**"
         }
       },
       "addReason": {
@@ -629,7 +631,7 @@
         }
       },
       "showMyContestVotes": {
-        "description": "Pokazuje przyznane głosy",
+        "description": "Pokazuje przyznane przez ciebie głosy",
         "options": {
           "contest": "$t(commands.submitContestEntry.options.contest)"
         },
@@ -637,7 +639,7 @@
           "failure": "❗ Nie udało się pobrać informacji o głosach."
         },
         "messages": {
-          "summary": "➡ Oddanych zostało **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** potrzebnych głosów w konkursie **{{contestName}}**. Musisz oddać jeszcze **$t(common.missingVotes, {\"count\": {{missingVotesCount}} })**",
+          "header": "➡ Oddanych zostało **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** potrzebnych głosów w konkursie **{{contestName}}**. Musisz oddać jeszcze **$t(common.missingVotes, {\"count\": {{missingVotesCount}} })**",
           "votesDescription": "⬇ Głosy oddane na pracę **{{entryName}}** autorstwa {{authorName}}:",
           "voteDescriptionWithScore": "- w kategorii *{{categoryName}}* oddano **$t(common.points, {\"count\": {{score}} })**",
           "voteDescriptionWithoutScore": "- w kategorii *{{categoryName}}* **nie oddano** jeszcze głosów"
@@ -652,7 +654,7 @@
           "failure": "$t(commands.showMyContestVotes.errors.failure)"
         },
         "messages": {
-          "summary": "➡ Głosowanie zakończyło **$t(common.person, {\"count\": {{completedVotingsCount}} })** w konkursie **{{contestName}}**. Nalezy zakończyć jeszcze **$t(common.missingVotings, {\"count\": {{missingVotingsCount}} })**",
+          "header": "➡ Głosowanie zakończyło **$t(common.person, {\"count\": {{completedVotingsCount}} })** w konkursie **{{contestName}}**. Nalezy zakończyć jeszcze **$t(common.missingVotings, {\"count\": {{missingVotingsCount}} })**",
           "votersDescription": "⬇ Do tej pory **$t(common.person, {\"count\": {{count}} })** głosująca oddała swoje głosy:",
           "voterDescription": "- **{{voterName}}** oddał **$t(common.votes, {\"count\": {{votesCount}} })** czyli **{{requiredVotesPercentage, number(maximumFractionDigits: 1)}}%** wymaganych",
           "votesDescription": "$t(commands.showMyContestVotes.messages.votesDescription)",
