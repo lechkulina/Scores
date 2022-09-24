@@ -107,9 +107,9 @@ class AddPointsCommand extends Command {
       new NumberOption(OptionId.Points, this.translate('commands.addPoints.options.points')),
     ]);
     this.addValidators([
-      new PointsValueValidator(OptionId.Points, OptionId.Reason, this.dataModel, this.settings, this.options),
       new ReasonValidator(OptionId.Reason, this.dataModel),
       new MemberValidator(OptionId.User, this.clientHandler),
+      new PointsValueValidator(OptionId.Points, OptionId.Reason, this.dataModel, this.settings, this.options),
     ])
     return Promise.resolve();
   }

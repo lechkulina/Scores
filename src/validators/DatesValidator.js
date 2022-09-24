@@ -18,7 +18,7 @@ class DatesValidator extends Validator {
       if (dateValue.isValid()) {
         optionsValues.set(optionId, dateValue);
       } else {
-        optionsValues.delete(optionId);
+        optionsValues.delete(optionId); // prevent any additional validation on this option
         issues.push(translate('validators.invalidDateFormat', {
           description: option.description,
           dateInputFormat: this.inpoutFormat,

@@ -11,14 +11,13 @@ class PointsValueValidator extends Validator {
 
   async validate(translate, optionsValues, interaction) {
     const issues = [];
-    const reason = await this.dataModel.getReason(optionsValues.get(this.reasonOptionId));
+    const reason = optionsValues.get(this.reasonOptionId);
     if (!reason) {
       return issues;
     }
-    const optionValue = optionsValues.get(this.optionId);
+    const points = optionsValues.get(this.optionId);
     const option = this.options.get(this.optionId);
-    if (optionValue < reason.min || optionValue > reason.max) {
-      optionsValues.delete(this.optionId);
+    if (points < reason.min || points > reason.max) {
       issues.push(translate('validators.invalidPointsRange', {
         description: option.description,
         reasonName: reason.name,

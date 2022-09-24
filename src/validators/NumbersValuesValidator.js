@@ -13,7 +13,6 @@ class NumbersValuesValidator extends Validator {
       const option = this.options.get(optionId);
       const optionValue = optionsValues.get(optionId);
       if (optionValue < 0) {
-        optionsValues.delete(optionId);
         issues.push(translate('validators.invalidNumberZero', {
           description: option.description,
         }));      

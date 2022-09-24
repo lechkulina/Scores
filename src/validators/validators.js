@@ -17,4 +17,5 @@ module.exports = {
   MemberValidator: require('./MemberValidator'),
   RoleValidator: require('./RoleValidator'),
   ContestVoteValidator: require('./ContestVoteValidator'),
+  ContestVoteScoreValidator: require('./ContestVoteScoreValidator'),
 }

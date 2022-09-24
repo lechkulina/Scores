@@ -15,8 +15,6 @@ class NumbersRangesValidator extends Validator {
       const maxOption = this.options.get(maxOptionId);
       const maxOptionValue = optionsValues.get(maxOptionId);
       if (minOptionValue >= maxOptionValue) {
-        optionsValues.delete(minOptionId);
-        optionsValues.delete(maxOptionId);
         issues.push(translate('validators.invalidNumbersRange', {
           min: minOption.description,
           max: maxOption.description,

@@ -15,7 +15,6 @@ class StringsLengthsValidator extends Validator {
       const optionValue = optionsValues.get(optionId);
       const option = this.options.get(optionId);
       if (!optionValue || optionValue.length < this.minLength || optionValue.length > this.maxLength) {
-        optionsValues.delete(optionId);
         issues.push(translate('validators.invalidLength', {
           description: option.description,
           min: this.minLength,

@@ -60,10 +60,10 @@ class ChangePointsCommand extends Command {
       new NumberOption(OptionId.Points, this.translate('commands.changePoints.options.points')),
     ]);
     this.addValidators([
-      new PointsValueValidator(OptionId.Points, OptionId.Reason, this.dataModel, this.options),
       new ReasonValidator(OptionId.Reason, this.dataModel),
       new PointsValidator(OptionId.RecentlyGivenPoints, this.dataModel),
       new MemberValidator(OptionId.User, this.clientHandler),
+      new PointsValueValidator(OptionId.Points, OptionId.Reason, this.dataModel, this.options),
     ]);
     return Promise.resolve();
   }

@@ -18,8 +18,6 @@ class DatesRangeValidator extends Validator {
         return;
       }
       if (minOptionValue.isSameOrAfter(maxOptionValue)) {
-        optionsValues.delete(minOptionId);
-        optionsValues.delete(maxOptionId);
         issues.push(translate('validators.invalidDatesRange', {
           min: minOption.description,
           max: maxOption.description,
