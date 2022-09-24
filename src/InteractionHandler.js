@@ -50,7 +50,8 @@ class InteractionHandler {
 
   async createLongMessage(interaction, content) {
     if (!content) {
-      return interaction.acknowledge();
+      await interaction.acknowledge();
+      return;
     }
     const contentChunks = this.messageDivider.divideContentIntoChunks(content);
     if (contentChunks.length === 0) {
