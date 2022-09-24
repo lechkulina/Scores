@@ -47,6 +47,7 @@
       "invalidNumbersRange": "❗ **{{description}}** can not value value greater than **{{secondDescription}}**",
       "invalidDateFormat": "❗ **{{description}}** has invalid date format. Required date format is **{{dateInputFormat}}**",
       "invalidDatesRange": "❗ **{{min}}** can not be later date than **{{max}}**",
+      "invalidContestVoteScoreRange": "❗ **{{description}}** has invalid range for the given points category **{{categoryName}}**. It must be between 0 and {{max}}",
       "reportIssue": "Report this issue the administrator.",
       "chooseFromAutocompleteList": "**Choose one from the list.**",
       "unknownContest": "❗ Selected contest {{contestId}} does not exist! $t(validators.chooseFromAutocompleteList)",

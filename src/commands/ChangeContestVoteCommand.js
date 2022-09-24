@@ -2,7 +2,13 @@ const {OptionId, NumberOption} = require('../options/CommonOptions');
 const ContestOption = require('../options/ContestOption');
 const ContestVoteOption = require('../options/ContestVoteOption');
 const ContestEntryOption = require('../options/ContestEntryOption');
-const {ContestValidator, ContestEntryValidator, NumbersValuesValidator, ContestVoteValidator} = require('../validators/validators');
+const {
+  ContestValidator,
+  ContestEntryValidator,
+  NumbersValuesValidator,
+  ContestVoteValidator,
+  ContestVoteScoreValidator,
+} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {ContestState} = require('../DataModel');
 const Command = require('./Command');
@@ -53,6 +59,7 @@ class ChangeContestVoteCommand extends Command {
       new ContestEntryValidator(OptionId.ContestEntry, this.dataModel),
       new ContestVoteValidator(OptionId.ContestVote, this.dataModel),
       new NumbersValuesValidator([OptionId.Score], this.options),
+      new ContestVoteScoreValidator(OptionId.Score, OptionId.AssignedContestVoteCategory, this.dataModel, this.options),
     ]);
     return Promise.resolve();
   }
