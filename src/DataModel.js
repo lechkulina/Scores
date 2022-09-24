@@ -323,6 +323,16 @@ class DataModel extends EventEmitter {
         FROM ContestVoteCategory, Variables
         WHERE ContestVoteCategory.useByDefault = 1 AND guildId = "${guildId}";
 
+        INSERT INTO ContestRules(contestId, contestRuleId)
+        SELECT Variables.contestId, ContestRule.id
+        FROM ContestRule, Variables
+        WHERE ContestRule.useByDefault = 1 AND guildId = "${guildId}";
+
+        INSERT INTO ContestRewards(contestId, contestRewardId)
+        SELECT Variables.contestId, ContestReward.id
+        FROM ContestReward, Variables
+        WHERE ContestReward.useByDefault = 1 AND guildId = "${guildId}";
+
         DROP TABLE Variables;
       COMMIT;
     `);
