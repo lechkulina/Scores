@@ -72,8 +72,8 @@
       "openForSubmittingEntriesDescription": "nie jest otwarty do zgłaszania prac konkursowych",
       "activeDescription": "nie jest aktywny",
       "notFinishedDescription": "zakończył się",
-      "reportIssue": "Zgłoś problem administratorowi.",
       "invalidUrl": "❗ {{optionDescription}} podany jako parametr **{{optionId}}** jest nieprawidłowym adresem.",
+      "reportIssue": "Zgłoś problem administratorowi.",
       "chooseFromAutocompleteList": "**Wybierz z listy dostępnych.**",
       "unknownContest": "❗ Wybrany konkurs {{contestId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
       "contestFetchFailure": "❗ Nie udało się pobrać danych konkursu {{contestId}}! $t(validators.reportIssue)",
@@ -96,7 +96,9 @@
       "unknownRole": "❗ Wybrana rola {{roleId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
       "roleFetchFailure": "❗ Nie udało się pobrać danych o roli {{roleId}}! $t(validators.reportIssue)",
       "unknownContestVote": "❗ Wybrana ocena pracy konkursowej {{contestVoteId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
-      "contestVoteFetchFailure": "❗ Nie udało się pobrać danych o ocenie pracy konkursowej {{contestVoteId}}! $t(validators.reportIssue)"
+      "contestVoteFetchFailure": "❗ Nie udało się pobrać danych o ocenie pracy konkursowej {{contestVoteId}}! $t(validators.reportIssue)",
+      "contestEntryIsNotUnique": "❗ Ta praca konkursowa została juz zgłoszona.",
+      "contestEntryUniqueFetchFailure": "❗ Nie udało się pobrać danych o unikalności pracy konkursowej! $t(validators.reportIssue)"
     },
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} punkty przyznane dnia {{acquireDate}} z powodu {{reasonName}}",

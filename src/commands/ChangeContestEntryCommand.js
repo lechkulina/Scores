@@ -8,6 +8,7 @@ const {
   ContestEntryValidator,
   UrlValidator,
   ContestStateValidator,
+  ContestEntryUniquenessValidator,
 } = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {SettingId} = require('../Settings');
@@ -77,6 +78,7 @@ class ChangeContestEntryCommand extends Command {
       new ContestValidator(OptionId.Contest, this.dataModel),
       new ContestEntryValidator(OptionId.ContestEntry, this.dataModel),
       new ContestStateValidator(ContestState.OpenForSubmittingEntries, OptionId.Contest),
+      new ContestEntryUniquenessValidator(OptionId.Name, OptionId.Url, this.dataModel),
     ]);
     return Promise.resolve();
   }

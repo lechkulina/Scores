@@ -55,6 +55,7 @@
       "openForSubmittingEntriesDescription": "is not open for submitting contest entries",
       "activeDescription": "is not active",
       "notFinishedDescription": "is finished",
+      "invalidUrl": "❗ {{optionDescription}} passed as **{{optionId}}** parameter is invalid URL.",
       "reportIssue": "Report this issue the administrator.",
       "chooseFromAutocompleteList": "**Choose one from the list.**",
       "unknownContest": "❗ Selected contest {{contestId}} does not exist! $t(validators.chooseFromAutocompleteList)",
@@ -78,7 +79,9 @@
       "unknownRole": "❗ Selected role {{roleId}} does not exist! $t(validators.chooseFromAutocompleteList)",
       "roleFetchFailure": "❗ Failed to fetch role {{roleId}} data! $t(validators.reportIssue)",
       "unknownContestVote": "❗ Selected contest vote {{contestVoteId}} does not exist! $t(validators.chooseFromAutocompleteList)",
-      "contestVoteFetchFailure": "❗ Failed to fetch contest vote {{contestVoteId}} data! $t(validators.reportIssue)"
+      "contestVoteFetchFailure": "❗ Failed to fetch contest vote {{contestVoteId}} data! $t(validators.reportIssue)",
+      "contestEntryIsNotUnique": "This contest entry has already been submitted.",
+      "contestEntryUniqueFetchFailure": "Failed to fetch contest entry uniqueness data! $t(validators.reportIssue)"
     },
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} points added at {{acquireDate}} with reason {{reasonName}}",

@@ -881,6 +881,17 @@ class DataModel extends EventEmitter {
     `);
   }
 
+  async isContestEntryUnique(name, url, guildId) {
+    return (await this.database.all(`
+      SELECT
+        (SELECT 1 FROM ContestEntry WHERE ContestEntry.contestId = Contest.id AND name = "${name}") AS hasName,
+        (SELECT 1 FROM ContestEntry WHERE ContestEntry.contestId = Contest.id AND url = "${url}") AS hasUrl 
+      FROM Contest
+      WHERE guildId = "${guildId}" AND (hasName = 1 OR hasUrl = 1)
+      LIMIT 1
+    `)).length === 0;
+  }
+
   async addContestVote(contestId, contestEntryId, contestVoteCategoryId, voterId, score) {
     await this.database.run(`
       INSERT INTO ContestVote(contestEntryId, contestVoteCategoryId, voterId, score)
