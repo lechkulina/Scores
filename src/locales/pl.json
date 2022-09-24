@@ -31,7 +31,10 @@
       "missingVotes_many": "{{count}} brakujących głosów",
       "acquiredPoints_one": "{{count}} zdobyty punkt",
       "acquiredPoints_few": "{{count}} zdobyte punkty",
-      "acquiredPoints_many": "{{count}} zdobytych punktów"
+      "acquiredPoints_many": "{{count}} zdobytych punktów",
+      "voters_one": "{{count}} głosującego",
+      "voters_few": "{{count}} głosujących",
+      "voters_many": "{{count}} głosujących"
     },
     "formatters": {
       "weeks_one": "{{count}} tydzień",
@@ -113,7 +116,7 @@
         "voteCategoriesTitle": "**Punktacja**",
         "voteCategoriesDescription": "Konkurs będzie oceniany w {{count}} kategoriach:",
         "voteCategoryDescription": "- {{voteCategoryName}} - {{voteCategoryDescription}} - Maksymalnie mozna uzyskać **{{maxPointsPerVoteCategory}} punktów** w tej kategorii.",
-        "voteCategoriesSummary": "Zatem maksymalnie od jednego głosującego praca może otrzymać {{maxPointsPerVoter}} punktów, natomiast od wszystkich {{votersCount}} głosujących {{maxPointsFromVoters}}.",
+        "voteCategoriesSummary": "Zatem maksymalnie od jednego głosującego praca może otrzymać **$t(common.points, {\"count\": {{maxPointsPerVoting}} })**, natomiast od wszystkich **$t(common.voters, {\"count\": {{requiredCompletedVotingsCount}} })** łącznie **$t(common.points, {\"count\": {{maxPointsFromVotings}} })**",
         "rewardsTitle": "**Nagrody**",
         "rewardsDescription": "Jako nagrody w konkursie przewidziane są:",
         "rewardDescription": "- {{rewardDescription}}",

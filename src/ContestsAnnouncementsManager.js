@@ -167,17 +167,17 @@ class ContestsAnnouncementsManager {
         })
       );
     });
-    const maxPointsPerVoter = voteCategories.reduce((points, voteCategory) => {
+    const maxPointsPerVoting = voteCategories.reduce((points, voteCategory) => {
       points += voteCategory.max;
       return points;
     }, 0);
-    const votersCount = 0; // TODO
-    const maxPointsFromVoters = maxPointsPerVoter * votersCount;
+    const requiredCompletedVotingsCount = contest.requiredCompletedVotingsCount;
+    const maxPointsFromVotings = maxPointsPerVoting * requiredCompletedVotingsCount;
     sections.push(
       this.translate('announcements.contest.voteCategoriesSummary', {
-        maxPointsPerVoter,
-        votersCount,
-        maxPointsFromVoters,
+        maxPointsPerVoting,
+        requiredCompletedVotingsCount,
+        maxPointsFromVotings,
       })
     );
     return sections.join(Entities.NewLine);

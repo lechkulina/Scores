@@ -25,7 +25,9 @@
       "missingVotes_one": "{{count}} missing vote",
       "missingVotes_other": "{{count}} missing votes",
       "acquiredPoints_one": "{{count}} acquired point",
-      "acquiredPoints_other": "{{count}} acquired points"
+      "acquiredPoints_other": "{{count}} acquired points",
+      "voters_one": "{{count}} voter",
+      "voters_other": "{{count}} voters"
     },
     "formatters": {
       "weeks_one": "{{count}} week",
