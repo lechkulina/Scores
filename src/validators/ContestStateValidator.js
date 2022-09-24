@@ -2,15 +2,15 @@ const {ContestState, calculateContestState} = require('../DataModel');
 const Validator = require('./Validator');
 
 class ContestStateValidator extends Validator {
-  constructor(contestState, optionId) {
+  constructor(contestState, contestOptionId) {
     super();
     this.contestState = contestState;
-    this.optionId = optionId;
+    this.contestOptionId = contestOptionId;
   }
 
   async validate(translate, optionsValues, interaction) {
     const issues = [];
-    const contest = optionsValues.get(this.optionId);
+    const contest = optionsValues.get(this.contestOptionId);
     if (!contest || this.contestState === ContestState.Any) {
       return issues;
     }

@@ -1,19 +1,19 @@
 const Validator = require('./Validator');
 
 class ContestValidator extends Validator {
-  constructor(optionId, dataModel) {
+  constructor(contestOptionId, dataModel) {
     super();
-    this.optionId = optionId;
+    this.contestOptionId = contestOptionId;
     this.dataModel = dataModel;
   }
 
   async validate(translate, optionsValues, interaction) {
     const issues = [];
-    const contestId = optionsValues.get(this.optionId);
+    const contestId = optionsValues.get(this.contestOptionId);
     try {
       const contest = await this.dataModel.getContest(contestId);
       if (contest) {
-        optionsValues.set(this.optionId, contest);
+        optionsValues.set(this.contestOptionId, contest);
       } else {
         issues.push(translate('validators.unknownContest', {
           contestId,

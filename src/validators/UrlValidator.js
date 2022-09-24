@@ -3,20 +3,20 @@ const Validator = require('./Validator');
 const pattern = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
 
 class UrlValidator extends Validator {
-  constructor(optionsIds, options) {
+  constructor(urlOptionsIds, options) {
     super();
-    this.optionsIds = optionsIds;
+    this.urlOptionsIds = urlOptionsIds;
     this.options = options;
   }
 
   async validate(translate, optionsValues, interaction) {
     const issues = [];
-    this.optionsIds.forEach(optionId => {
-      const option = this.options.get(optionId);
-      const url = optionsValues.get(optionId);
-      if (url && !pattern.test(url)) {
+    this.urlOptionsIds.forEach(urlOptionId => {
+      const option = this.options.get(urlOptionId);
+      const value = optionsValues.get(urlOptionId);
+      if (value && !pattern.test(value)) {
         issues.push(translate('validators.invalidUrl', {
-          optionId,
+          optionId: urlOptionId,
           optionDescription: option.description,
         }));
       }

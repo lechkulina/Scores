@@ -2,23 +2,23 @@ const moment = require('moment');
 const Validator = require('./Validator');
 
 class DatesValidator extends Validator {
-  constructor(inpoutFormat, optionsIds, options) {
+  constructor(inpoutFormat, dateOptionsIds, options) {
     super();
     this.inpoutFormat = inpoutFormat;
-    this.optionsIds = optionsIds;
+    this.dateOptionsIds = dateOptionsIds;
     this.options = options;
   }
 
   async validate(translate, optionsValues, interaction) {
     const issues = [];
-    this.optionsIds.forEach(optionId => {
-      const option = this.options.get(optionId);
-      const optionValue = optionsValues.get(optionId);
-      const dateValue = moment(optionValue, this.inpoutFormat, true);
-      if (dateValue.isValid()) {
-        optionsValues.set(optionId, dateValue);
+    this.dateOptionsIds.forEach(dateOptionId => {
+      const option = this.options.get(dateOptionId);
+      const value = optionsValues.get(dateOptionId);
+      const date = moment(value, this.inpoutFormat, true);
+      if (date.isValid()) {
+        optionsValues.set(dateOptionId, date);
       } else {
-        optionsValues.delete(optionId); // prevent any additional validation on this option
+        optionsValues.delete(dateOptionId); // prevent any additional validation on this option
         issues.push(translate('validators.invalidDateFormat', {
           description: option.description,
           dateInputFormat: this.inpoutFormat,

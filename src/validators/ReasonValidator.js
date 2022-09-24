@@ -1,19 +1,19 @@
 const Validator = require('./Validator');
 
 class ReasonValidator extends Validator {
-  constructor(optionId, dataModel) {
+  constructor(reasonOptionId, dataModel) {
     super();
-    this.optionId = optionId;
+    this.reasonOptionId = reasonOptionId;
     this.dataModel = dataModel;
   }
 
   async validate(translate, optionsValues, interaction) {
     const issues = [];
-    const reasonId = optionsValues.get(this.optionId);
+    const reasonId = optionsValues.get(this.reasonOptionId);
     try {
       const reason = await this.dataModel.getReason(reasonId);
       if (reason) {
-        optionsValues.set(this.optionId, reason);
+        optionsValues.set(this.reasonOptionId, reason);
       } else {
         issues.push(translate('validators.unknownReason', {
           reasonId,

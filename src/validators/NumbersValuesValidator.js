@@ -1,18 +1,18 @@
 const Validator = require('./Validator');
 
 class NumbersValuesValidator extends Validator {
-  constructor(optionsIds, options) {
+  constructor(numberOptionsIds, options) {
     super();
-    this.optionsIds = optionsIds;
+    this.numberOptionsIds = numberOptionsIds;
     this.options = options;
   }
 
   async validate(translate, optionsValues, interaction) {
     const issues = [];
-    this.optionsIds.forEach(optionId => {
-      const option = this.options.get(optionId);
-      const optionValue = optionsValues.get(optionId);
-      if (optionValue < 0) {
+    this.numberOptionsIds.forEach(numberOptionId => {
+      const option = this.options.get(numberOptionId);
+      const value = optionsValues.get(numberOptionId);
+      if (value < 0) {
         issues.push(translate('validators.invalidNumberZero', {
           description: option.description,
         }));      

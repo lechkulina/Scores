@@ -1,28 +1,28 @@
 const Validator = require('./Validator');
 
 class ContestRuleValidator extends Validator {
-  constructor(optionId, dataModel) {
+  constructor(ruleOptionId, dataModel) {
     super();
-    this.optionId = optionId;
+    this.ruleOptionId = ruleOptionId;
     this.dataModel = dataModel;
   }
 
   async validate(translate, optionsValues, interaction) {
     const issues = [];
-    const contestRuleId = optionsValues.get(this.optionId);
+    const ruleId = optionsValues.get(this.ruleOptionId);
     try {
-      const rule = await this.dataModel.getContestRule(contestRuleId);
+      const rule = await this.dataModel.getContestRule(ruleId);
       if (rule) {
-        optionsValues.set(this.optionId, rule);
+        optionsValues.set(this.ruleOptionId, rule);
       } else {
         issues.push(translate('validators.unknownContestRule', {
-          contestRuleId,
+          ruleId,
         }));
       }
     } catch(error) {
-      console.error(`Failed to fetch contest rule ${contestRuleId} data - got error`, error);
+      console.error(`Failed to fetch contest rule ${ruleId} data - got error`, error);
       issues.push(translate('validators.contestRuleFetchFailure', {
-        contestRuleId,
+        ruleId,
       }));
     }
     return issues;

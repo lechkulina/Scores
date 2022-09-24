@@ -1,20 +1,20 @@
 const Validator = require('./Validator');
 
 class NumbersRangesValidator extends Validator {
-  constructor(optionsIds, options) {
+  constructor(rangeOptionsIds, options) {
     super();
-    this.optionsIds = optionsIds;
+    this.rangeOptionsIds = rangeOptionsIds;
     this.options = options;
   }
 
   async validate(translate, optionsValues, interaction) {
     const issues = [];
-    this.optionsIds.forEach(([minOptionId, maxOptionId]) => {
+    this.rangeOptionsIds.forEach(([minOptionId, maxOptionId]) => {
       const minOption = this.options.get(minOptionId);
-      const minOptionValue = optionsValues.get(minOptionId);
       const maxOption = this.options.get(maxOptionId);
-      const maxOptionValue = optionsValues.get(maxOptionId);
-      if (minOptionValue >= maxOptionValue) {
+      const min = optionsValues.get(minOptionId);
+      const max = optionsValues.get(maxOptionId);
+      if (min >= max) {
         issues.push(translate('validators.invalidNumbersRange', {
           min: minOption.description,
           max: maxOption.description,

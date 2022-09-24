@@ -1,28 +1,28 @@
 const Validator = require('./Validator');
 
 class ContestVoteValidator extends Validator {
-  constructor(optionId, dataModel) {
+  constructor(voteOptionId, dataModel) {
     super();
-    this.optionId = optionId;
+    this.voteOptionId = voteOptionId;
     this.dataModel = dataModel;
   }
 
   async validate(translate, optionsValues, interaction) {
     const issues = [];
-    const contestVoteId = optionsValues.get(this.optionId);
+    const voteId = optionsValues.get(this.voteOptionId);
     try {
-      const vote = await this.dataModel.getContestVote(contestVoteId);
+      const vote = await this.dataModel.getContestVote(voteId);
       if (vote) {
-        optionsValues.set(this.optionId, vote);
+        optionsValues.set(this.voteOptionId, vote);
       } else {
         issues.push(translate('validators.unknownContestVote', {
-          contestVoteId,
+          voteId,
         }));
       }
     } catch(error) {
-      console.error(`Failed to fetch contest vote ${contestVoteId} data - got error`, error);
+      console.error(`Failed to fetch contest vote ${voteId} data - got error`, error);
       issues.push(translate('validators.contestVoteFetchFailure', {
-        contestVoteId,
+        voteId,
       }));
     }
     return issues;

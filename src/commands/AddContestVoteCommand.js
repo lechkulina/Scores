@@ -61,7 +61,7 @@ class AddContestVoteCommand extends Command {
       new ContestEntryValidator(OptionId.ContestEntry, this.dataModel),
       new ContestVoteCategoryValidator(OptionId.AssignedContestVoteCategory, this.dataModel),
       new NumbersValuesValidator([OptionId.Score], this.options),
-      new ContestVoteScoreValidator(OptionId.Score, OptionId.AssignedContestVoteCategory, this.dataModel, this.options),
+      new ContestVoteScoreValidator(OptionId.Score, OptionId.AssignedContestVoteCategory, this.options),
     ]);
     return Promise.resolve();
   }

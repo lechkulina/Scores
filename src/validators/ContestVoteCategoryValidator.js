@@ -1,28 +1,28 @@
 const Validator = require('./Validator');
 
 class ContestVoteCategoryValidator extends Validator {
-  constructor(optionId, dataModel) {
+  constructor(voteCategoryOptionId, dataModel) {
     super();
-    this.optionId = optionId;
+    this.voteCategoryOptionId = voteCategoryOptionId;
     this.dataModel = dataModel;
   }
 
   async validate(translate, optionsValues, interaction) {
     const issues = [];
-    const contestVoteCategoryId = optionsValues.get(this.optionId);
+    const voteCategoryId = optionsValues.get(this.voteCategoryOptionId);
     try {
-      const category = await this.dataModel.getContestVoteCategory(contestVoteCategoryId);
+      const category = await this.dataModel.getContestVoteCategory(voteCategoryId);
       if (category) {
-        optionsValues.set(this.optionId, category);
+        optionsValues.set(this.voteCategoryOptionId, category);
       } else {
         issues.push(translate('validators.unknownContestVoteCategory', {
-          contestVoteCategoryId,
+          voteCategoryId,
         }));
       }
     } catch(error) {
       console.error(`Failed to fetch contest vote category ${contestVoteCategoryId} data - got error`, error);
       issues.push(translate('validators.contestVoteCategoryFetchFailure', {
-        contestVoteCategoryId,
+        voteCategoryId,
       }));
     }
     return issues;

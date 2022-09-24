@@ -1,19 +1,19 @@
 const Validator = require('./Validator');
 
 class RoleValidator extends Validator {
-  constructor(optionId, clientHandler) {
+  constructor(roleOptionId, clientHandler) {
     super();
-    this.optionId = optionId;
+    this.roleOptionId = roleOptionId;
     this.clientHandler = clientHandler;
   }
 
   async validate(translate, optionsValues, interaction) {
     const issues = [];
-    const roleId = optionsValues.get(this.optionId);
+    const roleId = optionsValues.get(this.roleOptionId);
     try {
       const role = this.clientHandler.findRole(interaction.guildID, roleId);
       if (role) {
-        optionsValues.set(this.optionId, role);
+        optionsValues.set(this.roleOptionId, role);
       } else {
         issues.push(translate('validators.unknownRole', {
           roleId,

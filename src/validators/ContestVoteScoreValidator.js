@@ -1,22 +1,21 @@
 const Validator = require('./Validator');
 
 class ContestVoteScoreValidator extends Validator {
-  constructor(optionId, categoryOptionId, dataModel, options) {
+  constructor(voteScoreOptionId, voteCategoryOptionId, options) {
     super();
-    this.optionId = optionId;
-    this.categoryOptionId = categoryOptionId;
-    this.dataModel = dataModel;
+    this.voteScoreOptionId = voteScoreOptionId;
+    this.voteCategoryOptionId = voteCategoryOptionId;
     this.options = options;
   }
 
   async validate(translate, optionsValues, interaction) {
     const issues = [];
-    const category = optionsValues.get(this.categoryOptionId);
+    const category = optionsValues.get(this.voteCategoryOptionId);
     if (!category) {
       return issues;
     }
-    const score = optionsValues.get(this.optionId);
-    const option = this.options.get(this.optionId);
+    const option = this.options.get(this.voteScoreOptionId);
+    const score = optionsValues.get(this.voteScoreOptionId);
     if (score < 0 || score > category.max) {
       issues.push(translate('validators.invalidContestVoteScoreRange', {
         description: option.description,

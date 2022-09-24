@@ -1,20 +1,20 @@
 const Validator = require('./Validator');
 
 class StringsLengthsValidator extends Validator {
-  constructor(minLength, maxLength, optionsIds, options) {
+  constructor(minLength, maxLength, stringOptionsIds, options) {
     super();
     this.minLength = minLength;
     this.maxLength = maxLength;
-    this.optionsIds = optionsIds;
+    this.stringOptionsIds = stringOptionsIds;
     this.options = options;
   }
 
   async validate(translate, optionsValues, interaction) {
     const issues = [];
-    this.optionsIds.forEach(optionId => {
-      const optionValue = optionsValues.get(optionId);
-      const option = this.options.get(optionId);
-      if (!optionValue || optionValue.length < this.minLength || optionValue.length > this.maxLength) {
+    this.stringOptionsIds.forEach(stringOptionId => {
+      const option = this.options.get(stringOptionId);
+      const value = optionsValues.get(stringOptionId);
+      if (!value || value.length < this.minLength || value.length > this.maxLength) {
         issues.push(translate('validators.invalidLength', {
           description: option.description,
           min: this.minLength,

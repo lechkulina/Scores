@@ -1,28 +1,28 @@
 const Validator = require('./Validator');
 
 class ContestRewardValidator extends Validator {
-  constructor(optionId, dataModel) {
+  constructor(rewardOptionId, dataModel) {
     super();
-    this.optionId = optionId;
+    this.rewardOptionId = rewardOptionId;
     this.dataModel = dataModel;
   }
 
   async validate(translate, optionsValues, interaction) {
     const issues = [];
-    const contestRewardId = optionsValues.get(this.optionId);
+    const rewardId = optionsValues.get(this.rewardOptionId);
     try {
-      const reward = await this.dataModel.getContestReward(contestRewardId);
+      const reward = await this.dataModel.getContestReward(rewardId);
       if (reward) {
-        optionsValues.set(this.optionId, reward);
+        optionsValues.set(this.rewardOptionId, reward);
       } else {
         issues.push(translate('validators.unknownContestReward', {
-          contestRewardId,
+          rewardId,
         }));
       }
     } catch(error) {
-      console.error(`Failed to fetch contest reward ${contestRewardId} data - got error`, error);
+      console.error(`Failed to fetch contest reward ${rewardId} data - got error`, error);
       issues.push(translate('validators.contestRewardFetchFailure', {
-        contestRewardId,
+        rewardId,
       }));
     }
     return issues;

@@ -1,28 +1,28 @@
 const Validator = require('./Validator');
 
 class ContestEntryValidator extends Validator {
-  constructor(optionId, dataModel) {
+  constructor(entryOptionId, dataModel) {
     super();
-    this.optionId = optionId;
+    this.entryOptionId = entryOptionId;
     this.dataModel = dataModel;
   }
 
   async validate(translate, optionsValues, interaction) {
     const issues = [];
-    const contestEntryId = optionsValues.get(this.optionId);
+    const entryId = optionsValues.get(this.entryOptionId);
     try {
-      const entry = await this.dataModel.getContestEntry(contestEntryId);
+      const entry = await this.dataModel.getContestEntry(entryId);
       if (entry) {
-        optionsValues.set(this.optionId, entry);
+        optionsValues.set(this.entryOptionId, entry);
       } else {
         issues.push(translate('validators.unknownContestEntry', {
-          contestEntryId,
+          entryId,
         }));
       }
     } catch(error) {
-      console.error(`Failed to fetch contest entry ${contestEntryId} data - got error`, error);
+      console.error(`Failed to fetch contest entry ${entryId} data - got error`, error);
       issues.push(translate('validators.contestEntryFetchFailure', {
-        contestEntryId,
+        entryId,
       }));
     }
     return issues;
