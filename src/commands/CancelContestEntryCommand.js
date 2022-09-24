@@ -1,7 +1,7 @@
 const {OptionId} = require('../options/CommonOptions');
 const ContestOption = require('../options/ContestOption');
 const ContestEntryOption = require('../options/ContestEntryOption');
-const {ContestValidator, ContestEntryValidator} = require('../validators/validators');
+const {ContestValidator, ContestEntryValidator, ContestStateValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {ContestState} = require('../DataModel');
 const Command = require('./Command');
@@ -52,6 +52,7 @@ class CancelContestEntryCommand extends Command {
     this.addValidators([
       new ContestValidator(OptionId.Contest, this.dataModel),
       new ContestEntryValidator(OptionId.ContestEntry, this.dataModel),
+      new ContestStateValidator(ContestState.OpenForSubmittingEntries, OptionId.Contest),
     ]);
     return Promise.resolve();
   }

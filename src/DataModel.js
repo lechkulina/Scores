@@ -34,12 +34,29 @@ const DataModelEvents = {
 }
 
 const ContestState = {
-  Any: 'Any',
-  Active: 'Active',
-  Open: 'Open',
-  OpenForSubmittingEntries: 'OpenForSubmittingEntries',
   OpenForVoting: 'OpenForVoting',
+  OpenForSubmittingEntries: 'OpenForSubmittingEntries',
+  Active: 'Active',
+  NotFinished: 'NotFinished',
+  Any: 'Any',
 };
+
+function calculateContestState(contest) {
+  const now = Date.now();
+  if (now >= contest.votingBeginDate && now < contest.votingEndDate) {
+    return ContestState.OpenForVoting;
+  }
+  if (now >= contest.activeBeginDate && now < contest.votingBeginDate) {
+    return ContestState.OpenForSubmittingEntries;
+  }
+  if (now >= contest.activeBeginDate && now < contest.activeEndDate) {
+    return ContestState.Active;
+  }
+  if (now < contest.activeEndDate) {
+    return ContestState.NotFinished;
+  }
+  return ContestState.Any
+}
 
 class DataModel extends EventEmitter {
   constructor() {
@@ -380,11 +397,11 @@ class DataModel extends EventEmitter {
       clause.push(`Contest.guildId = "${guildId}"`);
     }
     switch (contestState) {
-      case ContestState.Active:
-        clause.push(`Contest.activeBeginDate >= ${now}`);
+      case ContestState.NotFinished:
         clause.push(`${now} < Contest.activeEndDate`);
         break;
-      case ContestState.Open:
+      case ContestState.Active:
+        clause.push(`${now} >= Contest.activeBeginDate`);
         clause.push(`${now} < Contest.activeEndDate`);
         break;
       case ContestState.OpenForSubmittingEntries:
@@ -977,4 +994,5 @@ module.exports = {
   DataModelEvents,
   ContestState,
   DataModel,
+  calculateContestState,
 }

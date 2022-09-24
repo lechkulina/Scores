@@ -402,7 +402,7 @@ class ContestsAnnouncementsManager {
   }
 
   async onUpdateOpenContestsAnnouncements(guildId) {
-    const contests = await this.dataModel.getContests(guildId, ContestState.Open);
+    const contests = await this.dataModel.getContests(guildId, ContestState.NotFinished);
     return Promise.all(
       contests.map(contest => this.updateContestAnnouncements(contest))
     );

@@ -1,6 +1,6 @@
 const {OptionId, StringOption} = require('../options/CommonOptions');
 const ContestOption = require('../options/ContestOption');
-const {StringsLengthsValidator, FirstLetterValidator, ContestValidator} = require('../validators/validators');
+const {StringsLengthsValidator, FirstLetterValidator, ContestValidator, ContestStateValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {SettingId} = require('../Settings');
 const {ContestState} = require('../DataModel');
@@ -41,7 +41,7 @@ class SubmitContestEntryCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.submitContestEntry.description'));
     this.addOptions([
-      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('commands.submitContestEntry.options.contest'), this.dataModel),
+      new ContestOption(ContestState.OpenForSubmittingEntries, OptionId.Contest, this.translate('commands.submitContestEntry.options.contest'), this.dataModel),
       new StringOption(OptionId.Name, this.translate('commands.submitContestEntry.options.name')),
       new StringOption(OptionId.Description, this.translate('commands.submitContestEntry.options.description')),
       new StringOption(OptionId.Url, this.translate('commands.submitContestEntry.options.url')),
@@ -58,6 +58,7 @@ class SubmitContestEntryCommand extends Command {
       new StringsLengthsValidator(minUrlLength, maxUrlLength, [OptionId.Url], this.options),
       new FirstLetterValidator([OptionId.Name], this.options),
       new ContestValidator(OptionId.Contest, this.dataModel),
+      new ContestStateValidator(ContestState.OpenForSubmittingEntries, OptionId.Contest),
     ]);
     return Promise.resolve();
   }
