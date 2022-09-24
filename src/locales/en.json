@@ -82,7 +82,9 @@
       "unknownContestVote": "❗ Selected contest vote {{voteId}} does not exist! $t(validators.chooseFromAutocompleteList)",
       "contestVoteFetchFailure": "❗ Failed to fetch contest vote {{voteId}} data! $t(validators.reportIssue)",
       "contestEntryIsNotUnique": "This contest entry has already been submitted.",
-      "contestEntryUniqueFetchFailure": "Failed to fetch contest entry uniqueness data! $t(validators.reportIssue)"
+      "contestEntryUniqueFetchFailure": "Failed to fetch contest entry uniqueness data! $t(validators.reportIssue)",
+      "invalidContestVoter": "💩 You can not add votes to yours contest entry",
+      "contestEntryAuthorFetchFailure": "❗ Failed to fetch contest contest entry author data! $t(validators.reportIssue)"
     },
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} points added at {{acquireDate}} with reason {{reasonName}}",

@@ -22,4 +22,5 @@ module.exports = {
   UrlValidator: require('./UrlValidator'),
   ContestEntryUniquenessValidator: require('./ContestEntryUniquenessValidator'),
   PointsGiverValidator: require('./PointsGiverValidator'),
+  ContestVoterValidator: require('./ContestVoterValidator'),
 }

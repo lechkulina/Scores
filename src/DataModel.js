@@ -892,6 +892,14 @@ class DataModel extends EventEmitter {
     `)).length === 0;
   }
 
+  async getContestEntryAuthorId(contestEntryId) {
+    return (await this.database.get(`
+      SELECT authorId
+      FROM ContestEntry
+      WHERE id = "${contestEntryId}";
+    `)).authorId;
+  }
+
   async addContestVote(contestId, contestEntryId, contestVoteCategoryId, voterId, score) {
     await this.database.run(`
       INSERT INTO ContestVote(contestEntryId, contestVoteCategoryId, voterId, score)

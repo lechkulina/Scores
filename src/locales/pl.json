@@ -99,7 +99,9 @@
       "unknownContestVote": "❗ Wybrana ocena pracy konkursowej {{voteId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
       "contestVoteFetchFailure": "❗ Nie udało się pobrać danych o ocenie pracy konkursowej {{voteId}}! $t(validators.reportIssue)",
       "contestEntryIsNotUnique": "❗ Ta praca konkursowa została juz zgłoszona.",
-      "contestEntryUniqueFetchFailure": "❗ Nie udało się pobrać danych o unikalności pracy konkursowej! $t(validators.reportIssue)"
+      "contestEntryUniqueFetchFailure": "❗ Nie udało się pobrać danych o unikalności pracy konkursowej! $t(validators.reportIssue)",
+      "invalidContestVoter": "💩 Nie mozesz oddawać głosów na swoją pracę",
+      "contestEntryAuthorFetchFailure": "❗ Nie udało się pobrać danych autorze pracy konkursowej! $t(validators.reportIssue)"
     },
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} punkty przyznane dnia {{acquireDate}} z powodu {{reasonName}}",

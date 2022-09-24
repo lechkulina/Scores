@@ -8,6 +8,8 @@ const {
   ContestVoteCategoryValidator,
   NumbersValuesValidator,
   ContestVoteScoreValidator,
+  ContestStateValidator,
+  ContestVoterValidator,
 } = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {ContestState} = require('../DataModel');
@@ -62,6 +64,8 @@ class AddContestVoteCommand extends Command {
       new ContestVoteCategoryValidator(OptionId.AssignedContestVoteCategory, this.dataModel),
       new NumbersValuesValidator([OptionId.Score], this.options),
       new ContestVoteScoreValidator(OptionId.Score, OptionId.AssignedContestVoteCategory, this.options),
+      new ContestStateValidator(ContestState.OpenForVoting, OptionId.Contest),
+      new ContestVoterValidator(OptionId.ContestEntry, this.dataModel),
     ]);
     return Promise.resolve();
   }
