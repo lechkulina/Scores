@@ -6,6 +6,8 @@ const {
   FirstLetterValidator,
   ContestValidator,
   ContestEntryValidator,
+  UrlValidator,
+  ContestStateValidator,
 } = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {SettingId} = require('../Settings');
@@ -71,8 +73,10 @@ class ChangeContestEntryCommand extends Command {
       new StringsLengthsValidator(minDescriptionLength, maxDescriptionLength, [OptionId.Description], this.options),
       new StringsLengthsValidator(minUrlLength, maxUrlLength, [OptionId.Url], this.options),
       new FirstLetterValidator([OptionId.Name], this.options),
+      new UrlValidator([OptionId.Url], this.options),
       new ContestValidator(OptionId.Contest, this.dataModel),
       new ContestEntryValidator(OptionId.ContestEntry, this.dataModel),
+      new ContestStateValidator(ContestState.OpenForSubmittingEntries, OptionId.Contest),
     ]);
     return Promise.resolve();
   }

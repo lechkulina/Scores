@@ -11,7 +11,7 @@ class ContestStateValidator extends Validator {
   async validate(translate, optionsValues, interaction) {
     const issues = [];
     const contest = optionsValues.get(this.optionId);
-    if (!contest) {
+    if (!contest || this.contestState === ContestState.Any) {
       return issues;
     }
     const contestState = calculateContestState(contest);

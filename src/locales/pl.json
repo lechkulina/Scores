@@ -73,6 +73,7 @@
       "activeDescription": "nie jest aktywny",
       "notFinishedDescription": "zakończył się",
       "reportIssue": "Zgłoś problem administratorowi.",
+      "invalidUrl": "❗ {{optionDescription}} podany jako parametr **{{optionId}}** jest nieprawidłowym adresem.",
       "chooseFromAutocompleteList": "**Wybierz z listy dostępnych.**",
       "unknownContest": "❗ Wybrany konkurs {{contestId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
       "contestFetchFailure": "❗ Nie udało się pobrać danych konkursu {{contestId}}! $t(validators.reportIssue)",
@@ -554,7 +555,7 @@
           "contest": "Aktualny konkurs",
           "name": "Nazwa pracy",
           "description": "Krótki opis pracy",
-          "url": "URL do galerii zdjęć lub filmu"
+          "url": "Link do galerii zdjęć lub filmu"
         },
         "errors": {
           "failure": "❗ Nie udało się zgłosić pracy **{{entryName}}** do konkursu **{{contestName}}**"

@@ -1,6 +1,12 @@
 const {OptionId, StringOption} = require('../options/CommonOptions');
 const ContestOption = require('../options/ContestOption');
-const {StringsLengthsValidator, FirstLetterValidator, ContestValidator, ContestStateValidator} = require('../validators/validators');
+const {
+  StringsLengthsValidator,
+  FirstLetterValidator,
+  ContestValidator,
+  ContestStateValidator,
+  UrlValidator,
+} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {SettingId} = require('../Settings');
 const {ContestState} = require('../DataModel');
@@ -57,6 +63,7 @@ class SubmitContestEntryCommand extends Command {
       new StringsLengthsValidator(minDescriptionLength, maxDescriptionLength, [OptionId.Description], this.options),
       new StringsLengthsValidator(minUrlLength, maxUrlLength, [OptionId.Url], this.options),
       new FirstLetterValidator([OptionId.Name], this.options),
+      new UrlValidator([OptionId.Url], this.options),
       new ContestValidator(OptionId.Contest, this.dataModel),
       new ContestStateValidator(ContestState.OpenForSubmittingEntries, OptionId.Contest),
     ]);

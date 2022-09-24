@@ -502,7 +502,7 @@
           "contest": "Active contest",
           "name": "Name of the entry",
           "description": "Short description",
-          "url": "URL to gallery or movie"
+          "url": "Link to gallery or movie"
         },
         "errors": {
           "failure": "❗ Failed to submit entry **{{entryName}}** to contest **{{contestName}}**"
