@@ -10,12 +10,10 @@ class SubmitContestEntryHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     this.markAsDone();
     const authorId = interaction.member.user.id;
-    const [contest, name, description, url] = this.getOptionValues([
-      OptionId.Contest,
-      OptionId.Name,
-      OptionId.Description,
-      OptionId.Url,
-    ]);
+    const contest = this.getOptionValue(OptionId.Contest);
+    const name = this.getOptionValue(OptionId.Name);
+    const description = this.getOptionValue(OptionId.Description);
+    const url = this.getOptionValue(OptionId.Url);
     try {
       const authorMember = await this.clientHandler.findMember(interaction.guildID, authorId);
       await this.dataModel.addUser(authorMember.user.id, authorMember.username, authorMember.user.discriminator, authorMember.guild.id);

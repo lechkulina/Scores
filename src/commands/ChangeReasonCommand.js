@@ -23,7 +23,9 @@ class ChangeReasonInteractionHandler extends InteractionHandler {
   }
 
   async handleComponentInteraction(interaction) {
-    const [name, min, max] = this.getOptionValues([OptionId.Name, OptionId.Min, OptionId.Max]);
+    const name = this.getOptionValue(OptionId.Name);
+    const min = this.getOptionValue(OptionId.Min);
+    const max = this.getOptionValue(OptionId.Max);
     return this.handleConfirmationForm(interaction, async () => {
       try {
         await this.dataModel.changeReason(this.reason.id, name, min, max);

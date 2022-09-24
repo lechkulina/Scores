@@ -17,12 +17,10 @@ class AddContestVoteCategoryHandler extends InteractionHandler {
   }
 
   async handleComponentInteraction(interaction) {
-    const [name, description, max, useByDefault] = this.getOptionValues([
-      OptionId.Name,
-      OptionId.Description,
-      OptionId.Max,
-      OptionId.UseByDefault
-    ]);
+    const name = this.getOptionValue(OptionId.Name);
+    const description = this.getOptionValue(OptionId.Description);
+    const max = this.getOptionValue(OptionId.Max);
+    const useByDefault = this.getOptionValue(OptionId.UseByDefault);
     return this.handleConfirmationForm(interaction, async () => {
       try {
         await this.dataModel.changeContestVoteCategory(this.category.id, name, description, max, useByDefault, interaction.guildID);

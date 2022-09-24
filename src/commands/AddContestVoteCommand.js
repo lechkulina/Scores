@@ -10,14 +10,12 @@ const Command = require('./Command');
 class AddContestVoteHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     this.markAsDone();
-    const voter = await this.clientHandler.findMember(interaction.guildID, interaction.member.user.id);
-    const [contest, entry, category, score] = this.getOptionValues([
-      OptionId.Contest,
-      OptionId.ContestEntry,
-      OptionId.AssignedContestVoteCategory,
-      OptionId.Score,
-    ]);
+    const contest = this.getOptionValue(OptionId.Contest);
+    const entry = this.getOptionValue(OptionId.ContestEntry);
+    const category = this.getOptionValue(OptionId.AssignedContestVoteCategory);
+    const score = this.getOptionValue(OptionId.Score);
     try {
+      const voter = await this.clientHandler.findMember(interaction.guildID, interaction.member.user.id);
       await this.dataModel.addUser(voter.user.id, voter.user.username, voter.user.discriminator, voter.guild.id);
       await this.dataModel.addContestVote(contest.id, entry.id, category.id, voter.id, score);
       return interaction.createMessage(

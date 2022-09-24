@@ -11,7 +11,8 @@ const Command = require('./Command');
 class AssignContestRewardHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     this.markAsDone();
-    const [contest, reward] = this.getOptionValues([OptionId.Contest, OptionId.ContestReward]);
+    const contest = this.getOptionValue(OptionId.Contest);
+    const reward = this.getOptionValue(OptionId.ContestReward);
     const rewardDescription = formatEllipsis(reward.description, autoCompeteNameLimit);
     try {
       await this.dataModel.assignContestReward(contest.id, reward.id);

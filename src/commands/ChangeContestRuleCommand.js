@@ -20,10 +20,8 @@ class ChangeContestRuleHandler extends InteractionHandler {
   }
 
   async handleComponentInteraction(interaction) {
-    const [description, useByDefault] = this.getOptionValues([      
-      OptionId.Description,
-      OptionId.UseByDefault,
-    ]);
+    const description = this.getOptionValue(OptionId.Description);
+    const useByDefault = this.getOptionValue(OptionId.UseByDefault);
     return this.handleConfirmationForm(interaction, async () => {
       try {
         await this.dataModel.changeContestRule(this.rule.id, description, useByDefault, interaction.guildID);

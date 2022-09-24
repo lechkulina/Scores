@@ -11,7 +11,8 @@ const Command = require('./Command');
 class AssignContestRuleHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     this.markAsDone();
-    const [contest, rule] = this.getOptionValues([OptionId.Contest, OptionId.ContestRule]);
+    const contest = this.getOptionValue(OptionId.Contest);
+    const rule = this.getOptionValue(OptionId.ContestRule);
     const ruleDescription = formatEllipsis(rule.description, autoCompeteNameLimit);
     try {
       await this.dataModel.assignContestRule(contest.id, rule.id);

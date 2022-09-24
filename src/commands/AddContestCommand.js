@@ -13,25 +13,14 @@ const Command = require('./Command');
 class AddContestInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     this.markAsDone();
-    const [
-      name,
-      description,
-      announcementsThreshold,
-      requiredCompletedVotingsCount,
-      activeBeginDate,
-      activeEndDate,
-      votingBeginDate,
-      votingEndDate
-    ] = this.getOptionValues([
-      OptionId.Name,
-      OptionId.Description,
-      OptionId.AnnouncementsThreshold,
-      OptionId.RequiredCompletedVotingsCount,
-      OptionId.ActiveBeginDate,
-      OptionId.ActiveEndDate,
-      OptionId.VotingBeginDate,
-      OptionId.VotingEndDate,
-    ]);
+    const name = this.getOptionValue(OptionId.Name);
+    const description = this.getOptionValue(OptionId.Description);
+    const announcementsThreshold = this.getOptionValue(OptionId.AnnouncementsThreshold);
+    const requiredCompletedVotingsCount = this.getOptionValue(OptionId.RequiredCompletedVotingsCount);
+    const activeBeginDate = this.getOptionValue(OptionId.ActiveBeginDate);
+    const activeEndDate = this.getOptionValue(OptionId.ActiveEndDate);
+    const votingBeginDate = this.getOptionValue(OptionId.VotingBeginDate);
+    const votingEndDate = this.getOptionValue(OptionId.VotingEndDate);
     try {
       await this.dataModel.addContest(
         name,

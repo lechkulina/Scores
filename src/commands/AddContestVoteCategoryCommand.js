@@ -7,12 +7,10 @@ const Command = require('./Command');
 class AddContestVoteCategoryHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     this.markAsDone();
-    const [name, description, max, useByDefault] = this.getOptionValues([
-      OptionId.Name,
-      OptionId.Description,
-      OptionId.Max,
-      OptionId.UseByDefault
-    ]);
+    const name = this.getOptionValue(OptionId.Name);
+    const description = this.getOptionValue(OptionId.Description);
+    const max = this.getOptionValue(OptionId.Max);
+    const useByDefault = this.getOptionValue(OptionId.UseByDefault);
     try {
       await this.dataModel.addContestVoteCategory(name, description, max, useByDefault, interaction.guildID);
       return interaction.createMessage({

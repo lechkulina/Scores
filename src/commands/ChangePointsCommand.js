@@ -29,7 +29,8 @@ class ChangePointsInteractionHandler extends InteractionHandler {
   }
 
   async handleComponentInteraction(interaction) {
-    const [reason, pointsValue] = this.getOptionValues([OptionId.Reason, OptionId.Points]);
+    const reason = this.getOptionValue(OptionId.Reason);
+    const pointsValue = this.getOptionValue(OptionId.Points);
     return this.handleConfirmationForm(interaction, async () => {
       try {
         await this.dataModel.changePoints(this.pointsEntry.id, pointsValue, reason.id);

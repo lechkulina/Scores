@@ -9,7 +9,8 @@ const Command = require('./Command');
 class AssignContestVoteCategoryHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     this.markAsDone();
-    const [contest, category] = this.getOptionValues([OptionId.Contest, OptionId.ContestVoteCategory]);
+    const contest = this.getOptionValue(OptionId.Contest);
+    const category = this.getOptionValue(OptionId.ContestVoteCategory);
     try {
       await this.dataModel.assignContestVoteCategory(contest.id, category.id);
       return interaction.createMessage(

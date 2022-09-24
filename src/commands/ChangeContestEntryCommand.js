@@ -26,11 +26,9 @@ class ChangeContestEntryHandler extends InteractionHandler {
   }
 
   async handleComponentInteraction(interaction) {
-    const [name, description, url] = this.getOptionValues([
-      OptionId.Name,
-      OptionId.Description,
-      OptionId.Url,
-    ]);
+    const name = this.getOptionValue(OptionId.Name);
+    const description = this.getOptionValue(OptionId.Description);
+    const url = this.getOptionValue(OptionId.Url);
     return this.handleConfirmationForm(interaction, async () => {
       try {
         await this.dataModel.changeContestEntry(this.entry.id, this.contest.id, name, description, url);
