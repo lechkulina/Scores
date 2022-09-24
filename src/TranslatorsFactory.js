@@ -1,4 +1,5 @@
 const i18next = require('i18next');
+const {SettingId} = require('./Settings');
 
 const namespace = 'main';
 const fallbackLanguage = 'en';
@@ -8,9 +9,9 @@ class TranslatorsFactory {
     this.settings = settings;
   }
 
-  async getPreferredLocale(interaction) {
-    const preferredLocale = await this.settings.get('preferredLocale');
-    const useGuildLocale = await this.settings.get('useGuildLocale');
+  getPreferredLocale(interaction) {
+    const preferredLocale = this.settings.get(SettingId.PreferredLocale);
+    const useGuildLocale = this.settings.get(SettingId.UseGuildLocale);
     const guild = interaction?.channel.guild;
     if (useGuildLocale && guild?.preferredLocale) {
       return guild.preferredLocale;
@@ -19,7 +20,7 @@ class TranslatorsFactory {
   }
 
   async initialize() {
-    const preferredLocale = await this.getPreferredLocale();
+    const preferredLocale = this.getPreferredLocale();
     await i18next.init({
       ns: namespace,
       defaultNS: namespace,
@@ -30,11 +31,11 @@ class TranslatorsFactory {
     });
   }
 
-  async getTranslator(interaction) {
+  getTranslator(interaction) {
     if (!interaction) {
       return i18next.t;
     }
-    const preferredLocale = await this.getPreferredLocale(interaction);
+    const preferredLocale = this.getPreferredLocale(interaction);
     return i18next.getFixedT(preferredLocale);
   }
 }

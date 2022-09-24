@@ -8,6 +8,7 @@ const {
   ReasonValidator,
 } = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
+const {SettingId} = require('../Settings');
 const Command = require('./Command');
 
 class ChangeReasonInteractionHandler extends InteractionHandler {
@@ -51,8 +52,10 @@ class ChangeReasonCommand extends Command {
       new NumberOption(OptionId.Min, this.translate('commands.changeReason.options.min')),
       new NumberOption(OptionId.Max, this.translate('commands.changeReason.options.max')),
     ]);
+    const minNameLength = this.settings.get(SettingId.MinNameLength);
+    const maxNameLength = this.settings.get(SettingId.MaxNameLength);
     this.addValidators([
-      new StringsLengthsValidator([OptionId.Name], 'minNameLength', 'maxNameLength', this.settings, this.options),
+      new StringsLengthsValidator(minNameLength, maxNameLength, [OptionId.Name], this.options),
       new FirstLetterValidator([OptionId.Name], this.options),
       new NumbersValuesValidator([OptionId.Min, OptionId.Max], this.options),
       new NumbersRangesValidator([

@@ -1,12 +1,13 @@
 const moment = require('moment');
 const InteractionHandler = require('../InteractionHandler');
 const {Entities} = require('../Formatters');
+const {SettingId} = require('../Settings');
 const Command = require('./Command');
 
 class ShowMyPointsInteractionHandler extends InteractionHandler {
-  async generateHeaderSection(accumulatedSummary) {
+  generateHeaderSection(accumulatedSummary) {
     const {points, minAcquireDate, maxAcquireDate} = accumulatedSummary;
-    const dateOutputFormat = await this.settings.get('dateOutputFormat');
+    const dateOutputFormat = this.settings.get(SettingId.DateOutputFormat);
     return points > 0
       ? this.translate('commands.showMyPoints.messages.headerWithPoints', {
           points,
@@ -16,14 +17,14 @@ class ShowMyPointsInteractionHandler extends InteractionHandler {
       : this.translate('commands.showMyPoints.messages.headerWithoutPoints');
   }
 
-  async generateRecentlyGivenSection(recentlyGivenSummary) {
+  generateRecentlyGivenSection(recentlyGivenSummary) {
     if (recentlyGivenSummary.length === 0) {
       return '';
     }
     const sections = [
       this.translate('commands.showMyPoints.messages.recentlyGivenDescription')
     ];
-    const dateAndTimeOutputFormat = await this.settings.get('dateAndTimeOutputFormat');
+    const dateAndTimeOutputFormat = this.settings.get(SettingId.DateAndTimeOutputFormat);
     recentlyGivenSummary.forEach(({points, acquireDate, giverName, reasonName}) => {
       sections.push(
         this.translate('commands.showMyPoints.messages.recentlyGivenEntry', {
@@ -60,14 +61,14 @@ class ShowMyPointsInteractionHandler extends InteractionHandler {
     this.markAsDone();
     try {
       const userId = interaction.member.user.id;
-      const recentPointsLimit = await this.settings.get('recentPointsLimit');
+      const recentPointsLimit = this.settings.get(SettingId.RecentPointsLimit);
       const accumulatedSummary = await this.dataModel.getPointsAccumulatedSummary(userId);
       const recentlyGivenSummary = await this.dataModel.getPointsRecentlyGivenSummary(userId, recentPointsLimit);
       const rankingsSummary = await this.dataModel.getPointsRankingsSummary(userId);
       return this.createLongMessage(interaction, 
         [
-          await this.generateHeaderSection(accumulatedSummary),
-          await this.generateRecentlyGivenSection(recentlyGivenSummary),
+          this.generateHeaderSection(accumulatedSummary),
+          this.generateRecentlyGivenSection(recentlyGivenSummary),
           this.generateRankingsSection(rankingsSummary),
         ]
           .filter(section => !!section)

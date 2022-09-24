@@ -9,13 +9,14 @@ const {
   MemberValidator,
  } = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
+const {SettingId} = require('../Settings');
 const Command = require('./Command');
 
 class ChangePointsInteractionHandler extends InteractionHandler {
-  async handleCommandInteraction(interaction) {
+  handleCommandInteraction(interaction) {
     this.member = this.getOptionValue(OptionId.User);
     this.pointsEntry = this.getOptionValue(OptionId.RecentlyGivenPoints);
-    const dateAndTimeOutputFormat = await this.settings.get('dateAndTimeOutputFormat');
+    const dateAndTimeOutputFormat = this.settings.get(SettingId.DateAndTimeOutputFormat);
     return interaction.createMessage({
       content: this.translate('commands.changePoints.messages.confirmation', {
         userName: this.member.user.username,

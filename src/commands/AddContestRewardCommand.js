@@ -3,6 +3,7 @@ const {StringsLengthsValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {formatEllipsis} = require('../Formatters');
 const {autoCompeteNameLimit} = require('../constants');
+const {SettingId} = require('../Settings');
 const Command = require('./Command');
 
 class AddContestRewardHandler extends InteractionHandler {
@@ -39,8 +40,10 @@ class AddContestRewardCommand extends Command {
       new StringOption(OptionId.Description, this.translate('commands.addContestReward.options.description')),
       new BooleanOption(OptionId.UseByDefault, this.translate('commands.addContestReward.options.useByDefault')),
     ]);
+    const minDescriptionLength = this.settings.get(SettingId.MinDescriptionLength);
+    const maxDescriptionLength = this.settings.get(SettingId.MaxDescriptionLength);
     this.addValidators([
-      new StringsLengthsValidator([OptionId.Description], 'minDescriptionLength', 'maxDescriptionLength', this.settings, this.options),
+      new StringsLengthsValidator(minDescriptionLength, maxDescriptionLength, [OptionId.Description], this.options),
     ]);
     return Promise.resolve();
   }

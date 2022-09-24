@@ -2,6 +2,7 @@ const {OptionId, StringOption} = require('../options/CommonOptions');
 const ContestOption = require('../options/ContestOption');
 const {StringsLengthsValidator, FirstLetterValidator, ContestValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
+const {SettingId} = require('../Settings');
 const {ContestState} = require('../DataModel');
 const Command = require('./Command');
 
@@ -47,10 +48,16 @@ class SubmitContestEntryCommand extends Command {
       new StringOption(OptionId.Description, this.translate('commands.submitContestEntry.options.description')),
       new StringOption(OptionId.Url, this.translate('commands.submitContestEntry.options.url')),
     ]);
+    const minNameLength = this.settings.get(SettingId.MinNameLength);
+    const maxNameLength = this.settings.get(SettingId.MaxNameLength);
+    const minDescriptionLength = this.settings.get(SettingId.MinDescriptionLength);
+    const maxDescriptionLength = this.settings.get(SettingId.MaxDescriptionLength);
+    const minUrlLength = this.settings.get(SettingId.MinUrlLength);
+    const maxUrlLength = this.settings.get(SettingId.MaxUrlLength);
     this.addValidators([
-      new StringsLengthsValidator([OptionId.Name], 'minNameLength', 'maxNameLength', this.settings, this.options),
-      new StringsLengthsValidator([OptionId.Description], 'minDescriptionLength', 'maxDescriptionLength', this.settings, this.options),
-      new StringsLengthsValidator([OptionId.Url], 'minUrlLength', 'maxUrlLength', this.settings, this.options),
+      new StringsLengthsValidator(minNameLength, maxNameLength, [OptionId.Name], this.options),
+      new StringsLengthsValidator(minDescriptionLength, maxDescriptionLength, [OptionId.Description], this.options),
+      new StringsLengthsValidator(minUrlLength, maxUrlLength, [OptionId.Url], this.options),
       new FirstLetterValidator([OptionId.Name], this.options),
       new ContestValidator(OptionId.Contest, this.dataModel),
     ]);

@@ -2,6 +2,7 @@ const {OptionId, StringOption, BooleanOption} = require('../options/CommonOption
 const {StringsLengthsValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {formatEllipsis} = require('../Formatters');
+const {SettingId} = require('../Settings');
 const {autoCompeteNameLimit} = require('../constants');
 const Command = require('./Command');
 
@@ -39,8 +40,10 @@ class AddContestRuleCommand extends Command {
       new StringOption(OptionId.Description, this.translate('commands.addContestRule.options.description')),
       new BooleanOption(OptionId.UseByDefault, this.translate('commands.addContestRule.options.useByDefault')),
     ]);
+    const minDescriptionLength = this.settings.get(SettingId.MinDescriptionLength);
+    const maxDescriptionLength = this.settings.get(SettingId.MaxDescriptionLength);
     this.addValidators([
-      new StringsLengthsValidator([OptionId.Description], 'minDescriptionLength', 'maxDescriptionLength', this.settings, this.options),
+      new StringsLengthsValidator(minDescriptionLength, maxDescriptionLength, [OptionId.Description], this.options),
     ]);
     return Promise.resolve();
   }

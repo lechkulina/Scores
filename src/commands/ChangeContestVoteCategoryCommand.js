@@ -2,6 +2,7 @@ const {OptionId, StringOption, NumberOption, BooleanOption} = require('../option
 const ContestVoteCategoryOption = require('../options/ContestVoteCategoryOption');
 const {StringsLengthsValidator, FirstLetterValidator, NumbersValuesValidator, ContestVoteCategoryValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
+const {SettingId} = require('../Settings');
 const Command = require('./Command');
 
 class AddContestVoteCategoryHandler extends InteractionHandler {
@@ -51,9 +52,13 @@ class ChangeContestVoteCategoryCommand extends Command {
       new NumberOption(OptionId.Max, this.translate('commands.changeContestVoteCategory.options.max')),
       new BooleanOption(OptionId.UseByDefault, this.translate('commands.changeContestVoteCategory.options.useByDefault')),
     ]);
+    const minNameLength = this.settings.get(SettingId.MinNameLength);
+    const maxNameLength = this.settings.get(SettingId.MaxNameLength);
+    const minDescriptionLength = this.settings.get(SettingId.MinDescriptionLength);
+    const maxDescriptionLength = this.settings.get(SettingId.MaxDescriptionLength);
     this.addValidators([
-      new StringsLengthsValidator([OptionId.Name], 'minNameLength', 'maxNameLength', this.settings, this.options),
-      new StringsLengthsValidator([OptionId.Description], 'minDescriptionLength', 'maxDescriptionLength', this.settings, this.options),
+      new StringsLengthsValidator(minNameLength, maxNameLength, [OptionId.Name], this.options),
+      new StringsLengthsValidator(minDescriptionLength, maxDescriptionLength, [OptionId.Description], this.options),
       new FirstLetterValidator([OptionId.Name], this.options),
       new NumbersValuesValidator([OptionId.Max], this.options),
       new ContestVoteCategoryValidator(OptionId.ContestVoteCategory, this.dataModel),

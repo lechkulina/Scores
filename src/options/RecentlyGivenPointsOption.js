@@ -2,6 +2,7 @@ const moment = require('moment');
 const {Constants: {ApplicationCommandOptionTypes}} = require('eris');
 const {autoCompeteResultsLimit} = require('../constants');
 const {formatAutoCompleteName} = require('../Formatters');
+const {SettingId} = require('../Settings');
 const {OptionId} = require('./CommonOptions');
 const {Option, SuggestionMethod} = require('./Option');
 
@@ -18,7 +19,7 @@ class RecentlyGivenPointsOption extends Option {
     if (!userId) {
       return [];
     }
-    const dateAndTimeOutputFormat = await this.settings.get('dateAndTimeOutputFormat');
+    const dateAndTimeOutputFormat = this.settings.get(SettingId.DateAndTimeOutputFormat);
     const points = await this.dataModel.getRecentlyGivenPoints(userId, giverId, autoCompeteResultsLimit);
     const results = points
       .map(({id, points, acquireDate, reasonName}) => {

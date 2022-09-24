@@ -1,3 +1,5 @@
+const {SettingId} = require('./Settings');
+
 class TasksScheduler { 
   constructor(settings) {
     this.settings = settings;
@@ -46,11 +48,11 @@ class TasksScheduler {
     const tasks = Array.from(this.tasks.values());
     await this.runReadyTasks(now, tasks);
     this.removeExpiredTasks(now, tasks); // expired tasks are removed after giving them a chance to run at least once
-    return this.scheduleNextTasksRun();
+    this.scheduleNextTasksRun();
   }
 
-  async scheduleNextTasksRun() {
-    const tasksRunInterval = await this.settings.get('tasksRunInterval');
+  scheduleNextTasksRun() {
+    const tasksRunInterval = this.settings.get(SettingId.TasksRunInterval);
     this.tasksRunTimer = setTimeout(() => this.runTasks(), tasksRunInterval);
   }
 
@@ -69,7 +71,7 @@ class TasksScheduler {
   }
 
   initialize() {
-    return this.scheduleNextTasksRun();
+    this.scheduleNextTasksRun();
   }
 }
 

@@ -7,6 +7,7 @@ const {
   NumbersValuesValidator,
 } = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
+const {SettingId} = require('../Settings');
 const Command = require('./Command');
 
 class AddContestInteractionHandler extends InteractionHandler {
@@ -73,17 +74,22 @@ class AddContestCommand extends Command {
       new StringOption(OptionId.VotingBeginDate, this.translate('commands.addContest.options.votingBeginDate')),
       new StringOption(OptionId.VotingEndDate, this.translate('commands.addContest.options.votingEndDate')),
     ]);
+    const minNameLength = this.settings.get(SettingId.MinNameLength);
+    const maxNameLength = this.settings.get(SettingId.MaxNameLength);
+    const minDescriptionLength = this.settings.get(SettingId.MinDescriptionLength);
+    const maxDescriptionLength = this.settings.get(SettingId.MaxDescriptionLength);
+    const dateAndTimeInputFormat = this.settings.get(SettingId.DateAndTimeInputFormat);
     this.addValidators([
-      new StringsLengthsValidator([OptionId.Name], 'minNameLength', 'maxNameLength', this.settings, this.options),
-      new StringsLengthsValidator([OptionId.Description], 'minDescriptionLength', 'maxDescriptionLength', this.settings, this.options),
+      new StringsLengthsValidator(minNameLength, maxNameLength, [OptionId.Name], this.options),
+      new StringsLengthsValidator(minDescriptionLength, maxDescriptionLength, [OptionId.Description], this.options),
       new NumbersValuesValidator([OptionId.AnnouncementsThreshold, OptionId.RequiredCompletedVotingsCount], this.options),
       new FirstLetterValidator([OptionId.Name, OptionId.Description], this.options),
-      new DatesValidator([
+      new DatesValidator(dateAndTimeInputFormat, [
         OptionId.ActiveBeginDate,
         OptionId.ActiveEndDate,
         OptionId.VotingBeginDate,
         OptionId.VotingEndDate,
-      ], this.settings, this.options),
+      ], this.options),
       new DatesRangesValidator([
         [OptionId.ActiveBeginDate, OptionId.ActiveEndDate],
         [OptionId.VotingBeginDate, OptionId.VotingEndDate],

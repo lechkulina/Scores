@@ -193,20 +193,22 @@ class DataModel extends EventEmitter {
     `);
   }
 
-  setSetting(key, value) {
+  setSettings(settings) {
+    const values = settings.map(({id, value, type}) => `("${id}", "${value}", "${type}")`);
+    if (values.length === 0) {
+      return;
+    }
     return this.database.run(`
-      INSERT OR REPLACE INTO Settings(key, value)
-      VALUES ("${key}", "${value}");
+      INSERT OR REPLACE INTO Settings(id, value, type)
+      VALUES ${values.join(', ')};
     `);
   }
 
-  async getSetting(key) {
-    return (await this.database.get(`
-      SELECT value
-      FROM Settings
-      WHERE key="${key}"
-      LIMIT 1;
-    `))?.value;
+  getSettings() {
+    return this.database.all(`
+      SELECT id, value, type
+      FROM Settings;
+    `);
   }
 
   addCommand(id, description) {

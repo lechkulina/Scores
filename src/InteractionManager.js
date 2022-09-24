@@ -1,6 +1,6 @@
 const {CommandInteraction, AutocompleteInteraction, ComponentInteraction} = require('eris');
 const {DataModel} = require('./DataModel');
-const Settings = require('./Settings');
+const {Settings} = require('./Settings');
 const TranslatorsFactory = require('./TranslatorsFactory');
 const CommandsManager = require('./CommandsManager');
 const {Entities} = require('./Formatters');
@@ -25,7 +25,7 @@ class InteractionManager {
     await this.tasksScheduler.initialize();
     await this.translatorsFactory.initialize();
     await this.messagePublisher.initialize();
-    this.translate = await this.translatorsFactory.getTranslator();
+    this.translate = this.translatorsFactory.getTranslator();
     this.commandsManager = new CommandsManager(this.clientHandler, this.dataModel, this.settings, this.translate);
     this.contestsAnnouncementsManager = new ContestsAnnouncementsManager(
       this.dataModel,
@@ -52,7 +52,7 @@ class InteractionManager {
       return;
     }
     // check if the user has the permission to execute this command
-    const translate = await this.translatorsFactory.getTranslator(interaction);
+    const translate = this.translatorsFactory.getTranslator(interaction);
     const userId = interaction.member.user.id;
     const rolesIds = interaction.member.roles;
     const allowed = true; // await this.dataModel.isAllowed(userId, rolesIds, commandId);
@@ -104,7 +104,7 @@ class InteractionManager {
       return interaction.result([]);
     }
     const optionValue = focusedOption?.value || '';
-    const translate = await this.translatorsFactory.getTranslator(interaction);
+    const translate = this.translatorsFactory.getTranslator(interaction);
     return option.getAutoCompeteResults(interaction, optionValue, translate);
   }
   

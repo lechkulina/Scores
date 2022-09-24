@@ -4,6 +4,7 @@ const {PointsValueValidator, ReasonValidator, MemberValidator} = require('../val
 const InteractionHandler = require('../InteractionHandler');
 const {ButtonId, createActionRow, createButton} = require('../Components');
 const {Entities} = require('../Formatters');
+const {SettingId} = require('../Settings');
 const Command = require('./Command');
 
 class AddPointsInteractionHandler extends InteractionHandler {
@@ -55,7 +56,7 @@ class AddPointsInteractionHandler extends InteractionHandler {
 
   // TODO move this to clientHandler
   async createPublicMessage(interaction) {
-    const publicChannelId = await this.settings.get('publicChannelId');
+    const publicChannelId = this.settings.get(SettingId.PointsAnnouncementsChannelId);
     const channel = await this.clientHandler.findChannel(interaction.guildID, publicChannelId);
     if (!channel) {
       console.error('Unable to send public message - public channel is missing');

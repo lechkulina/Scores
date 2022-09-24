@@ -1,6 +1,7 @@
 const moment = require('moment');
 const {DataModelEvents, ContestState} = require('./DataModel');
 const {formatDuration, Entities} = require('./Formatters');
+const {SettingId} = require('./Settings');
 const {msInHour} = require('./constants');
 
 const AnnouncementType = {
@@ -209,7 +210,7 @@ class ContestsAnnouncementsManager {
     if (entries.length === 0) {
       return '';
     }
-    const dateAndTimeOutputFormat = await this.settings.get('dateAndTimeOutputFormat');
+    const dateAndTimeOutputFormat = this.settings.get(SettingId.DateAndTimeOutputFormat);
     const sections = [
       this.translate('announcements.contest.entriesTitle'),
       this.translate('announcements.contest.entriesDescription', {
@@ -275,8 +276,8 @@ class ContestsAnnouncementsManager {
   }
 
   async createAnnouncement(contest, announcementType) {
+    const channelId = this.settings.get(SettingId.ContestsAnnouncementsChannelId);
     const content = await this.generateContent(contest, announcementType);
-    const channelId = await this.settings.get('contestsAnnouncementsChannelId');
     const messageId = await this.messagePublisher.createMessage(contest.guildId, channelId, content);
     return this.dataModel.addContestAnnouncement(announcementType, contest.id, messageId);
   }
