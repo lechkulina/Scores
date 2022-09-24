@@ -1,11 +1,10 @@
 const Validator = require('./Validator');
 
 class PointsValueValidator extends Validator {
-  constructor(optionId, reasonOptionId, dataModel, options) {
+  constructor(pointsOptionId, reasonOptionId, options) {
     super();
-    this.optionId = optionId;
+    this.pointsOptionId = pointsOptionId;
     this.reasonOptionId = reasonOptionId;
-    this.dataModel = dataModel;
     this.options = options;
   }
 
@@ -15,8 +14,8 @@ class PointsValueValidator extends Validator {
     if (!reason) {
       return issues;
     }
-    const points = optionsValues.get(this.optionId);
-    const option = this.options.get(this.optionId);
+    const points = optionsValues.get(this.pointsOptionId);
+    const option = this.options.get(this.pointsOptionId);
     if (points < reason.min || points > reason.max) {
       issues.push(translate('validators.invalidPointsRange', {
         description: option.description,

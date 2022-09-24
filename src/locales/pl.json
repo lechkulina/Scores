@@ -68,6 +68,7 @@
       "invalidDatesRange": "❗ **{{min}}** nie moze być pózniejszą datą niz **{{max}}**",
       "invalidContestVoteScoreRange": "❗ **{{description}}** ma nieprawidłowy zakres punktów dla kategorii **{{categoryName}}**. Musi mieścić się w zakresie od 0 do {{max}}",
       "invalidContestState": "❗ Konkurs **{{contestName}}** {{description}}",
+      "invalidPointsGiver": "💩 Nie mozesz sam sobie przypisywać punktów",
       "openForVotingDescription": "nie jest otwarty do głosowania",
       "openForSubmittingEntriesDescription": "nie jest otwarty do zgłaszania prac konkursowych",
       "activeDescription": "nie jest aktywny",

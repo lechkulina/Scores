@@ -51,6 +51,7 @@
       "invalidDatesRange": "❗ **{{min}}** can not be later date than **{{max}}**",
       "invalidContestVoteScoreRange": "❗ **{{description}}** has invalid range for the given points category **{{categoryName}}**. It must be between 0 and {{max}}",
       "invalidContestState": "❗ Contest **{{contestName}}** {{description}}",
+      "invalidPointsGiver": "💩 You can not add points to yourself",
       "openForVotingDescription": "is not open for voting",
       "openForSubmittingEntriesDescription": "is not open for submitting contest entries",
       "activeDescription": "is not active",

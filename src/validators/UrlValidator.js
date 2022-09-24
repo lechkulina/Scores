@@ -14,7 +14,7 @@ class UrlValidator extends Validator {
     this.optionsIds.forEach(optionId => {
       const option = this.options.get(optionId);
       const url = optionsValues.get(optionId);
-      if (!pattern.test(url)) {
+      if (url && !pattern.test(url)) {
         issues.push(translate('validators.invalidUrl', {
           optionId,
           optionDescription: option.description,

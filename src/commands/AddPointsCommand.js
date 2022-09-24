@@ -1,6 +1,11 @@
 const ReasonOption = require('../options/ReasonOption');
 const {OptionId, UserOption, NumberOption} = require('../options/CommonOptions');
-const {PointsValueValidator, ReasonValidator, MemberValidator} = require('../validators/validators');
+const {
+  PointsValueValidator,
+  ReasonValidator,
+  MemberValidator,
+  PointsGiverValidator,
+} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {ButtonId, createActionRow, createButton} = require('../Components');
 const {Entities} = require('../Formatters');
@@ -109,7 +114,8 @@ class AddPointsCommand extends Command {
     this.addValidators([
       new ReasonValidator(OptionId.Reason, this.dataModel),
       new MemberValidator(OptionId.User, this.clientHandler),
-      new PointsValueValidator(OptionId.Points, OptionId.Reason, this.dataModel, this.settings, this.options),
+      new PointsValueValidator(OptionId.Points, OptionId.Reason, this.options),
+      new PointsGiverValidator(OptionId.User),
     ])
     return Promise.resolve();
   }

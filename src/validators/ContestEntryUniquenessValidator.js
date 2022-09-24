@@ -12,6 +12,9 @@ class ContestEntryUniquenessValidator extends Validator {
     const issues = [];
     const name = optionsValues.get(this.nameOptionId);
     const url = optionsValues.get(this.urlOptionId);
+    if (!name || !url) {
+      return issues;
+    }
     try {
       const isUnique = await this.dataModel.isContestEntryUnique(name, url, interaction.guildID);
       if (!isUnique) {
