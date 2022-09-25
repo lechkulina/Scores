@@ -11,9 +11,7 @@ class ContestOption extends Option {
   }
 
   async getAutoCompeteResults(interaction, optionValue, translate) {
-    console.info('QQQQ contests');
     const contests = await this.dataModel.getContestsNames(interaction.guildID, this.contestState, autoCompeteResultsLimit);
-    console.info('QQQQ contests', contests);
     const results = contests
       .map(({id, name}) => ({
         name: formatAutoCompleteName(id, name),
