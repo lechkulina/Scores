@@ -34,7 +34,20 @@
       "acquiredPoints_many": "{{count}} zdobytych punktów",
       "voters_one": "{{count}} głosującego",
       "voters_few": "{{count}} głosujących",
-      "voters_many": "{{count}} głosujących"
+      "voters_many": "{{count}} głosujących",
+      "categories_one": "{{count}} kategorii",
+      "categories_few": "{{count}} kategoriach",
+      "categories_many": "{{count}} kategoriach",
+      "contestEntries_one": "{{count}} pracę konkursową",
+      "contestEntries_few": "{{count}} prace konkursowe",
+      "contestEntries_many": "{{count}} prac konkursowych",
+      "contestState": {
+        "any": "Nieokreślony",
+        "pending": "Oczekujący na rozpoczęcie",
+        "openForSubmittingEntries": "Otwarty do zgłaszania prac konkursowych",
+        "openForVoting": "Otwarty do głosowania",
+        "finished": "Zakończony"
+      }
     },
     "formatters": {
       "weeks_one": "{{count}} tydzień",
@@ -67,12 +80,8 @@
       "invalidDateFormat": "❗ **{{description}}** ma nieprawidłowy format daty. Wymagany format to **{{dateInputFormat}}**",
       "invalidDatesRange": "❗ **{{min}}** nie moze być pózniejszą datą niz **{{max}}**",
       "invalidContestVoteScoreRange": "❗ **{{description}}** ma nieprawidłowy zakres punktów dla kategorii **{{categoryName}}**. Musi mieścić się w zakresie od 0 do {{max}}",
-      "invalidContestState": "❗ Konkurs **{{contestName}}** {{description}}",
+      "invalidContestState": "❗ Konkurs **{{contestName}}** jest {{contestState}}",
       "invalidPointsGiver": "💩 Nie mozesz sam sobie przypisywać punktów",
-      "openForVotingDescription": "nie jest otwarty do głosowania",
-      "openForSubmittingEntriesDescription": "nie jest otwarty do zgłaszania prac konkursowych",
-      "activeDescription": "nie jest aktywny",
-      "notFinishedDescription": "zakończył się",
       "invalidUrl": "❗ {{optionDescription}} podany jako parametr **{{optionId}}** jest nieprawidłowym adresem.",
       "reportIssue": "Zgłoś problem administratorowi.",
       "chooseFromAutocompleteList": "**Wybierz z listy dostępnych.**",
@@ -101,7 +110,11 @@
       "contestEntryIsNotUnique": "❗ Ta praca konkursowa została juz zgłoszona.",
       "contestEntryUniqueFetchFailure": "❗ Nie udało się pobrać danych o unikalności pracy konkursowej! $t(validators.reportIssue)",
       "invalidContestVoter": "💩 Nie mozesz oddawać głosów na swoją pracę",
-      "contestEntryAuthorFetchFailure": "❗ Nie udało się pobrać danych autorze pracy konkursowej! $t(validators.reportIssue)"
+      "contestEntryAuthorFetchFailure": "❗ Nie udało się pobrać danych autorze pracy konkursowej! $t(validators.reportIssue)",
+      "unknownChannel": "❗ Wybrany kanał {{channelId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
+      "channelFetchFailure": "❗ Nie udało się pobrać danych kanału {{channelId}}! $t(validators.reportIssue)",
+      "unknownContestAnnouncement": "❗ Wybrane ogłoszenie konkursu {{announcementId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
+      "contestAnnouncementFetchFailure": "❗ Nie udało się pobrać danych o ogłoszeniu konkursu {{announcementId}}! $t(validators.reportIssue)"
     },
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} punkty przyznane dnia {{acquireDate}} z powodu {{reasonName}}",
@@ -109,34 +122,148 @@
     },
     "announcements": {
       "contest": {
-        "headerTitleInitial": "🎯 **NOWY KONKURS**",
-        "headerTitleReminder": "⏰ **PRZYPOMINAMY O KONKURSIE**",
-        "headerTitleFinal": "🏆 **FINAŁ KONKURSU**",
-        "headerDescriptionInitial": "Konkurs **{{contestName}}** rozpocznie się za **{{contestStartsIn}}**",
-        "headerDescriptionBeforeVoting": "Aktualnie trwa konkurs **{{contestName}}**, prace mozna jeszcze zgłaszać przez najblizsze **{{votingStartsIn}}**",
-        "headerDescriptionBeforeFinal": "Upłynął czas na zgłąszanie prac do konkursu **{{contestName}}**, za **{{finalStartsIn}}** zostaną ogłoszone wyniki.",
-        "headerDescriptionFinal": "Konkurs **{{contestName}}** zakończył się!",
-        "descriptionTitle": "**Zadanie**",
-        "descriptionInitial": "{{description}}",
-        "descriptionBeforeVoting": "$t(announcements.contest.descriptionInitial)",
-        "descriptionBeforeFinal": "Bardzo dziękujemy za wszystkie zgłoszone prace. Głosowanie trwa zatem trzymajcie kciuki za swoich faworytów!",
-        "descriptionFinal": "Maksymalnie można było zdobyć {{maxPointsCount}} punktów.\nNajwięcej punktów, tj. **{{winnerPointsCount}}** zdobył **{{winnerName}}** za pracę **{{winnerEntryName}}**\nDobra robota i serdecznie gratulujemy!",
-        "rulesTitle": "**Reguły konkursu**",
-        "rulesDescription": "Obowiązują następujące reguły konkursu:",
-        "ruleDescription": "- {{ruleDescription}}",
-        "voteCategoriesTitle": "**Punktacja**",
-        "voteCategoriesDescription": "Konkurs będzie oceniany w {{count}} kategoriach:",
-        "voteCategoryDescription": "- {{voteCategoryName}} - {{voteCategoryDescription}} - Maksymalnie mozna uzyskać **{{maxPointsPerVoteCategory}} punktów** w tej kategorii.",
-        "voteCategoriesSummary": "Zatem maksymalnie od jednego głosującego praca może otrzymać **$t(common.points, {\"count\": {{maxPointsPerVoting}} })**, natomiast od wszystkich **$t(common.voters, {\"count\": {{requiredCompletedVotingsCount}} })** łącznie **$t(common.points, {\"count\": {{maxPointsFromVotings}} })**",
-        "rewardsTitle": "**Nagrody**",
-        "rewardsDescription": "Jako nagrody w konkursie przewidziane są:",
-        "rewardDescription": "- {{rewardDescription}}",
-        "entriesTitle": "**Zgłoszenia**",
-        "entriesDescription_one": "Zgłoszono juz pierwszą pracę konkurosową!",
-        "entriesDescription_few": "Zgłoszono juz {{count}} prace konkursowe:",
-        "entriesDescription_many": "Zgłoszono juz {{count}} prac konkursowych:",
-        "entryDescription": "- **{{entryName}}** autorstwa **{{authorName}}** zgłoszona dnia {{submitDate}}",
-        "userWithMostEntries": "Do tej pory najwięcej prac **{{entriesCount}}** zgłosił uzytkownik **{{userName}}**!"
+        "header": {
+          "openForSubmittingEntries": {
+            "ready": {
+              "title": "🎯 **NOWY KONKURS**",
+              "content": "Konkurs **{{contestName}}** rozpocznie się za **{{remainingTime}}**"
+            },
+            "expired": {
+              "title": "$t(announcements.contest.header.openForSubmittingEntries.ready.title)",
+              "content": "Konkurs **{{contestName}}** juz się rozpoczął!"
+            }
+          },
+          "openForVoting": {
+            "ready": {
+              "title": "⏰ **PRZYPOMINAMY O KONKURSIE**",
+              "content": "Aktualnie trwa konkurs **{{contestName}}**, prace mozna jeszcze zgłaszać przez najblizsze **{{remainingTime}}**"
+            },
+            "expired": {
+              "title": "$t(announcements.contest.header.openForVoting.ready.title)",
+              "content": "Upłynął czas na zgłąszanie prac do aktualnie trwającego konkursu **{{contestName}}**"
+            }
+          },
+          "finished": {
+            "ready": {
+              "title": "🏆 **FINAŁ KONKURSU**",
+              "content": "Trwa głosowanie na prace zgłoszone do konkursu **{{contestName}}** juz za **{{remainingTime}}** zostaną ogłoszone wyniki."
+            },
+            "expired": {
+              "title": "$t(announcements.contest.header.finished.ready.title)",
+              "content": "Głosowanie zakończyło się, tym samym konkurs **{{contestName}}** zakończył się!"
+            }
+          }
+        },
+        "description": {
+          "openForSubmittingEntries": {
+            "ready": {
+              "title": "**Zadanie**",
+              "content": "{{description}}"
+            },
+            "expired": {
+              "title": "$t(announcements.contest.description.openForSubmittingEntries.ready.title)",
+              "content": "$t(announcements.contest.description.openForSubmittingEntries.ready.content)"
+            }
+          },
+          "openForVoting": {
+            "ready": {
+              "title": "$t(announcements.contest.description.openForSubmittingEntries.ready.title)",
+              "content": "$t(announcements.contest.description.openForSubmittingEntries.ready.content)"
+            },
+            "expired": {
+              "title": "",
+              "content": "Bardzo dziękujemy za wszystkie zgłoszone prace. Głosowanie rozpocznie się juz niebawem."
+            }
+          },
+          "finished": {
+            "ready": {
+              "title": "",
+              "content": "Głosowanie trwa zatem trzymajcie kciuki za swoich faworytów!"
+            },
+            "expired": {
+              "title": "",
+              "content": "Maksymalnie można było zdobyć **$t(common.points, {\"count\": {{maxPointsCount}} })**.\nNajwięcej punktów, tj. **{{winnerPointsCount}}** zdobył **{{winnerName}}** za pracę **{{winnerEntryName}}**\nDobra robota i serdecznie gratulujemy!"
+            }
+          }
+        },
+        "rules": {
+          "item":  "- {{item}}",
+          "openForSubmittingEntries": {
+            "title": "**Reguły konkursu**",
+            "description": "Obowiązywać będą następujące reguły konkursu:",
+            "noItems": "W konkursie nie przewiduje się specjalnych reguł"
+          },
+          "openForVoting": {
+            "title": "$t(announcements.contest.rules.openForSubmittingEntries.title)",
+            "description": "Obowiązują następujące reguły konkursu:",
+            "noItems": "W konkursie nie obowiązują specjalne reguły"
+          },
+          "finished": {
+            "title": "$t(announcements.contest.rules.openForSubmittingEntries.title)",
+            "description": "Podczas konkursu obowiązywały następujące zasady:",
+            "noItems": "W konkursie nie obowiązywały specjalne reguły"
+          }
+        },
+        "voteCategories": {
+          "item":  "- **{{voteCategoryName}}** - *{{voteCategoryDescription}}* - Maksymalnie mozna uzyskać **$t(common.points, {\"count\": {{maxPointsPerVoteCategory}} })** w tej kategorii.",
+          "openForSubmittingEntries": {
+            "title": "**Punktacja**",
+            "description": "Konkurs będzie oceniany w $t(common.categories, {\"count\": {{voteCategoriesCount}} }):",
+            "noItems": "W konkursie nie przewiduje się podziału na kategorie głosowania.",
+            "summary": "Zatem od jednego głosującego praca będzie mogła otrzymać **$t(common.points, {\"count\": {{maxPointsPerVoting}} })**, natomiast od wszystkich **$t(common.voters, {\"count\": {{requiredCompletedVotingsCount}} })** łącznie **$t(common.points, {\"count\": {{maxPointsFromVotings}} })**"
+          },
+          "openForVoting": {
+            "title": "$t(announcements.contest.voteCategories.openForSubmittingEntries.title)",
+            "description": "Konkurs jest oceniany w $t(common.categories, {\"count\": {{voteCategoriesCount}} }):",
+            "noItems": "W konkursie nie przewidziany jest podziału na kategorie głosowania.",
+            "summary": "Zatem od jednego głosującego praca moze otrzymać **$t(common.points, {\"count\": {{maxPointsPerVoting}} })**, natomiast od wszystkich **$t(common.voters, {\"count\": {{requiredCompletedVotingsCount}} })** łącznie **$t(common.points, {\"count\": {{maxPointsFromVotings}} })**"
+          },
+          "finished": {
+            "title": "$t(announcements.contest.voteCategories.openForSubmittingEntries.title)",
+            "description": "Konkurs był oceniany w $t(common.categories, {\"count\": {{voteCategoriesCount}} }):",
+            "noItems": "W konkursie nie przewidziano podziału na kategorie głosowania.",
+            "summary": "Zatem od jednego głosującego praca mogła otrzymać **$t(common.points, {\"count\": {{maxPointsPerVoting}} })**, natomiast od wszystkich **$t(common.voters, {\"count\": {{requiredCompletedVotingsCount}} })** łącznie **$t(common.points, {\"count\": {{maxPointsFromVotings}} })**"
+          }
+        },
+        "rewards": {
+          "item":  "- {{item}}",
+          "openForSubmittingEntries": {
+            "title": "**Nagrody**",
+            "description": "Jako nagrody w konkursie przewidziane są:",
+            "noItems": "W konkursie nie przewiduje się nagród."
+          },
+          "openForVoting": {
+            "title": "$t(announcements.contest.rewards.openForSubmittingEntries.title)",
+            "description": "$t(announcements.contest.rewards.openForSubmittingEntries.description)",
+            "noItems": "$t(announcements.contest.rewards.openForSubmittingEntries.noItems)"
+          },
+          "finished": {
+            "title": "$t(announcements.contest.rewards.openForSubmittingEntries.title)",
+            "description": "Nagrody jakie przysługują ${{winnerName}} to:",
+            "noItems": "W konkursie nie przewidziano nagród."
+          }
+        },
+        "entries": {
+          "item":  "- **{{entryName}}** autorstwa **{{authorName}}** zgłoszona dnia *{{submitDate}}*",
+          "openForSubmittingEntries": {
+            "title": "**Zgłoszenia**",
+            "description": "Zgłoszono juz **$t(common.contestEntries, {\"count\": {{entriesCount}} })**:",
+            "noItems": "Nie zgłoszono jeszcze zadnej pracy... nie zwlekaj!",
+            "summary": "Do tej pory najwięcej prac **{{entriesCount}}** zgłosił uzytkownik **{{userName}}**!"
+          },
+          "openForVoting": {
+            "title": "$t(announcements.contest.entries.openForSubmittingEntries.title)",
+            "description": "$t(announcements.contest.entries.openForSubmittingEntries.description)",
+            "noItems": "$t(announcements.contest.entries.openForSubmittingEntries.noItems)",
+            "summary": "$t(announcements.contest.entries.openForSubmittingEntries.summary)"
+          },
+          "finished": {
+            "title": "$t(announcements.contest.entries.openForSubmittingEntries.title)",
+            "description": "Łącznie zgłoszono **$t(common.contestEntries, {\"count\": {{entriesCount}} })**:",
+            "noItems": "Do konkursu nie zgłoszono zandej pracy.",
+            "summary": "Najwięcej prac **{{entriesCount}}** zgłosił uzytkownik **{{userName}}**!"
+          }
+        }
       }
     },
     "commands": {
@@ -308,10 +435,8 @@
         "options": {
           "name": "Nazwa konkursu",
           "description": "Opis konkursu",
-          "announcementThreshold": "Liczba godzin poprzedzająca opublikowanianie ogłoszeń", 
           "requiredCompletedVotingsCount": "Liczba głosów wymagana do zakończenia głosowania",
-          "activeBeginDate": "Data rozpoczęcia konkursu",
-          "activeEndDate": "Data zakończenia konkursu",
+          "submittingEntriesBeginDate": "Data rozpoczęcia przyjmowania prac konkursowych",
           "votingBeginDate": "Data rozpoczęcia głosowania",
           "votingEndDate": "Data zakończenia głosowania"
         },
@@ -329,8 +454,7 @@
           "description": "$t(commands.addContest.options.description)",
           "announcementThreshold": "$t(commands.addContest.options.announcementThreshold)",
           "requiredCompletedVotingsCount": "$t(commands.addContest.options.requiredCompletedVotingsCount)",
-          "activeBeginDate": "$t(commands.addContest.options.activeBeginDate)",
-          "activeEndDate": "$t(commands.addContest.options.activeEndDate)",
+          "submittingEntriesBeginDate": "$t(commands.addContest.options.submittingEntriesBeginDate)",
           "votingBeginDate": "$t(commands.v.options.votingBeginDate)",
           "votingEndDate": "$t(commands.addContest.options.votingEndDate)"
         },
@@ -358,7 +482,7 @@
           "name": "Nazwa kategorii głosowania",
           "description": "Opis kategorii głosowania",
           "max": "Maksymalna liczba punktów jaką mozna uzyskać w tej kategorii głosowania",
-          "useByDefault": "Dodawaj tą kategorię głosowania domyślnie w kazdym nowym konkursie"
+          "useByDefault": "Przypisuje tę kategorię głosowania domyślnie do kazdego nowego konkursu"
         },
         "errors": {
           "failure": "❗ Nie udało się dodać nowej kategorii głosowania pracy konkursowych **{{categoryName}}**"
@@ -426,7 +550,7 @@
         "description": "Dodaje regułę konkursu",
         "options": {
           "description": "Opis reguły konkursu",
-          "useByDefault": "Dodawaj tę regułę konkursu domyślnie w kazdym nowym konkursie"
+          "useByDefault": "Przypisuj tę regułę konkursu domyślnie do kazdego nowego konkursu"
         },
         "errors": {
           "failure": "❗ Nie udało się dodać nowej reguły konkursowej **{{ruleDescription}}**"
@@ -492,7 +616,7 @@
         "description": "Dodaje nagrodę konkursową",
         "options": {
           "description": "Opis nagrody konkursowej",
-          "useByDefault": "Dodawaj tę nagrodę konkursową domyślnie w kazdym nowym konkursie"
+          "useByDefault": "Przypisuj tę nagrodę konkursową domyślnie do kazdego nowego konkursu"
         },
         "errors": {
           "failure": "❗ Nie udało się dodać nowej nagrody konkursowej **{{rewardDescription}}**"
@@ -677,6 +801,86 @@
           "votesDescription": "$t(commands.showMyContestVotes.messages.votesDescription)",
           "voteDescriptionWithScore": "- w kategorii *{{categoryName}}* oddano **$t(common.votes, {\"count\": {{votesCount}} })** dając łącznie **$t(common.points, {\"count\": {{scores}} })**",
           "voteDescriptionWithoutScore": "$t(commands.showMyContestVotes.messages.voteDescriptionWithoutScore)"
+        }
+      },
+      "addContestAnnouncement": {
+        "description": "Dodaje ogłoszenie konkursu",
+        "options": {
+          "name": "Nazwa ogłoszenia",
+          "hoursBefore": "Liczba godzin przed zmianą stanu konkursu kiedy ogłoszenie zostnie opublikowane",
+          "contestState": "Stan konkursu, który będzie przyczyną opublikowania ogłoszenia",
+          "showRules": "Pokaz reguły konkursu w ogłoszeniu",
+          "showVoteCategories": "Pokaz kategorie głosowania w ogłoszeniu",
+          "showRewards": "Pokaz informacje o nagrodach w ogloszeniu",
+          "showEntries": "Pokaz aktualnie zgłoszone prace konkursowe w ogłoszeniu",
+          "showVotingResults": "Pokaz wyniki zakonczonego głosowania w ogłoszeniu",
+          "useByDefault":  "Przypisuj to ogłoszenie domyślnie do kazdego nowego konkursu"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się dodać ogłoszenia konkursu **{{announcementName}}** na kanale **{{channelName}}**"
+        },
+        "messages": {
+          "success": "✅ Dodano ogłoszenie konkursu **{{announcementName}}** na kanale **{{channelName}}**"
+        }
+      },
+      "removeContestAnnouncement": {
+        "description": "Usuwa ogłoszenie konkursu",
+        "options": {
+          "contestAnnouncement": "Ogłoszenie konkursu"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się usunąć ogłoszenie konkursu **{{announcementName}}** z kanału **{{channelName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz usunąć ogłoszenie konkursu **{{announcementName}}** z kanału **{{channelName}}**?",
+          "success": "✅ Usunięto ogłoszenie konkursu **{{announcementName}}** z kanału **{{channelName}}**"
+        }
+      },
+      "changeContestAnnouncement": {
+        "description": "Zmienia ogłoszenie konkursu",
+        "options": {
+          "contestAnnouncement": "$t(commands.removeContestAnnouncement.options.name)",
+          "name": "$t(commands.addContestAnnouncement.options.name)",
+          "hoursBefore": "$t(commands.addContestAnnouncement.options.hoursBefore)",
+          "contestState": "$t(commands.addContestAnnouncement.options.contestState)",
+          "showRules": "$t(commands.addContestAnnouncement.options.showRules)",
+          "showVoteCategories": "$t(commands.addContestAnnouncement.options.showVoteCategories)",
+          "showRewards": "$t(commands.addContestAnnouncement.options.showRewards)",
+          "showEntries": "$t(commands.addContestAnnouncement.options.showEntries)",
+          "showVotingResults": "$t(commands.addContestAnnouncement.options.showVotingResults)",
+          "useByDefault": "$t(commands.addContestAnnouncement.options.useByDefault)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się zmienić ogłoszenia konkursu **{{announcementName}}** na kanale **{{channelName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz zmienić ogłoszenie konkursu **{{announcementName}}** na kanale **{{channelName}}**?",
+          "success": "✅ Zmieniono ogłoszenie konkursu **{{announcementName}}** na kanale **{{channelName}}**"
+        }
+      },
+      "assignContestAnnouncement": {
+        "description": "Przypisuje ogłoszenie konkursowe do istniejącego konkursu",
+        "options": {
+          "contestReward": "$t(commands.removeContestAnnouncement.options.contestAnnouncement)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się przypisać ogłoszenia konkursu **{{announcementName}}** do konkursu **{{contestName}}**"
+        },
+        "messages": {
+          "success": "✅ Przypisano ogłoszenia konkursu **{{announcementName}}** do konkursu **{{contestName}}**"
+        }
+      },
+      "unassignContestAnnouncement": {
+        "description": "Cofa przypisanie ogłoszenia konkursu z istniejącego konkursu",
+        "options": {
+          "contestReward": "$t(commands.removeContestAnnouncement.options.contestAnnouncement)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się cofnąć przypisania ogłoszenia konkursu **{{announcementName}}** z konkursu **{{contestName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz cofnać przypisanie ogłoszenia konkursu **{{announcementName}}** z konkursu **{{contestName}}**?",
+          "success": "✅ Cofnięto przypisanie ogłoszenia konkursu **{{announcementName}}** z konkursu **{{contestName}}**"
         }
       }
     }

@@ -1,9 +1,10 @@
-const {Constants: {ApplicationCommandOptionTypes}} = require('eris');
+const {Constants: {ApplicationCommandOptionTypes, ChannelTypes}} = require('eris');
 const {Option} = require('./Option');
 
 const OptionId = {
   User: 'user',
   Role: 'role',
+  Channel: 'channel',
   Reason: 'reason',
   Command: 'command',
   RecentlyGivenPoints: 'recently-given-points',
@@ -13,10 +14,8 @@ const OptionId = {
   Max: 'max',
   Description: 'description',
   Url: 'url',
-  AnnouncementsThreshold: 'announcements-threshold',
   RequiredCompletedVotingsCount: 'required-completed-votings-count',
-  ActiveBeginDate: 'active-begin-date',
-  ActiveEndDate: 'active-end-date',
+  SubmittingEntriesBeginDate: 'submitting-entries-begin-date',
   VotingBeginDate: 'voting-begin-date',
   VotingEndDate: 'voting-end-date',
   Contest: 'contest',
@@ -29,7 +28,16 @@ const OptionId = {
   UseByDefault: 'use-by-default',
   ContestEntry: 'contest-entry',
   ContestVote: 'contest-vote',
+  ContestAnnouncement: 'contest-announcement',
   Score: 'score',
+  ContestState: 'contest-state',
+  HoursBefore: 'hours-before',
+  AssignedContestAnnouncement: 'assigned-contest-announcement',
+  ShowRules: 'show-rules',
+  ShowVoteCategories: 'show-vote-categories',
+  ShowRewards: 'show-rewards',
+  ShowEntries: 'show-entries',
+  ShowVotingResults: 'show-voting-results',
 };
 
 class NumberOption extends Option {
@@ -62,6 +70,21 @@ class RoleOption extends Option {
   }
 }
 
+class ChannelOption extends Option {
+  constructor(id, description) {
+    super(id, description, ApplicationCommandOptionTypes.CHANNEL);
+  }
+
+  getConfig() {
+    return {
+      ...super.getConfig(),
+      channel_types: [
+        ChannelTypes.GUILD_TEXT
+      ],
+    };
+  }
+}
+
 module.exports = {
   OptionId,
   NumberOption,
@@ -69,4 +92,5 @@ module.exports = {
   BooleanOption,
   UserOption,
   RoleOption,
+  ChannelOption,
 };

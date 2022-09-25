@@ -114,6 +114,12 @@ function formatAutoCompleteName(value, name, limit = autoCompeteNameLimit) {
   return formatEllipsis(`${value} - ${name}`, limit);
 }
 
+function joinSections(sections, entity = Entities.NewLine) {
+  return sections
+    .filter(section => !!section)
+    .join(entity);
+}
+
 module.exports = {
   Entities,
   formatTable,
@@ -121,4 +127,5 @@ module.exports = {
   formatEllipsis,
   formatDuration,
   formatAutoCompleteName,
+  joinSections,
 };

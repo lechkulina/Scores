@@ -46,7 +46,7 @@ class UnassignContestVoteCategoryCommand extends Command {
     this.setDescription(this.translate('commands.unassignContestVoteCategory.description'));
     this.addOptions([
       new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest'), this.dataModel),
-      new AssignedContestVoteCategoriesOption(OptionId.AssignedContestVoteCategory, this.translate('commands.unassignContestVoteCategory.options.contestVoteCategory'), this.dataModel),
+      new AssignedContestVoteCategoriesOption(OptionId.AssignedContestVoteCategory, OptionId.Contest, this.translate('commands.unassignContestVoteCategory.options.contestVoteCategory'), this.dataModel),
     ]);
     this.addValidators([
       new ContestValidator(OptionId.Contest, this.dataModel),

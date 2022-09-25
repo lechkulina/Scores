@@ -12,7 +12,13 @@ class AddContestVoteCategoryHandler extends InteractionHandler {
     const max = this.getOptionValue(OptionId.Max);
     const useByDefault = this.getOptionValue(OptionId.UseByDefault);
     try {
-      await this.dataModel.addContestVoteCategory(name, description, max, useByDefault, interaction.guildID);
+      await this.dataModel.addContestVoteCategory(
+        name,
+        description,
+        max,
+        useByDefault,
+        interaction.guildID
+      );
       return interaction.createMessage({
         content: this.translate('commands.addContestVoteCategory.messages.success', {
           categoryName: name,

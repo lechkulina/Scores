@@ -1,22 +1,22 @@
 const {Constants: {ApplicationCommandOptionTypes}} = require('eris');
-const {autoCompeteResultsLimit} = require('../constants');
 const {formatAutoCompleteName} = require('../Formatters');
+const {autoCompeteResultsLimit} = require('../constants');
 const {Option, SuggestionMethod} = require('./Option');
 
-class ContestOption extends Option {
-  constructor(contestState, id, description, dataModel) {
+class AssignedContestAnnouncementOption extends Option {
+  constructor(id, contestOptionId, description, dataModel) {
     super(id, description, ApplicationCommandOptionTypes.INTEGER, SuggestionMethod.Autocomplete);
-    this.contestState = contestState;
+    this.contestOptionId = contestOptionId;
     this.dataModel = dataModel;
   }
 
   async getAutoCompeteResults(interaction, optionValue, translate) {
-    const contests = await this.dataModel.getContestsNames({
-      guildId: interaction.guildID,
-      contestState: this.contestState,
-      limit: autoCompeteResultsLimit,
-    });
-    const results = contests
+    const contestId = interaction.data.options.find(({name}) => name === this.contestOptionId)?.value;
+    if (!contestId) {
+      return [];
+    }
+    const announcements = await this.dataModel.getAssignedContestAnnouncementsNames(contestId, autoCompeteResultsLimit);
+    const results = announcements
       .map(({id, name}) => ({
         name: formatAutoCompleteName(id, name),
         value: id,
@@ -27,4 +27,4 @@ class ContestOption extends Option {
   }
 }
 
-module.exports = ContestOption;
+module.exports = AssignedContestAnnouncementOption;

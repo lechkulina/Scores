@@ -43,8 +43,8 @@ class RemoveContestVoteCommand extends Command {
     this.setDescription(this.translate('commands.removeContestVote.description'));
     this.addOptions([
       new ContestOption(ContestState.OpenForVoting, OptionId.Contest, this.translate('commands.removeContestVote.options.contest'), this.dataModel),
-      new ContestEntryOption(false, OptionId.ContestEntry, this.translate('commands.removeContestVote.options.contestEntry'), this.dataModel),
-      new ContestVoteOption(true, OptionId.ContestVote, this.translate('commands.removeContestVote.options.contestVote'), this.dataModel),
+      new ContestEntryOption(false, OptionId.ContestEntry, OptionId.Contest, this.translate('commands.removeContestVote.options.contestEntry'), this.dataModel),
+      new ContestVoteOption(true, OptionId.ContestVote, OptionId.ContestEntry, this.translate('commands.removeContestVote.options.contestVote'), this.dataModel),
     ]);
     this.addValidators([
       new ContestValidator(OptionId.Contest, this.dataModel),

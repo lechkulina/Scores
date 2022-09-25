@@ -111,6 +111,10 @@ class MessagePublisher {
     return this.dataModel.updateMessage(messageId, updatedMessageChunks, obsoleteMessageChunks);
   }
 
+  removeMessage(messageId, removedChunksIds) {
+    return this.removeMessages([messageId], removedChunksIds);
+  }
+
   removeMessages(messagesIds, removedChunksIds = []) {
     // removing messages needs to be synchonized - onMessageDelete callback may be called while removing obsolete message chunks
     this.removeMessagesLock = this.removeMessagesLock.finally(async () => {
@@ -118,7 +122,7 @@ class MessagePublisher {
       for (const messageId of messagesIds) {
         const message = await this.dataModel.getMessage(messageId);
         if (!message) {
-          console.error(`Unable to delete message ${messageId} - unknown message`);
+          console.info(`Unable to delete message ${messageId} - message was already removed`);
           continue;
         }
         obsoleteMessagesIds.push(messageId);
@@ -154,6 +158,7 @@ class MessagePublisher {
 
   async onMessageDeleteBulk(removedMessagesChunks) {
     const removedMessagesChunksIds = removedMessagesChunks.map(({id}) => id);
+    // TODO replace this with one query
     const messagesIds = new Set();
     const messagesChunks = await Promise.all(
       removedMessagesChunksIds.map(id => this.dataModel.getMessageChunk(id))

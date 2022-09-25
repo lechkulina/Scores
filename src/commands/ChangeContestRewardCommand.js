@@ -24,7 +24,7 @@ class ChangeContestRewardHandler extends InteractionHandler {
     const useByDefault = this.getOptionValue(OptionId.UseByDefault);
     return this.handleConfirmationForm(interaction, async () => {
       try {
-        await this.dataModel.changeContestReward(this.reward.id, description, useByDefault, interaction.guildID);
+        await this.dataModel.changeContestReward(this.reward.id, description, useByDefault);
         return this.translate('commands.changeContestReward.messages.success', {
           rewardDescription: this.rewardDescription,
         });

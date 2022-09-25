@@ -1,4 +1,4 @@
-const {OptionId, StringOption} = require('../options/CommonOptions');
+const {OptionId, StringOption, NumberOption} = require('../options/CommonOptions');
 const {
   StringsLengthsValidator,
   FirstLetterValidator,
@@ -15,20 +15,16 @@ class AddContestInteractionHandler extends InteractionHandler {
     this.markAsDone();
     const name = this.getOptionValue(OptionId.Name);
     const description = this.getOptionValue(OptionId.Description);
-    const announcementsThreshold = this.getOptionValue(OptionId.AnnouncementsThreshold);
     const requiredCompletedVotingsCount = this.getOptionValue(OptionId.RequiredCompletedVotingsCount);
-    const activeBeginDate = this.getOptionValue(OptionId.ActiveBeginDate);
-    const activeEndDate = this.getOptionValue(OptionId.ActiveEndDate);
+    const submittingEntriesBeginDate = this.getOptionValue(OptionId.SubmittingEntriesBeginDate);
     const votingBeginDate = this.getOptionValue(OptionId.VotingBeginDate);
     const votingEndDate = this.getOptionValue(OptionId.VotingEndDate);
     try {
       await this.dataModel.addContest(
         name,
         description,
-        announcementsThreshold,
         requiredCompletedVotingsCount,
-        activeBeginDate.valueOf(),
-        activeEndDate.valueOf(),
+        submittingEntriesBeginDate.valueOf(),
         votingBeginDate.valueOf(),
         votingEndDate.valueOf(),
         interaction.guildID
@@ -39,6 +35,7 @@ class AddContestInteractionHandler extends InteractionHandler {
         })
       });
     } catch (error) {
+      console.error(`Failed to add contest ${name} - got error`, error);
       return interaction.createMessage(this.translate('commands.addContest.errors.failure', {
         contestName: name,
       }));
@@ -56,10 +53,8 @@ class AddContestCommand extends Command {
     this.addOptions([
       new StringOption(OptionId.Name, this.translate('commands.addContest.options.name')),
       new StringOption(OptionId.Description, this.translate('commands.addContest.options.description')),
-      new StringOption(OptionId.AnnouncementsThreshold, this.translate('commands.addContest.options.announcementThreshold')),
-      new StringOption(OptionId.RequiredCompletedVotingsCount, this.translate('commands.addContest.options.requiredCompletedVotingsCount')),
-      new StringOption(OptionId.ActiveBeginDate, this.translate('commands.addContest.options.activeBeginDate')),
-      new StringOption(OptionId.ActiveEndDate, this.translate('commands.addContest.options.activeEndDate')),
+      new NumberOption(OptionId.RequiredCompletedVotingsCount, this.translate('commands.addContest.options.requiredCompletedVotingsCount')),
+      new StringOption(OptionId.SubmittingEntriesBeginDate, this.translate('commands.addContest.options.submittingEntriesBeginDate')),
       new StringOption(OptionId.VotingBeginDate, this.translate('commands.addContest.options.votingBeginDate')),
       new StringOption(OptionId.VotingEndDate, this.translate('commands.addContest.options.votingEndDate')),
     ]);
@@ -71,19 +66,16 @@ class AddContestCommand extends Command {
     this.addValidators([
       new StringsLengthsValidator(minNameLength, maxNameLength, [OptionId.Name], this.options),
       new StringsLengthsValidator(minDescriptionLength, maxDescriptionLength, [OptionId.Description], this.options),
-      new NumbersValuesValidator([OptionId.AnnouncementsThreshold, OptionId.RequiredCompletedVotingsCount], this.options),
+      new NumbersValuesValidator([OptionId.RequiredCompletedVotingsCount], this.options),
       new FirstLetterValidator([OptionId.Name, OptionId.Description], this.options),
       new DatesValidator(dateAndTimeInputFormat, [
-        OptionId.ActiveBeginDate,
-        OptionId.ActiveEndDate,
+        OptionId.SubmittingEntriesBeginDate,
         OptionId.VotingBeginDate,
         OptionId.VotingEndDate,
       ], this.options),
       new DatesRangesValidator([
-        [OptionId.ActiveBeginDate, OptionId.ActiveEndDate],
+        [OptionId.SubmittingEntriesBeginDate, OptionId.VotingBeginDate],
         [OptionId.VotingBeginDate, OptionId.VotingEndDate],
-        [OptionId.ActiveBeginDate, OptionId.VotingBeginDate],
-        [OptionId.VotingEndDate, OptionId.ActiveEndDate],
       ], this.options),
     ]);
     return Promise.resolve();

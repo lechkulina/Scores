@@ -53,21 +53,29 @@ class TasksScheduler {
 
   scheduleNextTasksRun() {
     const tasksRunInterval = this.settings.get(SettingId.TasksRunInterval);
-    this.tasksRunTimer = setTimeout(() => this.runTasks(), tasksRunInterval);
+    this.tasksRunTimer = setTimeout(() => this.runTasks(), 2000);
+  }
+
+  hasTask(taskId) {
+    return this.tasks.has(taskId);
+  }
+
+  addTask(task) {
+    // override tasks with the same id
+    console.debug(`${this.hasTask(task.id) ? 'Updating' : 'Scheduling'} task ${task.id}`);
+    this.tasks.set(task.id, task);
   }
 
   addTasks(tasks) {
-    tasks.forEach(task => {
-      // override tasks with the same id
-      console.debug(`${this.tasks.has(task.id) ? 'Updating' : 'Scheduling'} task ${task.id}`);
-      this.tasks.set(task.id, task);
-    });
+    tasks.forEach(task => this.addTask(task));
+  }
+
+  removeTask(taskId) {
+    this.tasks.delete(taskId);
   }
 
   removeTasks(tasksIds) {
-    tasksIds.forEach(taskId => {
-      this.tasks.delete(taskId);
-    });
+    tasksIds.forEach(taskId => this.removeTask(taskId));
   }
 
   initialize() {

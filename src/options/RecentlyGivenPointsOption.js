@@ -7,15 +7,16 @@ const {OptionId} = require('./CommonOptions');
 const {Option, SuggestionMethod} = require('./Option');
 
 class RecentlyGivenPointsOption extends Option {
-  constructor(id, description, dataModel, settings) {
+  constructor(id, optionUserId, description, dataModel, settings) {
     super(id, description, ApplicationCommandOptionTypes.INTEGER, SuggestionMethod.Autocomplete);
+    this.optionUserId = optionUserId;
     this.dataModel = dataModel;
     this.settings = settings;
   }
 
   async getAutoCompeteResults(interaction, optionValue, translate) {
     const giverId = interaction.member.user.id;
-    const userId = interaction.data.options.find(({name}) => name === OptionId.User)?.value;
+    const userId = interaction.data.options.find(({name}) => name === this.optionUserId)?.value;
     if (!userId) {
       return [];
     }

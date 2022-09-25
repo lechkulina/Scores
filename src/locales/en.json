@@ -50,12 +50,8 @@
       "invalidDateFormat": "❗ **{{description}}** has invalid date format. Required date format is **{{dateInputFormat}}**",
       "invalidDatesRange": "❗ **{{min}}** can not be later date than **{{max}}**",
       "invalidContestVoteScoreRange": "❗ **{{description}}** has invalid range for the given points category **{{categoryName}}**. It must be between 0 and {{max}}",
-      "invalidContestState": "❗ Contest **{{contestName}}** {{description}}",
+      "invalidContestState": "❗ Contest **{{contestName}}** is {{contestState}}",
       "invalidPointsGiver": "💩 You can not add points to yourself",
-      "openForVotingDescription": "is not open for voting",
-      "openForSubmittingEntriesDescription": "is not open for submitting contest entries",
-      "activeDescription": "is not active",
-      "notFinishedDescription": "is finished",
       "invalidUrl": "❗ {{optionDescription}} passed as **{{optionId}}** parameter is invalid URL.",
       "reportIssue": "Report this issue the administrator.",
       "chooseFromAutocompleteList": "**Choose one from the list.**",
@@ -84,7 +80,11 @@
       "contestEntryIsNotUnique": "This contest entry has already been submitted.",
       "contestEntryUniqueFetchFailure": "Failed to fetch contest entry uniqueness data! $t(validators.reportIssue)",
       "invalidContestVoter": "💩 You can not add votes to yours contest entry",
-      "contestEntryAuthorFetchFailure": "❗ Failed to fetch contest contest entry author data! $t(validators.reportIssue)"
+      "contestEntryAuthorFetchFailure": "❗ Failed to fetch contest contest entry author data! $t(validators.reportIssue)",
+      "unknownChannel": "❗ Selected channel {{channelId}} does not exist! $t(validators.chooseFromAutocompleteList)",
+      "channelFetchFailure": "❗ Failed to fetch channel {{channelId}} data! $t(validators.reportIssue)",
+      "unknownContestAnnouncement": "❗ Selected contest announcement {{announcementId}} does not exist! $t(validators.chooseFromAutocompleteList)",
+      "contestAnnouncementFetchFailure": "❗ Failed to fetch contest announcement {{announcementId}} data! $t(validators.reportIssue)"
     },
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} points added at {{acquireDate}} with reason {{reasonName}}",
@@ -258,8 +258,7 @@
           "description": "Contest description",
           "announcementThreshold": "Number of hours before publishing the announcements", 
           "requiredCompletedVotingsCount": "Number of votes require to finish the voting process",
-          "activeBeginDate": "Contest begin date",
-          "activeEndDate": "Contest end date",
+          "submittingEntriesBeginDate": "Entries submitting begin date",
           "votingBeginDate": "Voting begin date",
           "votingEndDate": "Voting end date"
         },
@@ -277,8 +276,7 @@
           "description": "$t(commands.addContest.options.description)",
           "announcementThreshold": "$t(commands.addContest.options.announcementThreshold)",
           "requiredCompletedVotingsCount": "$t(commands.addContest.options.requiredCompletedVotingsCount)",
-          "activeBeginDate": "$t(commands.addContest.options.activeBeginDate)",
-          "activeEndDate": "$t(commands.addContest.options.activeEndDate)",
+          "submittingEntriesBeginDate": "$t(commands.addContest.options.submittingEntriesBeginDate)",
           "votingBeginDate": "$t(commands.v.options.votingBeginDate)",
           "votingEndDate": "$t(commands.addContest.options.votingEndDate)"
         },
@@ -625,6 +623,80 @@
           "votesDescription": "$t(commands.showMyContestVotes.messages.votesDescription)",
           "voteDescriptionWithScore": "- in category *{{categoryName}}* **$t(common.votes, {\"count\": {{votesCount}} })** have been added which gives **$t(common.points, {\"count\": {{scores}} })** in total",
           "voteDescriptionWithoutScore": "$t(commands.showMyContestVotes.messages.voteDescriptionWithoutScore)"
+        }
+      },
+      "addContestAnnouncement": {
+        "description": "Add contest announcement",
+        "options": {
+          "name": "Announcement name",
+          "hoursBefore": "Number of hours the announcement should be Announcemented before contest will change it's state",
+          "contestState": "Contest state that will trigger this announcement",
+          "showRules": "Show contest rules in the announcement",
+          "showVoteCategories": "Show contest vote categories in the announcement",
+          "showRewards": "Show contest rewards in the announcement",
+          "showEntries": "Show currently submitted contest entries in the announcement",
+          "showVotingResults": "Show the results of finished voting in the announcement",
+          "useByDefault": "Assign this announcement by default in every new contest"
+        },
+        "errors": {
+          "failure": "❗ Failed to add contest announcement **{{announcementName}}** on channel **{{channelName}}**"
+        },
+        "messages": {
+          "success": "✅ Added contest announcement **{{announcementName}}** on channel **{{channelName}}**"
+        }
+      },
+      "removeContestAnnouncement": {
+        "description": "Removes contest announcement",
+        "options": {
+          "contestAnnouncement": "Contest announcement"
+        },
+        "errors": {
+          "failure": "❗ Failed to remove contest announcement **{{announcementName}}** from channel **{{channelName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to remove contest announcement **{{announcementName}}** from channel **{{channelName}}**?",
+          "success": "✅ Removed contest announcement **{{announcementName}}** from channel **{{channelName}}**"
+        }
+      },
+      "changeContestAnnouncement": {
+        "description": "Changes contest announcement",
+        "options": {
+          "contestAnnouncement": "$t(commands.removeContestAnnouncement.options.name)",
+          "name": "$t(commands.addContestAnnouncement.options.name)",
+          "hoursBefore": "$t(commands.addContestAnnouncement.options.hoursBefore)",
+          "contestState": "$t(commands.addContestAnnouncement.options.contestState)",
+          "useByDefault": "$t(commands.addContestAnnouncement.options.useByDefault)"
+        },
+        "errors": {
+          "failure": "❗ Failed to changed contest announcement **{{announcementName}}** on channel **{{channelName}}**"
+        },
+        "messages": {
+          "success": "✅ Changed contest announcement **{{announcementName}}** on channel **{{channelName}}**"
+        }
+      },
+      "assignContestAnnouncement": {
+        "description": "Assigns contest announcement to an existing contest",
+        "options": {
+          "contestReward": "$t(commands.removeContestAnnouncement.options.contestAnnouncement)"
+        },
+        "errors": {
+          "failure": "❗  Failed to assign contest announcement **{{announcementName}}** from contest **{{contestName}}**"
+        },
+        "messages": {
+          "success": "✅  Assigned contest announcement **{{announcementName}}** from contest **{{contestName}}**"
+        }
+      },
+      "unassignContestAnnouncement": {
+        "description": "Unassigns contest announcement from an existing contest",
+        "options": {
+          "contestReward": "$t(commands.removeContestAnnouncement.options.contestAnnouncement)"
+        },
+        "errors": {
+          "failure": "❗ Failed to unassign contest contest announcement **{{announcementName}}** from contest **{{contestName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to unassign contest announcement **{{announcementName}}** ffrom contest **{{contestName}}**?",
+          "success": "✅ Unassigned contest contest announcement **{{announcementName}}** from contest **{{contestName}}**"
         }
       }
     }

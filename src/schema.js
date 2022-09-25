@@ -1,4 +1,6 @@
 module.exports = `
+PRAGMA foreign_keys = ON;
+
 BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS Message(
   id TEXT NOT NULL PRIMARY KEY,
@@ -9,7 +11,7 @@ CREATE TABLE IF NOT EXISTS MessageChunk(
   id TEXT NOT NULL PRIMARY KEY,
   hash TEXT NOT NULL,
   position INTEGER NOT NULL,
-  messageId TEXT NOT NULL REFERENCES Message(id) ON DELETE NO ACTION
+  messageId TEXT NOT NULL REFERENCES Message(id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS User(
   id TEXT PRIMARY KEY,
@@ -18,6 +20,11 @@ CREATE TABLE IF NOT EXISTS User(
   guildId TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS Role(
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  guildId TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS Channel(
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   guildId TEXT NOT NULL
@@ -38,7 +45,7 @@ CREATE TABLE IF NOT EXISTS UserPermission(
 );
 CREATE TABLE IF NOT EXISTS Reason(
   id INTEGER PRIMARY KEY,
-  name TEXT NOT NULL,
+  name TEXT NOT NULL UNIQUE,
   min INTEGER NOT NULL CHECK (min > 0),
   max INTEGER NOT NULL CHECK (max > 0)
 );
@@ -52,12 +59,10 @@ CREATE TABLE IF NOT EXISTS Points(
 );
 CREATE TABLE IF NOT EXISTS Contest(
   id INTEGER PRIMARY KEY,
-  name TEXT NOT NULL,
+  name TEXT NOT NULL UNIQUE,
   description TEXT NOT NULL,
-  announcementsThreshold INTEGER NOT NULL,
   requiredCompletedVotingsCount INTEGER NOT NULL,
-  activeBeginDate INTEGER NOT NULL,
-  activeEndDate INTEGER NOT NULL,
+  submittingEntriesBeginDate INTEGER NOT NULL,
   votingBeginDate INTEGER NOT NULL,
   votingEndDate INTEGER NOT NULL,
   guildId TEXT NOT NULL
@@ -69,9 +74,9 @@ CREATE TABLE IF NOT EXISTS ContestRule(
   guildId TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS ContestRules(
-  contestId INTEGER NOT NULL REFERENCES Contest(id),
-  contestRuleId INTEGER NOT NULL REFERENCES ContestRule(id),
-  PRIMARY KEY(contestId, contestRuleId)
+  id INTEGER PRIMARY KEY,
+  contestId INTEGER REFERENCES Contest(id) ON DELETE CASCADE,
+  contestRuleId INTEGER REFERENCES ContestRule(id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS ContestReward(
   id INTEGER PRIMARY KEY,
@@ -80,26 +85,26 @@ CREATE TABLE IF NOT EXISTS ContestReward(
   guildId TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS ContestRewards(
-  contestId INTEGER NOT NULL REFERENCES Contest(id),
-  contestRewardId INTEGER NOT NULL REFERENCES ContestReward(id),
-  PRIMARY KEY(contestId, contestRewardId)
+  id INTEGER PRIMARY KEY,
+  contestId INTEGER NOT NULL REFERENCES Contest(id) ON DELETE CASCADE,
+  contestRewardId INTEGER NOT NULL REFERENCES ContestReward(id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS ContestVoteCategory(
   id INTEGER PRIMARY KEY,
-  name TEXT NOT NULL,
+  name TEXT NOT NULL UNIQUE,
   description TEXT NOT NULL,
   max INTEGER NOT NULL CHECK (max > 0),
   useByDefault INTEGER DEFAULT 0,
   guildId TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS ContestVoteCategories(
-  contestId INTEGER NOT NULL REFERENCES Contest(id),
-  contestVoteCategoryId INTEGER NOT NULL REFERENCES ContestVoteCategory(id),
-  PRIMARY KEY(contestId, contestVoteCategoryId)
+  id INTEGER PRIMARY KEY,
+  contestId INTEGER REFERENCES Contest(id) ON DELETE CASCADE,
+  contestVoteCategoryId INTEGER REFERENCES ContestVoteCategory(id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS ContestEntry(
   id INTEGER PRIMARY KEY,
-  name TEXT NOT NULL,
+  name TEXT NOT NULL UNIQUE,
   description TEXT,
   url TEXT NOT NULL,
   submitDate INTEGER DEFAULT CURRENT_TIMESTAMP,
@@ -116,9 +121,26 @@ CREATE TABLE IF NOT EXISTS ContestVote(
 );
 CREATE TABLE IF NOT EXISTS ContestAnnouncement(
   id INTEGER PRIMARY KEY,
-  type INTEGER NOT NULL,
-  contestId INTEGER NOT NULL REFERENCES Contest(id) ON DELETE NO ACTION,
-  messageId TEXT NOT NULL REFERENCES Message(id) ON DELETE NO ACTION
+  name TEXT NOT NULL UNIQUE,
+  hoursBefore INTEGER NOT NULL,
+  contestState STRING NOT NULL,
+  channelId TEXT NOT NULL REFERENCES Channel(id),
+  useByDefault INTEGER DEFAULT 0,
+  showRules INTEGER DEFAULT 0,
+  showVoteCategories INTEGER DEFAULT 0,
+  showRewards INTEGER DEFAULT 0,
+  showEntries INTEGER DEFAULT 0,
+  showVotingResults INTEGER DEFAULT 0,
+  guildId TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS ContestAnnouncements(
+  id INTEGER PRIMARY KEY,
+  contestId INTEGER REFERENCES Contest(id) ON DELETE SET NULL,
+  contestAnnouncementId INTEGER REFERENCES ContestAnnouncement(id) ON DELETE SET NULL,
+  messageId TEXT REFERENCES Message(id) ON DELETE SET NULL,
+  published INTEGER DEFAULT 0,
+  removed INTEGER DEFAULT 0,
+  guildId TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS Settings(
   id TEXT PRIMARY KEY,

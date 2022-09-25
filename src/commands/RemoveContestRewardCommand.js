@@ -21,7 +21,7 @@ class RemoveContestRewardHandler extends InteractionHandler {
     async handleComponentInteraction(interaction) {
       return this.handleConfirmationForm(interaction, async () => {
         try {
-          await this.dataModel.removeContestReward(this.reward.id, interaction.guildID);
+          await this.dataModel.removeContestReward(this.reward.id);
           return this.translate('commands.removeContestReward.messages.success', {
             rewardDescription: this.rewardDescription,
           });

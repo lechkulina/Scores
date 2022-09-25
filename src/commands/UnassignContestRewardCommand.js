@@ -49,7 +49,7 @@ class UnassignContestRewardCommand extends Command {
     this.setDescription(this.translate('commands.unassignContestReward.description'));
     this.addOptions([
       new ContestOption(ContestState.Any, OptionId.Contest, this.translate('common.contest'), this.dataModel),
-      new AssignedContestRewardOption(OptionId.AssignedContestReward, this.translate('commands.unassignContestReward.options.contestReward'), this.dataModel),
+      new AssignedContestRewardOption(OptionId.AssignedContestReward, OptionId.Contest, this.translate('commands.unassignContestReward.options.contestReward'), this.dataModel),
     ]);
     this.addValidators([
       new ContestValidator(OptionId.Contest, this.dataModel),

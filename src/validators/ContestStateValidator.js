@@ -16,23 +16,9 @@ class ContestStateValidator extends Validator {
     }
     const contestState = calculateContestState(contest);
     if (contestState !== this.contestState) {
-      const description = (() => {
-        switch(this.contestState) {
-          case ContestState.OpenForVoting:
-            return translate('validators.openForVotingDescription');
-          case ContestState.OpenForSubmittingEntries:
-            return translate('validators.openForSubmittingEntriesDescription');
-          case ContestState.Active:
-            return translate('validators.activeDescription');
-          case ContestState.NotFinished:
-            return translate('validators.notFinishedDescription');
-          default:
-            return '';
-        }
-      })();
       issues.push(translate('validators.invalidContestState', {
         contestName: contest.name,
-        description,
+        contestState: translate(`common.contestState.${contestState}`).toLowerCase(),
       }));
     }
     return issues;

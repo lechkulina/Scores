@@ -21,7 +21,7 @@ class RemoveContestRuleHandler extends InteractionHandler {
   async handleComponentInteraction(interaction) {
     return this.handleConfirmationForm(interaction, async () => {
       try {
-        await this.dataModel.removeContestRule(this.rule.id, interaction.guildID);
+        await this.dataModel.removeContestRule(this.rule.id);
         return this.translate('commands.removeContestRule.messages.success', {
           ruleDescription: this.ruleDescription,
         });

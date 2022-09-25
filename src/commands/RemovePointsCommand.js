@@ -47,7 +47,7 @@ class RemovePointsCommand extends Command {
     this.setDescription(this.translate('commands.removePoints.description'));
     this.addOptions([
       new UserOption(OptionId.User, this.translate('commands.removePoints.options.user')),
-      new RecentlyGivenPointsOption(OptionId.RecentlyGivenPoints, this.translate('commands.removePoints.options.recentlyGivenPoints'), this.dataModel, this.settings),
+      new RecentlyGivenPointsOption(OptionId.RecentlyGivenPoints, OptionId.User, this.translate('commands.removePoints.options.recentlyGivenPoints'), this.dataModel, this.settings),
     ]);
     this.addValidators([
       new PointsValidator(OptionId.RecentlyGivenPoints, this.dataModel),
