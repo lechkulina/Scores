@@ -182,8 +182,39 @@
             },
             "expired": {
               "title": "",
-              "content": "Maksymalnie można było zdobyć **$t(common.points, {\"count\": {{maxPointsCount}} })**.\nNajwięcej punktów, tj. **{{winnerPointsCount}}** zdobył **{{winnerName}}** za pracę **{{winnerEntryName}}**\nDobra robota i serdecznie gratulujemy!"
+              "content": "W końcu nadeszła chwila aby poznać wyniki konkursu!"
             }
+          }
+        },
+        "winners": {
+          "item_one": "**{{entryName}}** autorstwa *{{authorName}}*, która uzyskała łącznie **$t(common.points, {\"count\": {{scores}} })**",
+          "item_few": "- **{{entryName}}** autorstwa *{{authorName}}* uzyskała łącznie **$t(common.points, {\"count\": {{scores}} })**",
+          "item_many": "- **{{entryName}}** autorstwa *{{authorName}}* uzyskała łącznie **$t(common.points, {\"count\": {{scores}} })**",
+          "openForSubmittingEntries": {
+            "title_one": "**Najwyzej oceniana praca**",
+            "title_few": "**Najwyzej oceniane prace**",
+            "title_many": "**Najwyzej oceniane prace**",
+            "description_one": "Aktualnie mamy $t(common.contestEntries, {\"count\": {{count}} }), która wysuwa się na prowadzenie:",
+            "description_few": "Aktualnie mamy $t(common.contestEntries, {\"count\": {{count}} }), które wysuwają się na prowadzenie:",
+            "description_many": "Aktualnie mamy $t(common.contestEntries, {\"count\": {{count}} }), które wysuwają się na prowadzenie:",
+            "noItems": "Nie zgłoszono zadnej pracy.",
+            "summary": "Nie mniej wszystko moze jeszcze sie zmienić!"
+          },
+          "openForVoting": {
+            "title": "$t(announcements.contest.winners.openForSubmittingEntries.title)",
+            "description": "$t(announcements.contest.winners.openForSubmittingEntries.description)",
+            "noItems": "$t(announcements.contest.winners.openForSubmittingEntries.noItems)",
+            "summary": "$t(announcements.contest.winners.openForSubmittingEntries.summary)"
+          },
+          "finished": {
+            "title_one": "**Zwycięzca**",
+            "title_few": "**Zwycięzcy**",
+            "title_many": "**Zwycięzcy**",
+            "description_one": "Praca, która wygrała to:",
+            "description_few": "Prace, które wygrały to:",
+            "description_many": "Prace, które wygrały to:",
+            "noItems": "$t(announcements.contest.winners.openForSubmittingEntries.noItems)",
+            "summary": "Serdecznie gratulujemy!"
           }
         },
         "rules": {
@@ -210,19 +241,19 @@
             "title": "**Punktacja**",
             "description": "Konkurs będzie oceniany w $t(common.categories, {\"count\": {{voteCategoriesCount}} }):",
             "noItems": "W konkursie nie przewiduje się podziału na kategorie głosowania.",
-            "summary": "Zatem od jednego głosującego praca będzie mogła otrzymać **$t(common.points, {\"count\": {{maxPointsPerVoting}} })**, natomiast od wszystkich **$t(common.voters, {\"count\": {{requiredCompletedVotingsCount}} })** łącznie **$t(common.points, {\"count\": {{maxPointsFromVotings}} })**"
+            "summary": "Zatem od jednego głosującego praca będzie mogła otrzymać $t(common.points, {\"count\": {{maxPointsPerVoting}} }), natomiast od wszystkich $t(common.voters, {\"count\": {{requiredCompletedVotingsCount}} }) łącznie **$t(common.points, {\"count\": {{maxPointsFromVotings}} })**"
           },
           "openForVoting": {
             "title": "$t(announcements.contest.voteCategories.openForSubmittingEntries.title)",
             "description": "Konkurs jest oceniany w $t(common.categories, {\"count\": {{voteCategoriesCount}} }):",
             "noItems": "W konkursie nie przewidziany jest podziału na kategorie głosowania.",
-            "summary": "Zatem od jednego głosującego praca moze otrzymać **$t(common.points, {\"count\": {{maxPointsPerVoting}} })**, natomiast od wszystkich **$t(common.voters, {\"count\": {{requiredCompletedVotingsCount}} })** łącznie **$t(common.points, {\"count\": {{maxPointsFromVotings}} })**"
+            "summary": "Zatem od jednego głosującego praca moze otrzymać $t(common.points, {\"count\": {{maxPointsPerVoting}} }), natomiast od wszystkich $t(common.voters, {\"count\": {{requiredCompletedVotingsCount}} }) łącznie **$t(common.points, {\"count\": {{maxPointsFromVotings}} })**"
           },
           "finished": {
             "title": "$t(announcements.contest.voteCategories.openForSubmittingEntries.title)",
             "description": "Konkurs był oceniany w $t(common.categories, {\"count\": {{voteCategoriesCount}} }):",
             "noItems": "W konkursie nie przewidziano podziału na kategorie głosowania.",
-            "summary": "Zatem od jednego głosującego praca mogła otrzymać **$t(common.points, {\"count\": {{maxPointsPerVoting}} })**, natomiast od wszystkich **$t(common.voters, {\"count\": {{requiredCompletedVotingsCount}} })** łącznie **$t(common.points, {\"count\": {{maxPointsFromVotings}} })**"
+            "summary": "Zatem od jednego głosującego praca mogła otrzymać $t(common.points, {\"count\": {{maxPointsPerVoting}} }), natomiast od wszystkich $t(common.voters, {\"count\": {{requiredCompletedVotingsCount}} }) łącznie **$t(common.points, {\"count\": {{maxPointsFromVotings}} })**"
           }
         },
         "rewards": {
@@ -239,15 +270,15 @@
           },
           "finished": {
             "title": "$t(announcements.contest.rewards.openForSubmittingEntries.title)",
-            "description": "Nagrody jakie przysługują ${{winnerName}} to:",
+            "description": "Nagrody przysługujące za wygraną są następujące:",
             "noItems": "W konkursie nie przewidziano nagród."
           }
         },
         "entries": {
-          "item":  "- **{{entryName}}** autorstwa **{{authorName}}** zgłoszona dnia *{{submitDate}}*",
+          "item":  "- **{{entryName}}** autorstwa *{{authorName}}* zgłoszona dnia *{{submitDate}}*",
           "openForSubmittingEntries": {
             "title": "**Zgłoszenia**",
-            "description": "Zgłoszono juz **$t(common.contestEntries, {\"count\": {{entriesCount}} })**:",
+            "description": "Zgłoszono juz $t(common.contestEntries, {\"count\": {{entriesCount}} }):",
             "noItems": "Nie zgłoszono jeszcze zadnej pracy... nie zwlekaj!",
             "summary": "Do tej pory najwięcej prac **{{entriesCount}}** zgłosił uzytkownik **{{userName}}**!"
           },
@@ -259,9 +290,30 @@
           },
           "finished": {
             "title": "$t(announcements.contest.entries.openForSubmittingEntries.title)",
-            "description": "Łącznie zgłoszono **$t(common.contestEntries, {\"count\": {{entriesCount}} })**:",
+            "description": "Łącznie zgłoszono $t(common.contestEntries, {\"count\": {{entriesCount}} }):",
             "noItems": "Do konkursu nie zgłoszono zandej pracy.",
             "summary": "Najwięcej prac **{{entriesCount}}** zgłosił uzytkownik **{{userName}}**!"
+          }
+        },
+        "votingResults": {
+          "item":  "- **{{entryName}}** autorstwa *{{authorName}}* uzyskała łącznie **$t(common.points, {\"count\": {{scores}} })**",
+          "openForSubmittingEntries": {
+            "title": "**Wyniki głosowania**",
+            "description": "Wszystkie $t(common.contestEntries, {\"count\": {{entriesCount}} }), które zostały zgłoszone będą ocenione, aktualne wyniki prezentują się następująco:",
+            "noItems": "Nie zgłoszono zadnej pracy.",
+            "summary": "Najwięcej prac **{{entriesCount}}** zgłosił uzytkownik **{{userName}}**!"
+          },
+          "openForVoting": {
+            "title": "$t(announcements.contest.votingResults.openForSubmittingEntries.title)",
+            "description": "Wszystkie zgłoszone $t(common.contestEntries, {\"count\": {{entriesCount}} }) są ocenione, aktualne wyniki prezentują się następująco:",
+            "noItems": "$t(announcements.contest.votingResults.openForSubmittingEntries.noItems)",
+            "summary": "$t(announcements.contest.votingResults.openForSubmittingEntries.summary)"
+          },
+          "finished": {
+            "title": "$t(announcements.contest.votingResults.openForSubmittingEntries.title)",
+            "description": "Wszystkie $t(common.contestEntries, {\"count\": {{entriesCount}} }), które zgłoszone są juz ocenione, tak przedstawiają się wyniki:",
+            "noItems": "$t(announcements.contest.votingResults.openForSubmittingEntries.noItems)",
+            "summary": "$t(announcements.contest.votingResults.openForSubmittingEntries.summary)"
           }
         }
       }
@@ -813,6 +865,7 @@
           "showVoteCategories": "Pokaz kategorie głosowania w ogłoszeniu",
           "showRewards": "Pokaz informacje o nagrodach w ogloszeniu",
           "showEntries": "Pokaz aktualnie zgłoszone prace konkursowe w ogłoszeniu",
+          "showWinners": "Pokaz informacje o zwyciezcach",
           "showVotingResults": "Pokaz wyniki zakonczonego głosowania w ogłoszeniu",
           "useByDefault":  "Przypisuj to ogłoszenie domyślnie do kazdego nowego konkursu"
         },
@@ -847,6 +900,7 @@
           "showVoteCategories": "$t(commands.addContestAnnouncement.options.showVoteCategories)",
           "showRewards": "$t(commands.addContestAnnouncement.options.showRewards)",
           "showEntries": "$t(commands.addContestAnnouncement.options.showEntries)",
+          "showWinners": "$t(commands.addContestAnnouncement.options.showWinners)",
           "showVotingResults": "$t(commands.addContestAnnouncement.options.showVotingResults)",
           "useByDefault": "$t(commands.addContestAnnouncement.options.useByDefault)"
         },

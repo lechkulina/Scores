@@ -130,6 +130,7 @@ CREATE TABLE IF NOT EXISTS ContestAnnouncement(
   showVoteCategories INTEGER DEFAULT 0,
   showRewards INTEGER DEFAULT 0,
   showEntries INTEGER DEFAULT 0,
+  showWinners INTEGER DEFAULT 0,
   showVotingResults INTEGER DEFAULT 0,
   guildId TEXT NOT NULL
 );

@@ -37,6 +37,7 @@ const OptionId = {
   ShowVoteCategories: 'show-vote-categories',
   ShowRewards: 'show-rewards',
   ShowEntries: 'show-entries',
+  ShowWinners: 'show-winners',
   ShowVotingResults: 'show-voting-results',
 };
 

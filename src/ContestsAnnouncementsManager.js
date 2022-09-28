@@ -49,12 +49,38 @@ class ContestsAnnouncementsManager {
       this.translate(`${key}.title`),
       this.translate(`${key}.content`, {
         description: contest.description,
-        maxPointsCount: 0, // TODO
-        winnerPointsCount: 0, // TODO
-        winnerName: 0, // TODO
-        winnerEntryName: '', // TODO
       }),
     ]);
+  }
+
+  async generateWinnersSection(contest, announcement) {
+    if (!announcement.showWinners) {
+      return;
+    }
+    const winners = await this.dataModel.getContestWinners(contest.id);
+    const key = `announcements.contest.winners.${announcement.contestState}`;
+    const sections = [
+      this.translate(`${key}.title`, {
+        count: winners.length,
+      }),
+      this.translate(`${key}.${winners.length === 0 ? 'noItems' : 'description'}`, {
+        count: winners.length,
+      }),
+    ];
+    winners.forEach(({entryName, authorName, scores}) => {
+      sections.push(
+        this.translate('announcements.contest.winners.item', {
+          entryName,
+          authorName,
+          scores,
+          count: winners.length,
+        })
+      );
+    });
+    sections.push(
+      this.translate(`${key}.summary`)
+    );
+    return joinSections(sections);
   }
 
   async generateRulesSection(contest, announcement) {
@@ -124,9 +150,7 @@ class ContestsAnnouncementsManager {
     const key = `announcements.contest.rewards.${announcement.contestState}`;
     const sections = [
       this.translate(`${key}.title`),
-      this.translate(`${key}.${rewards.length === 0 ? 'noItems' : 'description'}`, {
-        winnerName: '', // TODO
-      }),
+      this.translate(`${key}.${rewards.length === 0 ? 'noItems' : 'description'}`),
     ];
     rewards.forEach(({description}) => {
       sections.push(
@@ -180,7 +204,35 @@ class ContestsAnnouncementsManager {
     if (!announcement.showVotingResults) {
       return;
     }
-    return ''; // TODO
+    const results = await this.dataModel.getContestVotingResults(contest.id);
+    const key = `announcements.contest.votingResults.${announcement.contestState}`;
+    const sections = [
+      this.translate(`${key}.title`),
+      this.translate(`${key}.${results.length === 0 ? 'noItems' : 'description'}`, {
+        entriesCount: results.length,
+      }),
+    ];
+    results.forEach(({entryName, authorName, scores}) => {
+      sections.push(
+        this.translate('announcements.contest.votingResults.item', {
+          entryName,
+          authorName,
+          scores,
+        })
+      );
+    });
+    if (results.length > 0) {
+      const userWithMostEntries = await this.dataModel.getUserWithMostEntries(contest.id);
+      if (userWithMostEntries) {
+        sections.push(
+          this.translate(`${key}.summary`, {
+            entriesCount: userWithMostEntries.entriesCount,
+            userName: userWithMostEntries.userName,
+          })
+        );
+      }
+    }
+    return joinSections(sections);
   }
 
   async generateContent(contest, announcement, expirationDate) {
@@ -188,9 +240,10 @@ class ContestsAnnouncementsManager {
     return joinSections([
       this.generateHeaderSection(contest, announcement, remainingTime),
       this.generateDescriptionSection(contest, announcement, remainingTime),
+      await this.generateWinnersSection(contest, announcement),
+      await this.generateRewardsSection(contest, announcement),
       await this.generateRulesSection(contest, announcement),
       await this.generateVoteCategoriesSection(contest, announcement),
-      await this.generateRewardsSection(contest, announcement),
       await this.generateEntriesSection(contest, announcement),
       await this.generateVotingResultsSection(contest, announcement),
     ], Entities.EmptyLine);

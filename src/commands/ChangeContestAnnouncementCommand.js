@@ -26,22 +26,33 @@ class AddContestAnnouncementHandler extends InteractionHandler {
   async handleComponentInteraction(interaction) {
     const name = this.getOptionValue(OptionId.Name);
     const channel = this.getOptionValue(OptionId.Channel);
+    const hoursBefore = this.getOptionValue(OptionId.HoursBefore);
+    const contestState = this.getOptionValue(OptionId.ContestState);
+    const useByDefault = this.getOptionValue(OptionId.UseByDefault);
+    const showRules = this.getOptionValue(OptionId.ShowRules);
+    const showVoteCategories = this.getOptionValue(OptionId.ShowVoteCategories);
+    const showRewards = this.getOptionValue(OptionId.ShowRewards);
+    const showEntries = this.getOptionValue(OptionId.ShowEntries);
+    const showWinners = this.getOptionValue(OptionId.ShowWinners);
+    const showVotingResults = this.getOptionValue(OptionId.ShowVotingResults);
     return this.handleConfirmationForm(interaction, async () => {
       try {
-        await this.dataModel.changeContestAnnouncement(this.announcement.id, {
+        await this.dataModel.changeContestAnnouncement(
+          this.announcement.id,
           name,
-          hoursBefore: this.getOptionValue(OptionId.HoursBefore),
-          contestState: this.getOptionValue(OptionId.ContestState),
-          useByDefault: this.getOptionValue(OptionId.UseByDefault),
-          showRules: this.getOptionValue(OptionId.ShowRules),
-          showVoteCategories: this.getOptionValue(OptionId.ShowVoteCategories),
-          showRewards: this.getOptionValue(OptionId.ShowRewards),
-          showEntries: this.getOptionValue(OptionId.ShowEntries),
-          showVotingResults: this.getOptionValue(OptionId.ShowVotingResults),
-          channelId: channel.id,
-          channelName: channel.name,
-          guildId: interaction.guildID,
-        });
+          hoursBefore,
+          contestState,
+          useByDefault,
+          showRules,
+          showVoteCategories,
+          showRewards,
+          showEntries,
+          showWinners,
+          showVotingResults,
+          channel.id,
+          channel.name,
+          interaction.guildID
+        );
         return this.translate('commands.changeContestAnnouncement.messages.success', {
           announcementName: this.announcement.name,
           channelName: this.announcement.channelName,
@@ -78,6 +89,7 @@ class ChangeContestAnnouncementCommand extends Command {
       new BooleanOption(OptionId.ShowVoteCategories, this.translate('commands.changeContestAnnouncement.options.showVoteCategories')),
       new BooleanOption(OptionId.ShowRewards, this.translate('commands.changeContestAnnouncement.options.showRewards')),
       new BooleanOption(OptionId.ShowEntries, this.translate('commands.changeContestAnnouncement.options.showEntries')),
+      new BooleanOption(OptionId.ShowWinners, this.translate('commands.changeContestAnnouncement.options.showWinners')),
       new BooleanOption(OptionId.ShowVotingResults, this.translate('commands.changeContestAnnouncement.options.showVotingResults')),
       new BooleanOption(OptionId.UseByDefault, this.translate('commands.changeContestAnnouncement.options.useByDefault')),
     ]);

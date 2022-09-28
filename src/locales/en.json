@@ -635,6 +635,7 @@
           "showVoteCategories": "Show contest vote categories in the announcement",
           "showRewards": "Show contest rewards in the announcement",
           "showEntries": "Show currently submitted contest entries in the announcement",
+          "showWinners": "Show information about current winners",
           "showVotingResults": "Show the results of finished voting in the announcement",
           "useByDefault": "Assign this announcement by default in every new contest"
         },
@@ -665,6 +666,12 @@
           "name": "$t(commands.addContestAnnouncement.options.name)",
           "hoursBefore": "$t(commands.addContestAnnouncement.options.hoursBefore)",
           "contestState": "$t(commands.addContestAnnouncement.options.contestState)",
+          "showRules": "$t(commands.addContestAnnouncement.options.showRules)",
+          "showVoteCategories": "$t(commands.addContestAnnouncement.options.showVoteCategories)",
+          "showRewards": "$t(commands.addContestAnnouncement.options.showRewards)",
+          "showEntries": "$t(commands.addContestAnnouncement.options.showEntries)",
+          "showWinners": "$t(commands.addContestAnnouncement.options.showWinners)",
+          "showVotingResults": "$t(commands.addContestAnnouncement.options.showVotingResults)",
           "useByDefault": "$t(commands.addContestAnnouncement.options.useByDefault)"
         },
         "errors": {

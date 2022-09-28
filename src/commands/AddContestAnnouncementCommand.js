@@ -10,21 +10,31 @@ class AddContestAnnouncementHandler extends InteractionHandler {
     this.markAsDone();
     const name = this.getOptionValue(OptionId.Name);
     const channel = this.getOptionValue(OptionId.Channel);
+    const hoursBefore = this.getOptionValue(OptionId.HoursBefore);
+    const contestState = this.getOptionValue(OptionId.ContestState);
+    const useByDefault = this.getOptionValue(OptionId.UseByDefault);
+    const showRules = this.getOptionValue(OptionId.ShowRules);
+    const showVoteCategories = this.getOptionValue(OptionId.ShowVoteCategories);
+    const showRewards = this.getOptionValue(OptionId.ShowRewards);
+    const showEntries = this.getOptionValue(OptionId.ShowEntries);
+    const showWinners = this.getOptionValue(OptionId.ShowWinners);
+    const showVotingResults = this.getOptionValue(OptionId.ShowVotingResults);
     try {
-      await this.dataModel.addContestAnnouncement({
+      await this.dataModel.addContestAnnouncement(
         name,
-        hoursBefore: this.getOptionValue(OptionId.HoursBefore),
-        contestState: this.getOptionValue(OptionId.ContestState),
-        useByDefault: this.getOptionValue(OptionId.UseByDefault),
-        showRules: this.getOptionValue(OptionId.ShowRules),
-        showVoteCategories: this.getOptionValue(OptionId.ShowVoteCategories),
-        showRewards: this.getOptionValue(OptionId.ShowRewards),
-        showEntries: this.getOptionValue(OptionId.ShowEntries),
-        showVotingResults: this.getOptionValue(OptionId.ShowVotingResults),
-        channelId: channel.id,
-        channelName: channel.name,
-        guildId: interaction.guildID,
-      });
+        hoursBefore,
+        contestState,
+        useByDefault,
+        showRules,
+        showVoteCategories,
+        showRewards,
+        showEntries,
+        showWinners,
+        showVotingResults,
+        channel.id,
+        channel.name,
+        interaction.guildID,
+      );
       return interaction.createMessage({
         content: this.translate('commands.addContestAnnouncement.messages.success', {
           announcementName: name,
@@ -57,6 +67,7 @@ class AddContestAnnouncementCommand extends Command {
       new BooleanOption(OptionId.ShowVoteCategories, this.translate('commands.addContestAnnouncement.options.showVoteCategories')),
       new BooleanOption(OptionId.ShowRewards, this.translate('commands.addContestAnnouncement.options.showRewards')),
       new BooleanOption(OptionId.ShowEntries, this.translate('commands.addContestAnnouncement.options.showEntries')),
+      new BooleanOption(OptionId.ShowWinners, this.translate('commands.addContestAnnouncement.options.showWinners')),
       new BooleanOption(OptionId.ShowVotingResults, this.translate('commands.addContestAnnouncement.options.showVotingResults')),
       new BooleanOption(OptionId.UseByDefault, this.translate('commands.addContestAnnouncement.options.useByDefault')),
     ]);
