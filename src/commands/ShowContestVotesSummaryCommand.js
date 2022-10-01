@@ -2,7 +2,7 @@ const {OptionId} = require('../options/CommonOptions');
 const ContestOption = require('../options/ContestOption');
 const {ContestValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
-const {Entities} = require('../Formatters');
+const {Entities, joinSections} = require('../Formatters');
 const {ContestState} = require('../DataModel');
 const Command = require('./Command');
 
@@ -32,7 +32,12 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
   }
 
   groupVotersEntries(votersSummary) {
-    return votersSummary.map(({voterName, votesCount, entriesCount, categoriesCount}) => {
+    return votersSummary.map(({
+      voterName,
+      votesCount,
+      entriesCount,
+      categoriesCount
+    }) => {
       const requiredVotesCount = entriesCount * categoriesCount;
       const requiredVotesPercentage = requiredVotesCount > 0 ? (votesCount / requiredVotesCount) * 100 : 0;
       return {
@@ -46,14 +51,18 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
   generateVotersSection(votersSummary) {
     const votersEntries = this.groupVotersEntries(votersSummary);
     if (votersEntries.length === 0) {
-      return '';
+      return;
     }
     const sections = [
       this.translate('commands.showContestVotesSummary.messages.votersDescription', {
         count: votersSummary.length,
       })
     ];
-    votersEntries.forEach(({voterName, votesCount, requiredVotesPercentage}) => {
+    votersEntries.forEach(({
+      voterName,
+      votesCount,
+      requiredVotesPercentage
+    }) => {
       sections.push(
         this.translate('commands.showContestVotesSummary.messages.voterDescription', {
           voterName,
@@ -67,7 +76,14 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
 
   groupVotesEntries(votesSummary) {
     const votesEntries = new Map();
-    votesSummary.forEach(({entryId, entryName, authorName, categoryName, scores, votesCount}) => {
+    votesSummary.forEach(({
+      entryId,
+      entryName,
+      authorName,
+      categoryName,
+      scores,
+      votesCount
+    }) => {
       if (!votesEntries.has(entryId)) {
         votesEntries.set(entryId, {
           entryName,
@@ -85,13 +101,18 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
     return Array.from(votesEntries.values());
   }
 
-  generateVotesSections(votesSummary) {
+  async generateVotesSections(contest) {
+    const votesSummary = await this.dataModel.getContestVotesSummary(contest.id);
     const votesEntries = this.groupVotesEntries(votesSummary);
     if (votesEntries.length === 0) {
-      return '';
+      return;
     }
     const sections = [];
-    votesEntries.forEach(({entryName, authorName, categories}) => {
+    votesEntries.forEach(({
+      entryName,
+      authorName,
+      categories
+    }) => {
       if (categories.length === 0) {
         return;
       }
@@ -123,21 +144,18 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
     this.markAsDone();
     try {
       const contest = this.getOptionValue(OptionId.Contest);
-      const votersSummary = await this.dataModel.getContestVotersSummary(contest.id);
-      const votesSummary = await this.dataModel.getContestVotesSummary(contest.id);
+      const votersSummary = await this.dataModel.getContestVotersSummary(contest.id);      
       const sections = [
         this.generateHeaderSection(contest, votersSummary),
         this.generateVotersSection(votersSummary),
       ];
       if (votersSummary.length > 0) {
         sections.push(
-          ...this.generateVotesSections(votesSummary)
+          ...(await this.generateVotesSections(contest))
         );
       }
       return this.createLongMessage(interaction,
-        sections
-          .filter(section => !!section)
-          .join(Entities.EmptyLine)
+        joinSections(sections, Entities.EmptyLine)
       );
     } catch (error) {
       console.error(`Failed to show contest votes - got error`, error);

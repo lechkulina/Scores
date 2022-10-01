@@ -3,7 +3,7 @@ const SettingId = {
   ContestsAnnouncementsChannelId: 'ContestsAnnouncementsChannelId',
   PreferredLocale: 'PreferredLocale',
   UseGuildLocale: 'UseGuildLocale',
-  RecentPointsLimit: 'RecentPointsLimit',
+  RecentlyGivenPointsLimit: 'RecentPointsLimit',
   DateInputFormat: 'DateInputFormat',
   DateAndTimeInputFormat: 'DateAndTimeInputFormat',
   DateOutputFormat: 'DateOutputFormat',
@@ -22,11 +22,11 @@ const defaultSettings = {
   [SettingId.ContestsAnnouncementsChannelId]: '1017504421200023592', // TODO remove this test settting
   [SettingId.PreferredLocale]: 'pl', // TODO change to en
   [SettingId.UseGuildLocale]: false, // TODO change to en
-  [SettingId.RecentPointsLimit]: 30,
+  [SettingId.RecentlyGivenPointsLimit]: 30,
   [SettingId.DateInputFormat]: 'DD.MM.YYYY',
   [SettingId.DateAndTimeInputFormat]: 'DD.MM.YYYY HH:mm',
   [SettingId.DateOutputFormat]: 'DD.MM.YYYY',
-  [SettingId.DateAndTimeOutputFormat]: 'DD.MM.YYYY HH:mm:ss',
+  [SettingId.DateAndTimeOutputFormat]: 'DD.MM.YYYY HH:mm',
   [SettingId.MinNameLength]: 3,
   [SettingId.MaxNameLength]: 200,
   [SettingId.MinDescriptionLength]: 10,

@@ -1,78 +1,164 @@
 const moment = require('moment');
 const InteractionHandler = require('../InteractionHandler');
-const {Entities} = require('../Formatters');
+const {Entities, joinSections} = require('../Formatters');
 const {SettingId} = require('../Settings');
 const Command = require('./Command');
 
 class ShowMyPointsInteractionHandler extends InteractionHandler {
-  generateHeaderSection(accumulatedSummary) {
-    const {points, minAcquireDate, maxAcquireDate} = accumulatedSummary;
+  async generateHeaderSection(userId, contestVotesSummary) {
+    const pointsSummary = await this.dataModel.getUserAccumulatedPointsSummary(userId);
+    if (!pointsSummary && contestVotesSummary.length === 0) {
+      return;
+    }
+    let {points, minAcquireDate, maxAcquireDate} = pointsSummary;
+    contestVotesSummary.forEach(({scores, votingEndDate}) => {
+      points += scores;
+      minAcquireDate = minAcquireDate ? Math.min(minAcquireDate, votingEndDate) : votingEndDate;
+      maxAcquireDate = maxAcquireDate ? Math.max(maxAcquireDate, votingEndDate) : votingEndDate;
+    });
+    minAcquireDate = minAcquireDate || maxAcquireDate;
     const dateOutputFormat = this.settings.get(SettingId.DateOutputFormat);
-    return points > 0
-      ? this.translate('commands.showMyPoints.messages.headerWithPoints', {
-          points,
-          minAcquireDate: moment(minAcquireDate).format(dateOutputFormat),
-          maxAcquireDate: moment(maxAcquireDate).format(dateOutputFormat),
-        })
-      : this.translate('commands.showMyPoints.messages.headerWithoutPoints');
+    const key = `commands.showMyPoints.messages.header.${
+      points > 0
+        ? minAcquireDate === maxAcquireDate
+          ? 'withPointsDay'
+          : 'withPointsDatesRange'
+        : 'withoutPoints'
+    }`;
+    return this.translate(key, {
+      points,
+      minAcquireDate: moment(minAcquireDate).format(dateOutputFormat),
+      maxAcquireDate: moment(maxAcquireDate).format(dateOutputFormat),
+    });
   }
 
-  generateRecentlyGivenSection(recentlyGivenSummary) {
-    if (recentlyGivenSummary.length === 0) {
-      return '';
+  async generateRankingsSection(guildId, userId) {
+    const pointsSummary = await this.dataModel.getUserPointsRankingsSummary(userId);
+    const contestsSummary = await this.dataModel.getUserContestsRankingsSummary(guildId, userId);
+    if (pointsSummary.length === 0 && contestsSummary.length === 0) {
+      return;
     }
-    const sections = [
-      this.translate('commands.showMyPoints.messages.recentlyGivenDescription')
-    ];
-    const dateAndTimeOutputFormat = this.settings.get(SettingId.DateAndTimeOutputFormat);
-    recentlyGivenSummary.forEach(({points, acquireDate, giverName, reasonName}) => {
-      sections.push(
-        this.translate('commands.showMyPoints.messages.recentlyGivenEntry', {
-          points,
-          acquireDate: moment(acquireDate).format(dateAndTimeOutputFormat),
-          giverName,
-          reasonName,
-        })
-      );
+    const key = 'commands.showMyPoints.messages.rankings';
+    const items = [];
+    pointsSummary.forEach(({
+      points,
+      reasonName,
+      rank,
+    }) => {
+      items.push({
+        rank,
+        translate: () => (
+          this.translate(`${key}.pointsItem`, {
+            points,
+            reasonName,
+            rank,
+          })
+        )
+      });
     });
+    contestsSummary.forEach(({
+      entryName,
+      contestName,
+      scores,
+      rank,
+    }) => {
+      items.push({
+        rank,
+        translate: () => (
+          this.translate(`${key}.contestItem`, {
+            entryName,
+            contestName,
+            scores,
+            rank,
+          })
+        )
+      });
+    });
+    const sections = [
+      this.translate(`${key}.title`)
+    ];
+    items
+      .sort((left, right) => left.rank - right.rank)
+      .forEach(item => {
+        sections.push(item.translate());
+      });
     return sections.join(Entities.NewLine);
   }
 
-  generateRankingsSection(rankingsSummary) {
-    if (rankingsSummary.length === 0) {
-      return '';
+  async generateRecentlyGivenSection(userId, contestVotesSummary) {
+    const limit = this.settings.get(SettingId.RecentlyGivenPointsLimit);
+    const pointsSummary = await this.dataModel.getUserRecentlyGivenPointsSummary(userId, limit);
+    if (pointsSummary.length === 0 && contestVotesSummary.length === 0) {
+      return;
     }
-    const sections = [
-      this.translate('commands.showMyPoints.messages.rankingsDescription')
-    ];
-    rankingsSummary.forEach(({rankingPosition, points, reasonName}) => {
-      sections.push(
-        this.translate('commands.showMyPoints.messages.rankingsEntry', {
-          rankingPosition,
-          points,
-          reasonName,
-        })
-      );
+    const key = 'commands.showMyPoints.messages.recentlyGiven';
+    const dateAndTimeOutputFormat = this.settings.get(SettingId.DateAndTimeOutputFormat);
+    const items = [];
+    pointsSummary.forEach(({
+      points,
+      acquireDate,
+      giverName,
+      reasonName
+    }) => {
+      items.push({
+        date: acquireDate,
+        translate: () => (
+          this.translate(`${key}.pointsItem`, {
+            points,
+            acquireDate: moment(acquireDate).format(dateAndTimeOutputFormat),
+            giverName,
+            reasonName,
+          })
+        )
+      });
     });
+    contestVotesSummary.forEach(({
+      entryName,
+      submitDate,
+      contestName,
+      votingEndDate,
+      scores
+    }) => {
+      items.push({
+        date: votingEndDate,
+        translate: () => (
+          this.translate(`${key}.votesItem`, {
+            entryName,
+            contestName,
+            scores,
+            submitDate: moment(submitDate).format(dateAndTimeOutputFormat),
+            votingEndDate: moment(votingEndDate).format(dateAndTimeOutputFormat),
+          })
+        )
+      });
+    });
+    const sections = [];
+    items
+      .sort((left, right) => right.date - left.date)
+      .slice(0, limit)
+      .forEach(item => {
+        sections.push(item.translate());
+      });
+    sections.unshift(
+      this.translate(`${key}.title`, {
+        itemsCount: items.length,
+      })
+    );
     return sections.join(Entities.NewLine);
   }
 
   async handleCommandInteraction(interaction) {
     this.markAsDone();
     try {
+      const guildId = interaction.guildID;
       const userId = interaction.member.user.id;
-      const recentPointsLimit = this.settings.get(SettingId.RecentPointsLimit);
-      const accumulatedSummary = await this.dataModel.getPointsAccumulatedSummary(userId);
-      const recentlyGivenSummary = await this.dataModel.getPointsRecentlyGivenSummary(userId, recentPointsLimit);
-      const rankingsSummary = await this.dataModel.getPointsRankingsSummary(userId);
-      return this.createLongMessage(interaction, 
-        [
-          this.generateHeaderSection(accumulatedSummary),
-          this.generateRecentlyGivenSection(recentlyGivenSummary),
-          this.generateRankingsSection(rankingsSummary),
-        ]
-          .filter(section => !!section)
-          .join(Entities.EmptyLine)
+      const contestVotesSummary = await this.dataModel.getUserContestsVotesSummary(guildId, userId);
+      return this.createLongMessage(interaction,
+        joinSections([
+          await this.generateHeaderSection(userId, contestVotesSummary),
+          await this.generateRankingsSection(guildId, userId),
+          await this.generateRecentlyGivenSection(userId, contestVotesSummary),
+        ], Entities.EmptyLine)
       );
     } catch (error) {
       console.error(`Failed to show points - got error`, error);

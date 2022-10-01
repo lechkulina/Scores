@@ -27,7 +27,13 @@
       "acquiredPoints_one": "{{count}} acquired point",
       "acquiredPoints_other": "{{count}} acquired points",
       "voters_one": "{{count}} voter",
-      "voters_other": "{{count}} voters"
+      "voters_other": "{{count}} voters",
+      "categories_one": "{{count}} category",
+      "categories_other": "{{count}} categories",
+      "contestEntries_one": "{{count}} contest entry",
+      "contestEntries_other": "{{count}} contest entries",
+      "recentlyGivenPoints_one": "{{count}} recenty added point",
+      "recentlyGivenPoints_other": "{{count}} recenty added points"
     },
     "formatters": {
       "weeks_one": "{{count}} week",
@@ -146,15 +152,24 @@
       "showMyPoints": {
         "description": "Shows user points",
         "errors": {
-          "failure": "❗ Faield get points!"
+          "failure": "❗ Failed to fetch points data!"
         },
         "messages": {
-          "headerWithPoints": "➡ You have **$t(common.acquiredPoints, {\"count\": {{points}} })** in total, acquired between *{{minAcquireDate}}* and *{{maxAcquireDate}}*",
-          "headerWithoutPoints": "😮 You do not have any points",
-          "recentlyGivenDescription": "⬇ Recently given points:",
-          "recentlyGivenEntry": "- *{{acquireDate}}* added **$t(common.points, {\"count\": {{points}} })** for reason **{{reasonName}}** by *{{giverName}}*",
-          "rankingsDescription": "⬇ Ranking positions:",
-          "rankingsEntry": "- in category *{{reasonName}}* you take **{{rankingPosition}} position** in which you have **$t(common.points, {\"count\": {{points}} })**"
+          "header": {
+            "withPointsDay": "➡ You have **$t(common.acquiredPoints, {\"count\": {{points}} })** in total, acquired *{{maxAcquireDate}}*",
+            "withPointsDatesRange": "➡ You have **$t(common.acquiredPoints, {\"count\": {{points}} })** in total, acquired between *{{minAcquireDate}}* and *{{maxAcquireDate}}*",
+            "withoutPoints": "😮 You do not have any points"
+          },
+          "rankings": {
+            "title": "⬇ Ranking positions:",
+            "pointsItem": "- in category *{{reasonName}}* you take **{{rankingPosition}} position** in which you have **$t(common.points, {\"count\": {{points}} })**",
+            "contestItem": "- in contest **{{contestName}}** you gained **{{rank}} place** for entry **{{entryName}}**, which gained **$t(common.points, {\"count\": {{scores}} })**"
+          },
+          "recentlyGiven": {
+            "title": "⬇ $t(common.recentlyGivenPoints, {\"count\": {{itemsCount}} })",
+            "pointsItem": "- *{{acquireDate}}* added **$t(common.points, {\"count\": {{points}} })** for reason **{{reasonName}}** by *{{giverName}}*",
+            "votesItem": "- *{{votingEndDate}}* added **$t(common.points, {\"count\": {{scores}} })** for entry **{{entryName}}** in contest **{{contestName}}** submitted *{{submitDate}}*"
+          }
         }
       },
       "addReason": {

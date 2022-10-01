@@ -2,7 +2,7 @@ const {OptionId} = require('../options/CommonOptions');
 const ContestOption = require('../options/ContestOption');
 const {ContestValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
-const {Entities} = require('../Formatters');
+const {Entities, joinSections} = require('../Formatters');
 const {ContestState} = require('../DataModel');
 const Command = require('./Command');
 
@@ -17,9 +17,9 @@ class ShowMyContestVotesHandler extends InteractionHandler {
   }
 
   generateHeaderSection(contest, votesSummary, addedVotesCount) {
-    const requiredvotesCount = votesSummary.length;
-    const missingVotesCount = Math.max(0, requiredvotesCount - addedVotesCount);
-    const addedVotesPercentage = requiredvotesCount > 0 ? 100 * (addedVotesCount / requiredvotesCount) : 0;
+    const requiredVotesCount = votesSummary.length;
+    const missingVotesCount = Math.max(0, requiredVotesCount - addedVotesCount);
+    const addedVotesPercentage = requiredVotesCount > 0 ? 100 * (addedVotesCount / requiredVotesCount) : 0;
     return addedVotesCount > 0
       ? this.translate('commands.showMyContestVotes.messages.headerWithVotes', {
           contestName: contest.name,
@@ -53,10 +53,14 @@ class ShowMyContestVotesHandler extends InteractionHandler {
   generateVotesSections(votesSummary) {
     const votesEntries = this.groupVotesEntries(votesSummary);
     if (votesEntries.length === 0) {
-      return '';
+      return;
     }
     const sections = [];
-    votesEntries.forEach(({entryName, authorName, categories}) => {
+    votesEntries.forEach(({
+      entryName,
+      authorName,
+      categories
+    }) => {
       if (categories.length === 0) {
         return;
       }
@@ -98,9 +102,7 @@ class ShowMyContestVotesHandler extends InteractionHandler {
         );
       }
       return this.createLongMessage(interaction,
-        sections
-          .filter(section => !!section)
-          .join(Entities.EmptyLine)
+        joinSections(sections, Entities.EmptyLine)
       );
     } catch (error) {
       console.error(`Failed to show contest votes - got error`, error);

@@ -214,13 +214,15 @@ class DataModel extends EventEmitter {
         points,
         userId,
         giverId,
-        reasonId
+        reasonId,
+        acquireDate
       )
       VALUES (
         ${points},
         "${userId}",
         "${giverId}",
-        ${reasonId}
+        ${reasonId},
+        ${Date.now()}
       );`
     );
   }
@@ -237,11 +239,11 @@ class DataModel extends EventEmitter {
       UPDATE Points
       SET points = ${points},
           reasonId = ${reasonId}
-      WHERE id = ${pointsId};
-    `);
+      WHERE id = ${pointsId};`
+    );
   }
 
-  getPointsAccumulatedSummary(userId) {
+  getUserAccumulatedPointsSummary(userId) {
     return this.database.get(`
       SELECT SUM(points) AS points,
              COUNT(1) AS pointsCount,
@@ -252,16 +254,18 @@ class DataModel extends EventEmitter {
     );
   }
 
-  getPointsRecentlyGivenSummary(userId, limit) {
+  getUserRecentlyGivenPointsSummary(userId, limit) {
     return this.database.all(
       joinClauses([`
         SELECT Points.points AS points,
                Points.acquireDate AS acquireDate,
-               G.name AS giverName,
+               Giver.name AS giverName,
                Reason.name AS reasonName
         FROM Points
-        INNER JOIN User AS G ON G.id = giverId
-        INNER JOIN Reason ON Reason.id = Points.reasonId
+        INNER JOIN User AS Giver
+          ON Giver.id = giverId
+        INNER JOIN Reason
+          ON Reason.id = Points.reasonId
         WHERE Points.userId = "${userId}"
         ORDER BY Points.acquireDate DESC`,
         createLimitClause(limit),
@@ -269,32 +273,87 @@ class DataModel extends EventEmitter {
     );
   }
 
-  getPointsRankingsSummary(userId) {
+  getUserPointsRankingsSummary(userId) {
     return this.database.all(`
-      SELECT COUNT(sumPointsPerReason) + 1 AS rankingPosition,
-             SUM(D.points) AS points,
+      SELECT PointsWithRanks.points,
+             PointsWithRanks.rank,
              Reason.name AS reasonName
-      FROM Points AS D
-      INNER JOIN Reason ON Reason.id = D.reasonId
-      LEFT JOIN (
-        SELECT SUM(B.points) AS sumPointsPerReason,
-               B.userId,
-               B.reasonId, (
-                SELECT SUM(A.points)
-                FROM Points AS A
-                WHERE A.userId = "${userId}" AND A.reasonId = B.reasonId
-               ) AS userPoints
-        FROM Points AS B
-        GROUP BY B.userId, B.reasonId
-        HAVING sumPointsPerReason > userPoints
-      ) AS C ON C.reasonId = D.reasonId
-      WHERE D.userId = "${userId}"
-      GROUP BY D.reasonId
-      ORDER BY rankingPosition ASC;`
+      FROM (
+        SELECT PointsPerUserReason.*,
+               ROW_NUMBER() OVER (
+                 PARTITION BY PointsPerUserReason.reasonId
+                 ORDER BY PointsPerUserReason.points DESC
+               ) AS rank
+        FROM (
+          SELECT userId,
+                 reasonId,
+                 SUM(points) AS points
+          FROM Points
+          GROUP BY userId, reasonId
+        ) AS PointsPerUserReason
+      ) AS PointsWithRanks
+      INNER JOIN Reason
+        ON Reason.id = PointsWithRanks.reasonId
+      WHERE PointsWithRanks.userId = "${userId}"`
     );
   }
 
-  getRecentlyGivenPoints(userId, giverId, limit) {
+  getUserContestsRankingsSummary(guildId, userId) {
+    return this.database.all(`
+      SELECT EntriesScoresWithRanks.entryName,
+             EntriesScoresWithRanks.contestName,
+             EntriesScoresWithRanks.scores,
+             EntriesScoresWithRanks.rank
+      FROM (
+        SELECT EntriesScores.*,
+               ROW_NUMBER() OVER (
+                 PARTITION BY EntriesScores.contestId
+                 ORDER BY EntriesScores.scores DESC
+               ) AS rank
+        FROM (
+          SELECT ContestEntry.name as entryName,
+                 ContestEntry.authorId AS authorId,
+                 Contest.id AS contestId,
+                 Contest.name as contestName,
+                 SUM(ContestVote.score) scores
+          FROM ContestEntry
+          INNER JOIN Contest
+            ON Contest.id = ContestEntry.contestId
+          LEFT JOIN ContestVote
+            ON ContestVote.contestEntryId = ContestEntry.id
+          WHERE unixepoch() * 1000 >= Contest.votingEndDate
+            AND ContestVote.score IS NOT NULL
+            AND Contest.guildId = "${guildId}"
+          GROUP BY ContestEntry.id
+        ) AS EntriesScores
+        LIMIT 1
+      ) AS EntriesScoresWithRanks
+      WHERE EntriesScoresWithRanks.authorId = "${userId}";`
+    );
+  }
+
+  getUserContestsVotesSummary(guildId, userId) {
+    return this.database.all(`
+      SELECT ContestEntry.name as entryName,
+             submitDate,
+             Contest.name as contestName,
+             Contest.votingEndDate,
+             SUM(ContestVote.score) scores
+      FROM ContestEntry
+      INNER JOIN Contest
+        ON Contest.id = ContestEntry.contestId
+      LEFT JOIN ContestVote
+        ON ContestVote.contestEntryId = ContestEntry.id
+      WHERE unixepoch() * 1000 >= Contest.votingEndDate
+        AND ContestVote.score IS NOT NULL
+        AND Contest.guildId = "${guildId}"
+        AND ContestEntry.authorId = "${userId}"
+      GROUP BY ContestEntry.id
+      ORDER BY ContestEntry.submitDate`
+    );
+  }
+
+  getUserRecentlyGivenPoints(userId, giverId, limit) {
     return this.database.all(
       joinClauses([`
         SELECT Points.id,
@@ -302,8 +361,10 @@ class DataModel extends EventEmitter {
                Points.acquireDate AS acquireDate,
                Reason.name AS reasonName
         FROM Points
-        INNER JOIN Reason ON Reason.id = Points.reasonId
-        WHERE Points.userId = "${userId}" AND Points.giverId = ${giverId}
+        INNER JOIN Reason
+          ON Reason.id = Points.reasonId
+        WHERE Points.userId = "${userId}"
+          AND Points.giverId = ${giverId}
         ORDER BY Points.acquireDate DESC`,
         createLimitClause(limit),
       ])
@@ -318,8 +379,10 @@ class DataModel extends EventEmitter {
              Giver.name AS giverName,
              Reason.name AS reasonName
       FROM Points
-      INNER JOIN User AS Giver ON Giver.id = giverId
-      INNER JOIN Reason ON Reason.id = Points.reasonId
+      INNER JOIN User AS Giver
+        ON Giver.id = giverId
+      INNER JOIN Reason
+        ON Reason.id = Points.reasonId
       WHERE Points.id="${pointsId}"`
     );
   }
@@ -1380,7 +1443,8 @@ class DataModel extends EventEmitter {
                ContestVote.score,
                ContestVoteCategory.name AS categoryName
         FROM ContestVote
-        INNER JOIN ContestVoteCategory ON ContestVoteCategory.id = ContestVote.contestVoteCategoryId`,
+        INNER JOIN ContestVoteCategory
+          ON ContestVoteCategory.id = ContestVote.contestVoteCategoryId`,
         createContestVotesWhereClause(params),
         createLimitClause(limit),
       ])
@@ -1397,7 +1461,8 @@ class DataModel extends EventEmitter {
              voterId,
              ContestVoteCategory.name AS categoryName
       FROM ContestVote
-      INNER JOIN ContestVoteCategory ON ContestVoteCategory.id = ContestVote.contestVoteCategoryId
+      INNER JOIN ContestVoteCategory
+        ON ContestVoteCategory.id = ContestVote.contestVoteCategoryId
       WHERE ContestVote.id = "${id}";`
     );
   }
@@ -1419,9 +1484,14 @@ class DataModel extends EventEmitter {
         CROSS JOIN ContestVoteCategories
         WHERE ContestEntry.contestId = ${contestId}
       )
-      INNER JOIN User ON User.id = authorId
-      INNER JOIN ContestVoteCategory ON ContestVoteCategory.id = categoryId
-      LEFT OUTER JOIN ContestVote ON ContestVote.contestEntryId = entryId AND ContestVote.contestVoteCategoryId = categoryId AND ContestVote.voterId = "${voterId}";`
+      INNER JOIN User
+        ON User.id = authorId
+      INNER JOIN ContestVoteCategory
+        ON ContestVoteCategory.id = categoryId
+      LEFT OUTER JOIN ContestVote
+        ON ContestVote.contestEntryId = entryId
+          AND ContestVote.contestVoteCategoryId = categoryId
+          AND ContestVote.voterId = "${voterId}";`
     );
   }
 

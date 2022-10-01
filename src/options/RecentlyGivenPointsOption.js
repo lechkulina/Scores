@@ -21,7 +21,7 @@ class RecentlyGivenPointsOption extends Option {
       return [];
     }
     const dateAndTimeOutputFormat = this.settings.get(SettingId.DateAndTimeOutputFormat);
-    const points = await this.dataModel.getRecentlyGivenPoints(userId, giverId, autoCompeteResultsLimit);
+    const points = await this.dataModel.getUserRecentlyGivenPoints(userId, giverId, autoCompeteResultsLimit);
     const results = points
       .map(({id, points, acquireDate, reasonName}) => {
         const name = translate('autoCompete.recentlyGivenPoints', {

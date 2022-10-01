@@ -41,6 +41,9 @@
       "contestEntries_one": "{{count}} pracę konkursową",
       "contestEntries_few": "{{count}} prace konkursowe",
       "contestEntries_many": "{{count}} prac konkursowych",
+      "recentlyGivenPoints_one": "{{count}} ostatnio przyznany punkt",
+      "recentlyGivenPoints_few": "{{count}} ostatnio przyznane punkty",
+      "recentlyGivenPoints_many": "{{count}} ostatnio przyznanych punktów",
       "contestState": {
         "any": "Nieokreślony",
         "pending": "Oczekujący na rozpoczęcie",
@@ -380,12 +383,21 @@
           "failure": "❗ Nie udało się pobrać punktów!"
         },
         "messages": {
-          "headerWithPoints": "➡ Masz łącznie **$t(common.acquiredPoints, {\"count\": {{points}} })** pomiędzy *{{minAcquireDate}}* a *{{maxAcquireDate}}*",
-          "headerWithoutPoints": "😮 Nie zdobyłeś jeszcze punktów.",
-          "recentlyGivenDescription": "⬇ Ostatnio przyznane punkty:",
-          "recentlyGivenEntry": "- *{{acquireDate}}* przyznano **$t(common.points, {\"count\": {{points}} })** z powodu **{{reasonName}}** przez *{{giverName}}*",
-          "rankingsDescription": "⬇ Pozycje w rankingu:",
-          "rankingsEntry": "- w kategorii *{{reasonName}}* zajmujesz **{{rankingPosition}} pozycję**, w której masz **$t(common.points, {\"count\": {{points}} })**"
+          "header": {
+            "withPointsDay": "➡ Masz łącznie **$t(common.acquiredPoints, {\"count\": {{points}} })** zdobyte dnia *{{maxAcquireDate}}*",
+            "withPointsDatesRange": "➡ Masz łącznie **$t(common.acquiredPoints, {\"count\": {{points}} })** pomiędzy *{{minAcquireDate}}* a *{{maxAcquireDate}}*",
+            "withoutPoints": "😮 Nie zdobyłeś jeszcze punktów."
+          },
+          "rankings": {
+            "title": "⬇ Pozycje w rankingu:",
+            "pointsItem": "- w kategorii *{{reasonName}}* zajmujesz **{{rank}} pozycję**, w której masz **$t(common.points, {\"count\": {{points}} })**",
+            "contestItem": "- w konkursie **{{contestName}}** usyskałeś **{{rank}} miejsce** za pracę **{{entryName}}**, której przyznano **$t(common.points, {\"count\": {{scores}} })**"
+          },
+          "recentlyGiven": {
+            "title": "⬇ $t(common.recentlyGivenPoints, {\"count\": {{itemsCount}} })",
+            "pointsItem": "- *{{acquireDate}}* przyznano **$t(common.points, {\"count\": {{points}} })** z powodu **{{reasonName}}** przez *{{giverName}}*",
+            "votesItem": "- *{{votingEndDate}}* przyznano **$t(common.points, {\"count\": {{scores}} })** za pracę **{{entryName}}** w konkursie **{{contestName}}** zagłoszoną dnia *{{submitDate}}*"
+          }
         }
       },
       "addReason": {
