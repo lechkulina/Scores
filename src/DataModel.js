@@ -1625,6 +1625,34 @@ class DataModel extends EventEmitter {
     );
   }
 
+  getUserContestEntriesSummary(contestId, userId) {
+    return this.database.all(`
+      SELECT entryId,
+             entryName,
+             submitDate,
+             categoryId,
+             ContestVoteCategory.name AS categoryName,
+             SUM(ContestVote.score) scores
+      FROM (
+        SELECT ContestEntry.id AS entryId,
+               ContestEntry.name AS entryName,
+               ContestEntry.submitDate AS submitDate,
+               ContestVoteCategories.contestVoteCategoryId AS categoryId
+        FROM ContestEntry
+        CROSS JOIN ContestVoteCategories
+        WHERE ContestEntry.authorId = "${userId}"
+          AND ContestEntry.contestId = ${contestId}
+          AND ContestVoteCategories.contestId = ${contestId}
+      )
+      INNER JOIN ContestVoteCategory
+        ON ContestVoteCategory.id = categoryId
+      LEFT OUTER JOIN ContestVote
+        ON ContestVote.contestEntryId = entryId
+          AND ContestVote.contestVoteCategoryId = categoryId
+      GROUP BY entryId, categoryId;`
+    );
+  }
+
   getContestVotingResults(contestId) {
     return this.database.all(`
       SELECT ContestEntry.id AS entryId,

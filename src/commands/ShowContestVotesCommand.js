@@ -134,10 +134,10 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
         scores
       }) => {
         subSections.push(
-          this.translate(`${key}.${
+          this.translate(`${key}.item.${
             scores == null
-              ? 'itemWithoutScore'
-              : 'itemWithScore'
+              ? 'withoutScore'
+              : 'withScore'
           }`, {
             categoryName,
             votesCount,

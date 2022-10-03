@@ -22,10 +22,10 @@ class ShowMyContestVotesHandler extends InteractionHandler {
     const addedVotesPercentage = requiredVotesCount > 0
       ? 100 * (addedVotesCount / requiredVotesCount)
       : 0;
-    const key = `commands.showMyContestVotes.messages.${
+    const key = `commands.showMyContestVotes.messages.header.${
       addedVotesCount > 0
-      ? 'headerWithVotes'
-      : 'headerWithoutVotes'
+      ? 'withVotes'
+      : 'withoutVotes'
     }`;
     return this.translate(key, {
       contestName: contest.name,
@@ -85,10 +85,10 @@ class ShowMyContestVotesHandler extends InteractionHandler {
       ];
       categories.forEach(({categoryName, score}) => {
         subSections.push(
-          this.translate(`${key}.${
+          this.translate(`${key}.item.${
             score == null
-              ? 'itemWithoutScore'
-              : 'itemWithScore'  
+              ? 'withoutScore'
+              : 'withScore'  
           }`, {
             categoryName,
             score,

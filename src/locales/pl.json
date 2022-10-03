@@ -41,6 +41,9 @@
       "contestEntries_one": "{{count}} pracę konkursową",
       "contestEntries_few": "{{count}} prace konkursowe",
       "contestEntries_many": "{{count}} prac konkursowych",
+      "contestEntriesHave_one": "{{count}} praca konkursowa została",
+      "contestEntriesHave_few": "{{count}} prace konkursowe zostały",
+      "contestEntriesHave_many": "{{count}} prace konkursowe zostały",
       "recentlyGivenPoints_one": "{{count}} ostatnio przyznany punkt",
       "recentlyGivenPoints_few": "{{count}} ostatnio przyznane punkty",
       "recentlyGivenPoints_many": "{{count}} ostatnio przyznanych punktów",
@@ -351,7 +354,7 @@
         "description": "Usuwa wcześniej dodane uzytkownikowi punkty",
         "options": {
           "user": "Uzytkownik, któremu nalezy usunąć punkty",
-          "recentlyGivenPoints": "Ostatnio przyznane punkty przez ciebie punkty"
+          "recentlyGivenPoints": "Ostatnio przyznane przez ciebie punkty"
         },
         "errors": {
           "failure": "❗ Nie udało się usunąć **{{points}}** punktów uzytkownikowi **{{userName}}**"
@@ -848,8 +851,10 @@
           },
           "votes": {
             "title": "⬇ Głosy oddane na pracę **{{entryName}}** autorstwa {{authorName}}:",
-            "itemWithScore": "- w kategorii *{{categoryName}}* oddano **$t(common.points, {\"count\": {{score}} })**",
-            "itemWithoutScore": "- w kategorii *{{categoryName}}* **nie oddano** jeszcze głosów"
+            "item": {
+              "withScore": "- w kategorii *{{categoryName}}* oddano **$t(common.points, {\"count\": {{score}} })**",
+              "withoutScore": "- w kategorii *{{categoryName}}* **nie oddano** jeszcze głosów"
+            }
           }
         }
       },
@@ -872,8 +877,32 @@
           },
           "votes": {
             "title": "$t(commands.showMyContestVotes.messages.votes.title)",
-            "itemWithScore": "- w kategorii *{{categoryName}}* oddano **$t(common.votes, {\"count\": {{votesCount}} })** dając łącznie **$t(common.points, {\"count\": {{scores}} })**",
-            "itemWithoutScore": "$t(commands.showMyContestVotes.messages.votes.itemWithoutScore)"
+            "item": {
+              "withScore": "- w kategorii *{{categoryName}}* oddano **$t(common.votes, {\"count\": {{votesCount}} })** dając łącznie **$t(common.points, {\"count\": {{scores}} })**",
+              "withoutScore": "$t(commands.showMyContestVotes.messages.votes.item.withoutScore)"
+            }
+          }
+        }
+      },
+      "showMyContestEntries": {
+        "description": "Pokazuje wyniki głosowania twoich prac konkursowych",
+        "options": {
+          "contest": "$t(commands.submitContestEntry.options.contest)"
+        },
+        "errors": {
+          "failure": "$t(commands.showMyContestVotes.errors.failure)"
+        },
+        "messages": {
+          "header": {
+            "withEntries": "➡ $t(common.contestEntriesHave, {\"count\": {{entriesCount}} }) zgłoszonych przez ciebie do konkursu **{{contestName}}**. Głosy jakie zostały oddane to:",
+            "withoutEntries": "😮 Nie ma masz zadnej pracy zgłoszonej do konkursu **{{contestName}}**"
+          },
+          "entries": {
+            "title": "⬇ Głosy oddane na pracę **{{entryName}}** zgłoszoną dnia {{submitDate}}:",
+            "item": {
+              "withScore": "$t(commands.showMyContestVotes.messages.votes.item.withScore)",
+              "withoutScore": "$t(commands.showMyContestVotes.messages.votes.item.withoutScore)"
+            }
           }
         }
       },

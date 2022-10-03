@@ -32,6 +32,8 @@
       "categories_other": "{{count}} categories",
       "contestEntries_one": "{{count}} contest entry",
       "contestEntries_other": "{{count}} contest entries",
+      "contestEntriesHave_one": "{{count}} contest entry has been",
+      "contestEntriesHave_other": "{{count}} contest entries have been",
       "recentlyGivenPoints_one": "{{count}} recenty added point",
       "recentlyGivenPoints_other": "{{count}} recenty added points"
     },
@@ -647,6 +649,28 @@
             "title": "$t(commands.showMyContestVotes.messages.votes.title)",
             "itemWithScore": "- in category *{{categoryName}}* **$t(common.votes, {\"count\": {{votesCount}} })** have been added which gives **$t(common.points, {\"count\": {{scores}} })** in total",
             "itemWithoutScore": "$t(commands.showMyContestVotes.messages.votes.itemWithoutScore)"
+          }
+        }
+      },
+      "showMyContestEntries": {
+        "description": "Shows voting results of your's contest entries",
+        "options": {
+          "contest": "$t(commands.submitContestEntry.options.contest)"
+        },
+        "errors": {
+          "failure": "$t(commands.showMyContestVotes.errors.failure)"
+        },
+        "messages": {
+          "header": {
+            "withEntries": "➡ $t(common.contestEntriesHave, {\"count\": {{entriesCount}} }) submitted to contest **{{contestName}}**. Votes they gained are:",
+            "withoutEntries": "😮 You have not submitted any entry to contest **{{contestName}}**"
+          },
+          "entries": {
+            "title": "⬇ Votes added for contest entry **{{entryName}}** submitted {{submitDate}}:",
+            "item": {
+              "withScore": "$t(commands.showMyContestVotes.messages.votes.item.withScore)",
+              "withoutScore": "$t(commands.showMyContestVotes.messages.votes.item.withoutScore)"
+            }
           }
         }
       },
