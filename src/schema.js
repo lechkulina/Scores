@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS PointsCategory(
 CREATE TABLE IF NOT EXISTS Points(
   id INTEGER PRIMARY KEY,
   points INTEGER,
-  acquireDate INTEGER,
+  acquireDate INTEGER NOT NULL,
   userId TEXT NOT NULL REFERENCES User(id),
   giverId TEXT NOT NULL REFERENCES User(id),
   pointsCategoryId INTEGER NOT NULL REFERENCES PointsCategory(id)
@@ -119,13 +119,16 @@ CREATE TABLE IF NOT EXISTS ContestEntry(
   submitDate INTEGER DEFAULT CURRENT_TIMESTAMP,
   authorId TEXT NOT NULL REFERENCES User(id),
   contestId INTEGER NOT NULL REFERENCES Contest(id)
+    ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS ContestVote(
   id INTEGER PRIMARY KEY,
   score INTEGER CHECK (score > 0),
   voteDate INTEGER DEFAULT CURRENT_TIMESTAMP,
-  contestEntryId INTEGER NOT NULL REFERENCES ContestEntry(id),
-  contestVoteCategoryId INTEGER NOT NULL REFERENCES ContestVoteCategory(id),
+  contestEntryId INTEGER NOT NULL REFERENCES ContestEntry(id)
+    ON DELETE CASCADE,
+  contestVoteCategoryId INTEGER NOT NULL REFERENCES ContestVoteCategory(id)
+    ON DELETE CASCADE,
   voterId TEXT NOT NULL REFERENCES User(id)
 );
 CREATE TABLE IF NOT EXISTS ContestAnnouncement(
