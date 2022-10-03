@@ -1335,14 +1335,16 @@ class DataModel extends EventEmitter {
         description,
         url,
         authorId,
-        contestId
+        contestId,
+        submitDate
       )
       VALUES (
         "${name}",
         "${description}",
         "${url}",
         "${authorId}",
-        ${contestId}
+        ${contestId},
+        ${Date.now()}
       );`
     );
     this.emit(DataModelEvents.onContestEntrySubmitted, contestId);
@@ -1476,13 +1478,15 @@ class DataModel extends EventEmitter {
         contestEntryId,
         contestVoteCategoryId,
         voterId,
-        score
+        score,
+        voteDate
       )
       VALUES (
         ${contestEntryId},
         ${contestVoteCategoryId},
         "${voterId}",
-        ${score}
+        ${score},
+        ${Date.now()}
       );`
     );
     this.emit(DataModelEvents.onContestVoteAdded, contestId);
