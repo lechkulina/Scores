@@ -20,15 +20,16 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
   generateHeaderSection(contest, votersSummary) {
     const completedVotingsCount = this.calculateCompletedVotingsCount(votersSummary);
     const missingVotingsCount = Math.max(0, contest.requiredCompletedVotingsCount - completedVotingsCount);
-    return votersSummary.length > 0
-      ? this.translate('commands.showContestVotesSummary.messages.headerWithVotings', {
-          contestName: contest.name,
-          completedVotingsCount,
-          missingVotingsCount,
-        })
-      : this.translate('commands.showContestVotesSummary.messages.headerWithoutVotings', {
-          contestName: contest.name,
-        });
+    const key = `commands.showContestVotes.messages.header.${
+      votersSummary.length > 0
+        ? 'withVotings'
+        : 'withoutVotings'
+    }`;
+    return this.translate(key, {
+      contestName: contest.name,
+      completedVotingsCount,
+      missingVotingsCount,
+    });
   }
 
   groupVotersEntries(votersSummary) {
@@ -53,8 +54,9 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
     if (votersEntries.length === 0) {
       return;
     }
+    const key = 'commands.showContestVotes.messages.voters';
     const sections = [
-      this.translate('commands.showContestVotesSummary.messages.votersDescription', {
+      this.translate(`${key}.title`, {
         count: votersSummary.length,
       })
     ];
@@ -64,7 +66,7 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
       requiredVotesPercentage
     }) => {
       sections.push(
-        this.translate('commands.showContestVotesSummary.messages.voterDescription', {
+        this.translate(`${key}.item`, {
           voterName,
           votesCount,
           requiredVotesPercentage,
@@ -95,19 +97,23 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
       votesEntry.categories.push({
         categoryName,
         votesCount,
-        scores: scores ?? 0,
+        scores,
       });
     });
     return Array.from(votesEntries.values());
   }
 
-  async generateVotesSections(contest) {
+  async generateVotesSections(contest, votersSummary) {
+    const sections = [];
+    if (votersSummary.length === 0) {
+      return sections;
+    }
     const votesSummary = await this.dataModel.getContestVotesSummary(contest.id);
     const votesEntries = this.groupVotesEntries(votesSummary);
     if (votesEntries.length === 0) {
-      return;
+      return sections;
     }
-    const sections = [];
+    const key = 'commands.showContestVotes.messages.votes';
     votesEntries.forEach(({
       entryName,
       authorName,
@@ -117,22 +123,26 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
         return;
       }
       const subSections = [
-        this.translate('commands.showContestVotesSummary.messages.votesDescription', {
+        this.translate(`${key}.title`, {
           entryName,
           authorName,
         })
       ]
-      categories.forEach(({categoryName, votesCount, scores}) => {
+      categories.forEach(({
+        categoryName,
+        votesCount,
+        scores
+      }) => {
         subSections.push(
-          scores === 0
-            ? this.translate('commands.showContestVotesSummary.messages.voteDescriptionWithoutScore', {
-                categoryName,
-              })
-            : this.translate('commands.showContestVotesSummary.messages.voteDescriptionWithScore', {
-              categoryName,
-              votesCount,
-              scores,
-            })
+          this.translate(`${key}.${
+            scores == null
+              ? 'itemWithoutScore'
+              : 'itemWithScore'
+          }`, {
+            categoryName,
+            votesCount,
+            scores,
+          })
         )
       });
       sections.push(subSections.join(Entities.NewLine));
@@ -144,35 +154,30 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
     this.markAsDone();
     try {
       const contest = this.getOptionValue(OptionId.Contest);
-      const votersSummary = await this.dataModel.getContestVotersSummary(contest.id);      
-      const sections = [
-        this.generateHeaderSection(contest, votersSummary),
-        this.generateVotersSection(votersSummary),
-      ];
-      if (votersSummary.length > 0) {
-        sections.push(
-          ...(await this.generateVotesSections(contest))
-        );
-      }
+      const votersSummary = await this.dataModel.getContestVotersSummary(contest.id); 
       return this.createLongMessage(interaction,
-        joinSections(sections, Entities.EmptyLine)
+        joinSections([
+          this.generateHeaderSection(contest, votersSummary),
+          this.generateVotersSection(votersSummary),
+          ...(await this.generateVotesSections(contest, votersSummary)),
+        ], Entities.EmptyLine)
       );
     } catch (error) {
       console.error(`Failed to show contest votes - got error`, error);
-      return interaction.createMessage(this.translate('commands.showContestVotesSummary.errors.failure'));
+      return interaction.createMessage(this.translate('commands.showContestVotes.errors.failure'));
     }
   }
 }
 
 class ShowContestVotesSummaryCommand extends Command {
   constructor(...props) {
-    super('show-contest-votes-summary', ...props);
+    super('show-contest-votes', ...props);
   }
 
   initialize() {
-    this.setDescription(this.translate('commands.showContestVotesSummary.description'));
+    this.setDescription(this.translate('commands.showContestVotes.description'));
     this.addOptions([
-      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('commands.showContestVotesSummary.options.contest'), this.dataModel),
+      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('commands.showContestVotes.options.contest'), this.dataModel),
     ]);
     this.addValidators([
       new ContestValidator(OptionId.Contest, this.dataModel),

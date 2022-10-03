@@ -615,14 +615,18 @@
           "failure": "❗ Failed to fetch contest votes data."
         },
         "messages": {
-          "headerWithVotes": "➡ You have added **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** of required points in contest **{{contestName}}**. There are **$t(common.missingVotes, {\"count\": {{missingVotesCount}} })** still remaining",
-          "headerWithoutVotes": "😮 You have not added any votes for any of the entries in contest **{{contestName}}**.",
-          "votesDescription": "⬇ Votes added for contest entry **{{entryName}}** by {{authorName}}:",
-          "voteDescriptionWithScore": "- in category *{{categoryName}}* **$t(common.points, {\"count\": {{score}} })** have been added",
-          "voteDescriptionWithoutScore": "- in category *{{categoryName}}* no points have been added"
+          "header": {
+            "withVotes": "➡ You have added **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** of required points in contest **{{contestName}}**. There are **$t(common.missingVotes, {\"count\": {{missingVotesCount}} })** still remaining",
+            "withoutVotes": "😮 You have not added any votes for any of the entries in contest **{{contestName}}**."
+          },
+          "votes": {
+            "title": "⬇ Votes added for contest entry **{{entryName}}** by {{authorName}}:",
+            "itemWithScore": "- in category *{{categoryName}}* **$t(common.points, {\"count\": {{score}} })** have been added",
+            "itemWithoutScore": "- in category *{{categoryName}}* no points have been added"
+          }
         }
       },
-      "showContestVotesSummary": {
+      "showContestVotes": {
         "description": "Show voting summary of currently active contest",
         "options": {
           "contest": "$t(commands.submitContestEntry.options.contest)"
@@ -631,13 +635,19 @@
           "failure": "$t(commands.showMyContestVotes.errors.failure)"
         },
         "messages": {
-          "headerWithVotings": "➡ **$t(common.person, {\"count\": {{completedVotingsCount}} })** finished voting in contest **{{contestName}}**. There are **$t(common.missingVotings, {\"count\": {{missingVotingsCount}} })** still remaining",
-          "headerWithoutVotings": "😮 Nobody voted for any of the entries in contest **{{contestName}}**.",
-          "votersDescription": "⬇ Until now **$t(common.person, {\"count\": {{count}} })** voted:",
-          "voterDescription": "- **{{voterName}}** added **$t(common.votes, {\"count\": {{votesCount}} })** that is **{{requiredVotesPercentage, number(maximumFractionDigits: 1)}}%** of the required ones",
-          "votesDescription": "$t(commands.showMyContestVotes.messages.votesDescription)",
-          "voteDescriptionWithScore": "- in category *{{categoryName}}* **$t(common.votes, {\"count\": {{votesCount}} })** have been added which gives **$t(common.points, {\"count\": {{scores}} })** in total",
-          "voteDescriptionWithoutScore": "$t(commands.showMyContestVotes.messages.voteDescriptionWithoutScore)"
+          "header": {
+            "withVotings": "➡ **$t(common.person, {\"count\": {{completedVotingsCount}} })** finished voting in contest **{{contestName}}**. There are **$t(common.missingVotings, {\"count\": {{missingVotingsCount}} })** still remaining",
+            "withoutVotings": "😮 Nobody voted for any of the entries in contest **{{contestName}}**."
+          },
+          "voters": {
+            "title": "⬇ Until now **$t(common.person, {\"count\": {{count}} })** voted:",
+            "item": "- **{{voterName}}** added **$t(common.votes, {\"count\": {{votesCount}} })** that is **{{requiredVotesPercentage, number(maximumFractionDigits: 1)}}%** of the required ones"
+          },
+          "votes": {
+            "title": "$t(commands.showMyContestVotes.messages.votes.title)",
+            "itemWithScore": "- in category *{{categoryName}}* **$t(common.votes, {\"count\": {{votesCount}} })** have been added which gives **$t(common.points, {\"count\": {{scores}} })** in total",
+            "itemWithoutScore": "$t(commands.showMyContestVotes.messages.votes.itemWithoutScore)"
+          }
         }
       },
       "addContestAnnouncement": {

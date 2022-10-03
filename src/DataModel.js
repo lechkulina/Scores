@@ -1556,6 +1556,7 @@ class DataModel extends EventEmitter {
         FROM ContestEntry
         CROSS JOIN ContestVoteCategories
         WHERE ContestEntry.contestId = ${contestId}
+          AND ContestVoteCategories.contestId = ${contestId}
       )
       INNER JOIN User
         ON User.id = authorId
@@ -1589,6 +1590,7 @@ class DataModel extends EventEmitter {
         ON ContestEntry.id = ContestVote.contestEntryId
       GROUP BY User.id;
       WHERE ContestEntry.contestId = ${contestId}
+        AND ContestVote.score IS NOT NULL
       ORDER BY votesCount DESC;`
     );
   }
@@ -1610,6 +1612,7 @@ class DataModel extends EventEmitter {
         FROM ContestEntry
         CROSS JOIN ContestVoteCategories
         WHERE ContestEntry.contestId = ${contestId}
+          AND ContestVoteCategories.contestId = ${contestId}
       )
       INNER JOIN User
         ON User.id = authorId

@@ -834,7 +834,7 @@
         }
       },
       "showMyContestVotes": {
-        "description": "Pokazuje przyznane przez ciebie głosy",
+        "description": "Pokazuje przyznane przez ciebie głosy w konkursie",
         "options": {
           "contest": "$t(commands.submitContestEntry.options.contest)"
         },
@@ -842,15 +842,19 @@
           "failure": "❗ Nie udało się pobrać informacji o głosach."
         },
         "messages": {
-          "headerWithVotes": "➡ Oddanych zostało **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** potrzebnych głosów w konkursie **{{contestName}}**. Musisz oddać jeszcze **$t(common.missingVotes, {\"count\": {{missingVotesCount}} })**",
-          "headerWithoutVotes": "😮 Brak oddanych głosów w konkursie **{{contestName}}**.",
-          "votesDescription": "⬇ Głosy oddane na pracę **{{entryName}}** autorstwa {{authorName}}:",
-          "voteDescriptionWithScore": "- w kategorii *{{categoryName}}* oddano **$t(common.points, {\"count\": {{score}} })**",
-          "voteDescriptionWithoutScore": "- w kategorii *{{categoryName}}* **nie oddano** jeszcze głosów"
+          "header": {
+            "withVotes": "➡ Oddanych zostało **{{addedVotesPercentage, number(maximumFractionDigits: 1)}}%** potrzebnych głosów w konkursie **{{contestName}}**. Musisz oddać jeszcze **$t(common.missingVotes, {\"count\": {{missingVotesCount}} })**",
+            "withoutVotes": "😮 Brak oddanych głosów w konkursie **{{contestName}}**."
+          },
+          "votes": {
+            "title": "⬇ Głosy oddane na pracę **{{entryName}}** autorstwa {{authorName}}:",
+            "itemWithScore": "- w kategorii *{{categoryName}}* oddano **$t(common.points, {\"count\": {{score}} })**",
+            "itemWithoutScore": "- w kategorii *{{categoryName}}* **nie oddano** jeszcze głosów"
+          }
         }
       },
-      "showContestVotesSummary": {
-        "description": "Pokazuje podsumowanie aktualnie prowadzonego głosowania",
+      "showContestVotes": {
+        "description": "Pokazuje przyznane głosy w konkursie",
         "options": {
           "contest": "$t(commands.submitContestEntry.options.contest)"
         },
@@ -858,13 +862,19 @@
           "failure": "$t(commands.showMyContestVotes.errors.failure)"
         },
         "messages": {
-          "headerWithVotings": "➡ Głosowanie zakończyło **$t(common.person, {\"count\": {{completedVotingsCount}} })** w konkursie **{{contestName}}**. Nalezy zakończyć jeszcze **$t(common.missingVotings, {\"count\": {{missingVotingsCount}} })**",
-          "headerWithoutVotings": "😮 Nikt jeszcze nie zagłosował w konkursie **{{contestName}}**.",
-          "votersDescription": "⬇ Do tej pory **$t(common.person, {\"count\": {{count}} })** głosująca oddała swoje głosy:",
-          "voterDescription": "- **{{voterName}}** oddał **$t(common.votes, {\"count\": {{votesCount}} })** czyli **{{requiredVotesPercentage, number(maximumFractionDigits: 1)}}%** wymaganych",
-          "votesDescription": "$t(commands.showMyContestVotes.messages.votesDescription)",
-          "voteDescriptionWithScore": "- w kategorii *{{categoryName}}* oddano **$t(common.votes, {\"count\": {{votesCount}} })** dając łącznie **$t(common.points, {\"count\": {{scores}} })**",
-          "voteDescriptionWithoutScore": "$t(commands.showMyContestVotes.messages.voteDescriptionWithoutScore)"
+          "header": {
+            "withVotings": "➡ Głosowanie zakończyło **$t(common.person, {\"count\": {{completedVotingsCount}} })** w konkursie **{{contestName}}**. Nalezy zakończyć jeszcze **$t(common.missingVotings, {\"count\": {{missingVotingsCount}} })**",
+            "withoutVotings": "😮 Nikt jeszcze nie zagłosował w konkursie **{{contestName}}**."
+          },
+          "voters": {
+            "title": "⬇ Do tej pory **$t(common.person, {\"count\": {{count}} })** głosująca oddała swoje głosy:",
+            "item": "- **{{voterName}}** oddał **$t(common.votes, {\"count\": {{votesCount}} })** czyli **{{requiredVotesPercentage, number(maximumFractionDigits: 1)}}%** wymaganych"
+          },
+          "votes": {
+            "title": "$t(commands.showMyContestVotes.messages.votes.title)",
+            "itemWithScore": "- w kategorii *{{categoryName}}* oddano **$t(common.votes, {\"count\": {{votesCount}} })** dając łącznie **$t(common.points, {\"count\": {{scores}} })**",
+            "itemWithoutScore": "$t(commands.showMyContestVotes.messages.votes.itemWithoutScore)"
+          }
         }
       },
       "addContestAnnouncement": {
