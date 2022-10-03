@@ -1634,6 +1634,7 @@ class DataModel extends EventEmitter {
       LEFT JOIN ContestVote
         ON ContestVote.contestEntryId = ContestEntry.id
       WHERE ContestEntry.contestId = ${contestId}
+        AND ContestVote.score IS NOT NULL
       GROUP BY ContestEntry.id
       ORDER BY scores DESC;`
     );
@@ -1651,6 +1652,7 @@ class DataModel extends EventEmitter {
       LEFT JOIN ContestVote
         ON ContestVote.contestEntryId = ContestEntry.id
       WHERE ContestEntry.contestId = ${contestId}
+        AND ContestVote.score IS NOT NULL
       GROUP BY ContestEntry.id
       HAVING scores = (
         SELECT SUM(BContestVote.score) AS topScores
@@ -1659,6 +1661,7 @@ class DataModel extends EventEmitter {
           ON BContestEntry.id = BContestVote.contestEntryId
         WHERE BContestEntry.contestId = ContestEntry.contestId
         GROUP BY BContestEntry.id
+        ORDER BY topScores DESC
         LIMIT 1
       )
       ORDER BY ContestEntry.submitDate ASC;`

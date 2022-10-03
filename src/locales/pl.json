@@ -200,7 +200,7 @@
             "description_one": "Aktualnie mamy $t(common.contestEntries, {\"count\": {{count}} }), która wysuwa się na prowadzenie:",
             "description_few": "Aktualnie mamy $t(common.contestEntries, {\"count\": {{count}} }), które wysuwają się na prowadzenie:",
             "description_many": "Aktualnie mamy $t(common.contestEntries, {\"count\": {{count}} }), które wysuwają się na prowadzenie:",
-            "noItems": "Nie zgłoszono zadnej pracy.",
+            "noItems": "Jeszcze zadna praca nie wyszła na prowadzenie.",
             "summary": "Nie mniej wszystko moze jeszcze sie zmienić!"
           },
           "openForVoting": {
@@ -303,7 +303,7 @@
           "openForSubmittingEntries": {
             "title": "**Wyniki głosowania**",
             "description": "Wszystkie $t(common.contestEntries, {\"count\": {{entriesCount}} }), które zostały zgłoszone będą ocenione, aktualne wyniki prezentują się następująco:",
-            "noItems": "Nie zgłoszono zadnej pracy.",
+            "noItems": "Brak wyników głosowania",
             "summary": "Najwięcej prac **{{entriesCount}}** zgłosił uzytkownik **{{userName}}**!"
           },
           "openForVoting": {
