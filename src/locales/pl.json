@@ -77,7 +77,7 @@
     "validators": {
       "invalidLength": "❗ **{{description}}** ma nieprawidłową długość. Musi mieścić się w zakresie od {{min}} do {{max}} znaków",
       "invalidFirstLetter": "❗ **{{description}}** musi zaczynać się od duzej litery",
-      "invalidPointsRange": "❗ **{{description}}** ma nieprawidłowy zakres punktów dla powodu **{{reasonName}}**. Musi mieścić się w zakresie od {{min}} do {{max}}",
+      "invalidPointsRange": "❗ **{{description}}** ma nieprawidłowy zakres punktów dla kategorii **{{categoryName}}**. Musi mieścić się w zakresie od {{min}} do {{max}}",
       "invalidNumberZero": "❗ **{{description}}** nie moze byc ponizej zera",
       "invalidNumbersRange": "❗ **{{min}}** nie mieć wartości wiekszej lub równej **{{max}}**",
       "invalidDateFormat": "❗ **{{description}}** ma nieprawidłowy format daty. Wymagany format to **{{dateInputFormat}}**",
@@ -92,14 +92,14 @@
       "contestFetchFailure": "❗ Nie udało się pobrać danych konkursu {{contestId}}! $t(validators.reportIssue)",
       "unknownContestReward": "❗ Wybrana nagroda konkursowa {{rewardId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
       "contestRewardFetchFailure": "❗ Nie udało się pobrać danych nagrody konkursowej {{rewardId}}! $t(validators.reportIssue)",
-      "unknownContestVoteCategory": "❗ Wybrana kategoria głosowania na prace konkursowe {{voteCategoryId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
-      "contestVoteCategoryFetchFailure": "❗ Nie udało się pobrać danych kategorii głosowania na prace konkursowe {{voteCategoryId}}! $t(validators.reportIssue)",
+      "unknownContestVoteCategory": "❗ Wybrana kategoria głosowania na prace konkursowe {{categoryId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
+      "contestVoteCategoryFetchFailure": "❗ Nie udało się pobrać danych kategorii głosowania na prace konkursowe {{categoryId}}! $t(validators.reportIssue)",
       "unknownContestRule": "❗ Wybrana reguła konkursu {{ruleId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
       "contestRuleFetchFailure": "❗ Nie udało się pobrać danych reguły konkursu {{ruleId}}! $t(validators.reportIssue)",
       "unknownContestEntry": "❗ Wybrana praca konkursowa {{entryId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
       "contestEntryFetchFailure": "❗ Nie udało się pobrać danych pracy konkursowej {{entryId}}! $t(validators.reportIssue)",
-      "unknownReason": "❗ Wybrany powód przyznawania punktów {{reasonId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
-      "reasonFetchFailure": "❗ Nie udało się pobrać danych powodu przyznawania punktów {{reasonId}}! $t(validators.reportIssue)",
+      "unknownPointsCategory": "❗ Wybrany powód przyznawania punktów {{categoryId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
+      "pointsCategoryFetchFailure": "❗ Nie udało się pobrać danych powodu przyznawania punktów {{categoryId}}! $t(validators.reportIssue)",
       "unknownPoints": "❗ Wybrane punkty {{pointsId}} nie istnieją! $t(validators.chooseFromAutocompleteList)",
       "pointsFetchFailure": "❗ Nie udało się pobrać danych punktów {{pointsId}}! $t(validators.reportIssue)",
       "unknownCommand": "❗ Wybrane polecenie {{commandId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
@@ -120,7 +120,7 @@
       "contestAnnouncementFetchFailure": "❗ Nie udało się pobrać danych o ogłoszeniu konkursu {{announcementId}}! $t(validators.reportIssue)"
     },
     "autoCompete": {
-      "recentlyGivenPoints": "{{points}} punkty przyznane dnia {{acquireDate}} z powodu {{reasonName}}",
+      "recentlyGivenPoints": "{{points}} punkty przyznane dnia {{acquireDate}} w kategorii {{categoryName}}",
       "contestVote": "Przyznano {{score}} punktów w kategorii {{categoryName}}"
     },
     "announcements": {
@@ -239,22 +239,22 @@
           }
         },
         "voteCategories": {
-          "item":  "- **{{voteCategoryName}}** - *{{voteCategoryDescription}}* - Maksymalnie mozna uzyskać **$t(common.points, {\"count\": {{maxPointsPerVoteCategory}} })** w tej kategorii.",
+          "item":  "- **{{categoryName}}** - *{{categoryDescription}}* - Maksymalnie mozna uzyskać **$t(common.points, {\"count\": {{maxPointsPerCategory}} })** w tej kategorii.",
           "openForSubmittingEntries": {
             "title": "**Punktacja**",
-            "description": "Konkurs będzie oceniany w $t(common.categories, {\"count\": {{voteCategoriesCount}} }):",
+            "description": "Konkurs będzie oceniany w $t(common.categories, {\"count\": {{categoriesCount}} }):",
             "noItems": "W konkursie nie przewiduje się podziału na kategorie głosowania.",
             "summary": "Zatem od jednego głosującego praca będzie mogła otrzymać $t(common.points, {\"count\": {{maxPointsPerVoting}} }), natomiast od wszystkich $t(common.voters, {\"count\": {{requiredCompletedVotingsCount}} }) łącznie **$t(common.points, {\"count\": {{maxPointsFromVotings}} })**"
           },
           "openForVoting": {
             "title": "$t(announcements.contest.voteCategories.openForSubmittingEntries.title)",
-            "description": "Konkurs jest oceniany w $t(common.categories, {\"count\": {{voteCategoriesCount}} }):",
+            "description": "Konkurs jest oceniany w $t(common.categories, {\"count\": {{categoriesCount}} }):",
             "noItems": "W konkursie nie przewidziany jest podziału na kategorie głosowania.",
             "summary": "Zatem od jednego głosującego praca moze otrzymać $t(common.points, {\"count\": {{maxPointsPerVoting}} }), natomiast od wszystkich $t(common.voters, {\"count\": {{requiredCompletedVotingsCount}} }) łącznie **$t(common.points, {\"count\": {{maxPointsFromVotings}} })**"
           },
           "finished": {
             "title": "$t(announcements.contest.voteCategories.openForSubmittingEntries.title)",
-            "description": "Konkurs był oceniany w $t(common.categories, {\"count\": {{voteCategoriesCount}} }):",
+            "description": "Konkurs był oceniany w $t(common.categories, {\"count\": {{categoriesCount}} }):",
             "noItems": "W konkursie nie przewidziano podziału na kategorie głosowania.",
             "summary": "Zatem od jednego głosującego praca mogła otrzymać $t(common.points, {\"count\": {{maxPointsPerVoting}} }), natomiast od wszystkich $t(common.voters, {\"count\": {{requiredCompletedVotingsCount}} }) łącznie **$t(common.points, {\"count\": {{maxPointsFromVotings}} })**"
           }
@@ -333,17 +333,17 @@
         "description": "Dodaje punkty uzytkownikowi",
         "options": {
           "user": "Uzytkownik któremu zostaną dodane punkty",
-          "reason": "Powód dodania punktów",
+          "pointsCategory": "Kategoria punktów",
           "points": "Liczba punktów"
         },
         "errors": {
           "failure": "❗ Nie udało się dodać **{{points}}** punktów uzytkownikowi **{{userName}}**"
         },
         "messages": {
-          "success": "✅ Dodano **{{points}}** punkty uzytkownikowi **{{userName}}** z powodu **{{reasonName}}**\nCzy chcesz wysłać notyfikacje?",
-          "directMessage": "{{giverName}} dodał tobie **{{points}}** punkty z powodu {{reasonName}.",
+          "success": "✅ Dodano **{{points}}** punkty uzytkownikowi **{{userName}}** w kategorii **{{categoryName}}**\nCzy chcesz wysłać notyfikacje?",
+          "directMessage": "{{giverName}} dodał tobie **{{points}}** punkty w kategorii {{categoryName}.",
           "directMessageSent": "✅ Wiadomość prywatna do uzytkownika **{{userName}}** została wysłana.",
-          "publicMessage": "**{{userName}}** zyskał **{{points}}** punkty z powodu {{reasonName}.",
+          "publicMessage": "**{{userName}}** zyskał **{{points}}** punkty w kategorii {{categoryName}.",
           "publicMessageCreated": "✅ Publiczna wiadomość została stworzona na kanale **{{channelName}}**"
         }
       },
@@ -357,7 +357,7 @@
           "failure": "❗ Nie udało się usunąć **{{points}}** punktów uzytkownikowi **{{userName}}**"
         },
         "messages": {
-          "confirmation": "❓ Czy na pewno chcesz usunąć **{{points}}** punkty uzytkownikowi **{{userName}}** dnia {{acquireDate}} z powodu {{reasonName}}?",
+          "confirmation": "❓ Czy na pewno chcesz usunąć **{{points}}** punkty uzytkownikowi **{{userName}}** dnia {{acquireDate}} w kategorii {{categoryName}}?",
           "success": "✅ Usunięto punkty uzytkownikowi **{{userName}}**"
         }
       },
@@ -366,14 +366,14 @@
         "options": {
           "user": "Uzytkownik, któremu nalezy zmienić punkty",
           "recentlyGivenPoints": "$t(commands.removePoints.options.recentlyGivenPoints)",
-          "reason": "$t(commands.addPoints.options.reason)",
+          "pointsCategory": "$t(commands.addPoints.options.pointsCategory)",
           "points": "$t(commands.addPoints.options.points)"
         },
         "errors": {
           "failure": "❗ Nie udało się zmienić **{{points}}** punktów uzytkownikowi **{{userName}}**"
         },
         "messages": {
-          "confirmation": "❓ Czy na pewno chcesz zmienić **{{points}}** punkty uzytkownikowi **{{userName}}** z dnia {{acquireDate}} z powodu {{reasonName}}?",
+          "confirmation": "❓ Czy na pewno chcesz zmienić **{{points}}** punkty uzytkownikowi **{{userName}}** z dnia {{acquireDate}} w kategorii {{categoryName}}?",
           "success": "✅ Zmieniono punkty uzytkownikowi **{{userName}}**"
         }
       },
@@ -390,57 +390,57 @@
           },
           "rankings": {
             "title": "⬇ Pozycje w rankingu:",
-            "pointsItem": "- w kategorii *{{reasonName}}* zajmujesz **{{rank}} pozycję**, w której masz **$t(common.points, {\"count\": {{points}} })**",
+            "pointsItem": "- w kategorii *{{categoryName}}* zajmujesz **{{rank}} pozycję**, w której masz **$t(common.points, {\"count\": {{points}} })**",
             "contestItem": "- w konkursie **{{contestName}}** usyskałeś **{{rank}} miejsce** za pracę **{{entryName}}**, której przyznano **$t(common.points, {\"count\": {{scores}} })**"
           },
           "recentlyGiven": {
             "title": "⬇ $t(common.recentlyGivenPoints, {\"count\": {{itemsCount}} })",
-            "pointsItem": "- *{{acquireDate}}* przyznano **$t(common.points, {\"count\": {{points}} })** z powodu **{{reasonName}}** przez *{{giverName}}*",
+            "pointsItem": "- *{{acquireDate}}* przyznano **$t(common.points, {\"count\": {{points}} })** w kategorii **{{categoryName}}** przez *{{giverName}}*",
             "votesItem": "- *{{votingEndDate}}* przyznano **$t(common.points, {\"count\": {{scores}} })** za pracę **{{entryName}}** w konkursie **{{contestName}}** zagłoszoną dnia *{{submitDate}}*"
           }
         }
       },
-      "addReason": {
-        "description": "Dodaje nowy powód przyznawania punktów",
+      "addPointsCategory": {
+        "description": "Dodaje nową kategorię punktów",
         "options": {
-          "name": "Nazwa powodu dodania punktów",
+          "name": "Nazwa kategorii",
           "min": "Minimalna liczba punktów jaką mozna przyznać",
           "max": "Maksymalna liczba punktów jaką mozna przyznać"
         },
         "errors": {
-          "failure": "❗ Nie udało się dodać nowego powodu przyznawania punktów."
+          "failure": "❗ Nie udało się dodać nowej kategorii punktów"
         },
         "messages": {
-          "success": "✅ Dodano nowy powód przynawania punktów **{{reasonName}}**"
+          "success": "✅ Dodano nową kategorię punktów **{{categoryName}}**"
         }
       },
-      "removeReason": {
-        "description": "Usuwa istniejący powód przyznawania punktów",
+      "removePointsCategory": {
+        "description": "Usuwa istniejącą kategorię punktów",
         "options": {
-          "reason": "Powód dodania punktów"
+          "pointsCategory": "Kategoria punktów"
         },
         "errors": {
-          "failure": "❗ Nie udało się usunąć powodu przyznawania punktów **{{reasonName}}**"
+          "failure": "❗ Nie udało się usunąć kategorii punktów **{{categoryName}}**"
         },
         "messages": {
-          "confirmation": "❓ Czy na pewno chcesz usunąć powód przyznania punktów **{{reasonName}}**?",
-          "success": "✅ Usunięto powód przyznania punktów **{{reasonName}}**"
+          "confirmation": "❓ Czy na pewno chcesz usunąć kategorię punktów **{{categoryName}}**?",
+          "success": "✅ Usunięto kategorię punktów **{{categoryName}}**"
         }
       },
-      "changeReason": {
-        "description": "Zmienia istniejący powód przyznawania punktów",
+      "changePointsCategory": {
+        "description": "Zmienia istniejącą kategorię punktów",
         "options": {
-          "reason": "$t(commands.removeReason.options.reason)",
-          "name": "$t(commands.addReason.options.name)",
-          "min": "$t(commands.addReason.options.min)",
-          "max": "$t(commands.addReason.options.max)"
+          "pointsCategory": "$t(commands.removePointsCategory.options.pointsCategory)",
+          "name": "$t(commands.addPointsCategory.options.name)",
+          "min": "$t(commands.addPointsCategory.options.min)",
+          "max": "$t(commands.addPointsCategory.options.max)"
         },
         "errors": {
-          "failure": "❗ Nie udało się zmianić powodu do przyznawania punktów **{{reasonName}}**"
+          "failure": "❗ Nie udało się zmianić kategorii punktów **{{categoryName}}**"
         },
         "messages": {
-          "confirmation": "❓ Czy na pewno chcesz zmienić powód do przyznania punktów **{{reasonName}}**?",
-          "success": "✅ Zmieniono powód przyznania punktów **{{reasonName}}**"
+          "confirmation": "❓ Czy na pewno chcesz zmienić kategorię punktów **{{categoryName}}**?",
+          "success": "✅ Zmieniono kategorię punktów **{{categoryName}}**"
         }
       },
       "showHelp": {
@@ -549,10 +549,10 @@
           "useByDefault": "Przypisuje tę kategorię głosowania domyślnie do kazdego nowego konkursu"
         },
         "errors": {
-          "failure": "❗ Nie udało się dodać nowej kategorii głosowania pracy konkursowych **{{categoryName}}**"
+          "failure": "❗ Nie udało się dodać nowej kategorii głosowania na prace konkursowe **{{categoryName}}**"
         },
         "messages": {
-          "success": "✅ Dodano nową kategorię głosowania prac konkursowych **{{categoryName}}**"
+          "success": "✅ Dodano nową kategorię głosowania na prace konkursowe **{{categoryName}}**"
         }
       },
       "removeContestVoteCategory": {

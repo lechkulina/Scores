@@ -1,10 +1,10 @@
 const moment = require('moment');
-const ReasonOption = require('../options/ReasonOption');
+const PointsCategoryOption = require('../options/PointsCategoryOption');
 const RecentlyGivenPointsOption = require('../options/RecentlyGivenPointsOption');
 const {OptionId, UserOption, NumberOption} = require('../options/CommonOptions');
 const {
   PointsValueValidator,
-  ReasonValidator, 
+  PointsCategoryValidator, 
   PointsValidator,
   MemberValidator,
  } = require('../validators/validators');
@@ -22,18 +22,18 @@ class ChangePointsInteractionHandler extends InteractionHandler {
         userName: this.member.user.username,
         points: this.pointsEntry.points,
         acquireDate: moment(this.pointsEntry.acquireDate).format(dateAndTimeOutputFormat),
-        reasonName: this.pointsEntry.reasonName,
+        categoryName: this.pointsEntry.categoryName,
       }),
       components: this.createConfirmationForm(),
     });
   }
 
   async handleComponentInteraction(interaction) {
-    const reason = this.getOptionValue(OptionId.Reason);
+    const category = this.getOptionValue(OptionId.PointsCategory);
     const pointsValue = this.getOptionValue(OptionId.Points);
     return this.handleConfirmationForm(interaction, async () => {
       try {
-        await this.dataModel.changePoints(this.pointsEntry.id, pointsValue, reason.id);
+        await this.dataModel.changePoints(this.pointsEntry.id, pointsValue, category.id);
         return this.translate('commands.changePoints.messages.success', {
           userName: this.member.user.username
         });
@@ -56,14 +56,14 @@ class ChangePointsCommand extends Command {
     this.addOptions([
       new UserOption(OptionId.User, this.translate('commands.changePoints.options.user')),
       new RecentlyGivenPointsOption(OptionId.RecentlyGivenPoints, OptionId.User, this.translate('commands.changePoints.options.recentlyGivenPoints'), this.dataModel, this.settings),
-      new ReasonOption(OptionId.Reason, this.translate('commands.changePoints.options.reason'), this.dataModel),
+      new PointsCategoryOption(OptionId.PointsCategory, this.translate('commands.changePoints.options.pointsCategory'), this.dataModel),
       new NumberOption(OptionId.Points, this.translate('commands.changePoints.options.points')),
     ]);
     this.addValidators([
-      new ReasonValidator(OptionId.Reason, this.dataModel),
+      new PointsCategoryValidator(OptionId.PointsCategory, this.dataModel),
       new PointsValidator(OptionId.RecentlyGivenPoints, this.dataModel),
       new MemberValidator(OptionId.User, this.clientHandler),
-      new PointsValueValidator(OptionId.Points, OptionId.Reason, this.options),
+      new PointsValueValidator(OptionId.Points, OptionId.PointsCategory, this.options),
     ]);
     return Promise.resolve();
   }

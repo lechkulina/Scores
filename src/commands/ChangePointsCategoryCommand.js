@@ -1,22 +1,22 @@
-const ReasonOption = require('../options/ReasonOption');
+const PointsCategoryOption = require('../options/PointsCategoryOption');
 const {OptionId, StringOption, NumberOption} = require('../options/CommonOptions');
 const {
   StringsLengthsValidator,
   FirstLetterValidator,
   NumbersValuesValidator,
   NumbersRangesValidator,
-  ReasonValidator,
+  PointsCategoryValidator,
 } = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {SettingId} = require('../Settings');
 const Command = require('./Command');
 
-class ChangeReasonInteractionHandler extends InteractionHandler {
+class ChangePointsCategoryHandler extends InteractionHandler {
   handleCommandInteraction(interaction) {
-    this.reason = this.getOptionValue(OptionId.Reason);
+    this.category = this.getOptionValue(OptionId.PointsCategory);
     return interaction.createMessage({
-      content: this.translate('commands.changeReason.messages.confirmation', {
-        reasonName: this.reason.name,
+      content: this.translate('commands.changePointsCategory.messages.confirmation', {
+        categoryName: this.category.name,
       }),
       components: this.createConfirmationForm(),
     });
@@ -28,31 +28,31 @@ class ChangeReasonInteractionHandler extends InteractionHandler {
     const max = this.getOptionValue(OptionId.Max);
     return this.handleConfirmationForm(interaction, async () => {
       try {
-        await this.dataModel.changeReason(this.reason.id, name, min, max);
-        return this.translate('commands.changeReason.messages.success', {
-          reasonName: this.reason.name,
+        await this.dataModel.changePointsCategory(this.category.id, name, min, max);
+        return this.translate('commands.changePointsCategory.messages.success', {
+          categoryName: this.category.name,
         });
       } catch (error) {
-        return this.translate('commands.changeReason.errors.failure', {
-          reasonName: this.reason.name,
+        return this.translate('commands.changePointsCategory.errors.failure', {
+          categoryName: this.category.name,
         });
       }
     });
   }
 }
 
-class ChangeReasonCommand extends Command {
+class ChangePointsCategoryCommand extends Command {
   constructor(...props) {
-    super('change-reason', ...props);
+    super('change-points-category', ...props);
   }
 
   initialize() {
-    this.setDescription(this.translate('commands.changeReason.description'));
+    this.setDescription(this.translate('commands.changePointsCategory.description'));
     this.addOptions([
-      new ReasonOption(OptionId.Reason, this.translate('commands.changeReason.options.reason'), this.dataModel),
-      new StringOption(OptionId.Name, this.translate('commands.changeReason.options.name')),
-      new NumberOption(OptionId.Min, this.translate('commands.changeReason.options.min')),
-      new NumberOption(OptionId.Max, this.translate('commands.changeReason.options.max')),
+      new PointsCategoryOption(OptionId.PointsCategory, this.translate('commands.changePointsCategory.options.pointsCategory'), this.dataModel),
+      new StringOption(OptionId.Name, this.translate('commands.changePointsCategory.options.name')),
+      new NumberOption(OptionId.Min, this.translate('commands.changePointsCategory.options.min')),
+      new NumberOption(OptionId.Max, this.translate('commands.changePointsCategory.options.max')),
     ]);
     const minNameLength = this.settings.get(SettingId.MinNameLength);
     const maxNameLength = this.settings.get(SettingId.MaxNameLength);
@@ -63,14 +63,14 @@ class ChangeReasonCommand extends Command {
       new NumbersRangesValidator([
         [OptionId.Min, OptionId.Max]
       ], this.options),
-      new ReasonValidator(OptionId.Reason, this.dataModel),
+      new PointsCategoryValidator(OptionId.PointsCategory, this.dataModel),
     ]);
     return Promise.resolve();
   }
 
   createInteractionHandler(...props) {
-    return new ChangeReasonInteractionHandler(...props);
+    return new ChangePointsCategoryHandler(...props);
   }
 }
 
-module.exports = ChangeReasonCommand;
+module.exports = ChangePointsCategoryCommand;

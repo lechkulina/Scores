@@ -50,7 +50,7 @@
     "validators": {
       "invalidLength": "❗ **{{description}}** has invalid value. It must be between {{minNameLength}} and {{maxNameLength}}",
       "invalidFirstLetter": "❗ **{{description}}** has to start from upper case letter",
-      "invalidPointsRange": "❗ **{{description}}** has invalid range for the given points add reason **{{reasonName}}**. It must be between {{min}} and {{max}}",
+      "invalidPointsRange": "❗ **{{description}}** has invalid range for the given points category **{{categoryName}}**. It must be between {{min}} and {{max}}",
       "invalidNumberZero": "❗ **{{description}}** can not be below zero",
       "invalidNumbersRange": "❗ **{{description}}** can not value value greater than **{{secondDescription}}**",
       "invalidDateFormat": "❗ **{{description}}** has invalid date format. Required date format is **{{dateInputFormat}}**",
@@ -65,14 +65,14 @@
       "contestFetchFailure": "❗ Failed to fetch contest {{contestId}} data! $t(validators.reportIssue)",
       "unknownContestReward": "❗ Selected contest reward {{rewardId}} does not exist! $t(validators.chooseFromAutocompleteList)",
       "contestRewardFetchFailure": "❗ Failed to fetch contest reward {{rewardId}} data! $t(validators.reportIssue)",
-      "unknownContestVoteCategory": "❗ Selected contest vote category {{voteCategoryId}} does not exist! $t(validators.chooseFromAutocompleteList)",
-      "contestVoteCategoryFetchFailure": "❗ Failed to fetch contest vote category {{voteCategoryId}} data! $t(validators.reportIssue)",
+      "unknownContestVoteCategory": "❗ Selected contest vote category {{categoryId}} does not exist! $t(validators.chooseFromAutocompleteList)",
+      "contestVoteCategoryFetchFailure": "❗ Failed to fetch contest vote category {{categoryId}} data! $t(validators.reportIssue)",
       "unknownContestRule": "❗ Selected contest rule {{ruleId}} does not exist! $t(validators.chooseFromAutocompleteList)",
       "contestRuleFetchFailure": "❗ Failed to fetch contest rule {{ruleId}} data! $t(validators.reportIssue)",
       "unknownContestEntry": "❗ Selected contest entry {{entryId}} does not exist! $t(validators.chooseFromAutocompleteList)",
       "contestEntryFetchFailure": "❗ Failed to fetch contest entry {{entryId}} data! $t(validators.reportIssue)",
-      "unknownReason": "❗ Selected points add reason {{reasonId}} does not exist! $t(validators.chooseFromAutocompleteList)",
-      "reasonFetchFailure": "❗ Failed to fetch points add reason {{reasonId}} data! $t(validators.reportIssue)",
+      "unknownPointsCategory": "❗ Selected points category {{categoryId}} does not exist! $t(validators.chooseFromAutocompleteList)",
+      "pointsCategoryFetchFailure": "❗ Failed to fetch points category {{categoryId}} data! $t(validators.reportIssue)",
       "unknownPoints": "❗ Selected points {{pointsId}} do not exist! $t(validators.chooseFromAutocompleteList)",
       "pointsFetchFailure": "❗ Failed to fetch points {{pointsId}} data! $t(validators.reportIssue)",
       "unknownCommand": "❗ Selected command {{commandId}} does not exist! $t(validators.chooseFromAutocompleteList)",
@@ -93,7 +93,7 @@
       "contestAnnouncementFetchFailure": "❗ Failed to fetch contest announcement {{announcementId}} data! $t(validators.reportIssue)"
     },
     "autoCompete": {
-      "recentlyGivenPoints": "{{points}} points added at {{acquireDate}} with reason {{reasonName}}",
+      "recentlyGivenPoints": "{{points}} points added at {{acquireDate}} in category {{categoryName}}",
       "contestVote": "Granted {{score}} points in category {{categoryName}}"
     },
     "commands": {
@@ -105,17 +105,17 @@
         "description": "Adds points to a user",
         "options": {
           "user": "User for which points points should be added",
-          "reason": "Reason why points are being added",
+          "pointsCategory": "Points category",
           "points": "Number of points"
         },
         "errors": {
           "failure": "❗ Faield to add **{{points}}** points to user **{{userName}}**"
         },
         "messages": {
-          "success": "✅ Added **{{points}}** points to user **{{userName}}** with reason **{{reasonName}}**\nWould you like to send notification?",
-          "directMessage": "{{giverName}} added **{{points}}** points to you with reason {{reasonName}.",
+          "success": "✅ Added **{{points}}** points to user **{{userName}}** in category **{{categoryName}}**\nWould you like to send notification?",
+          "directMessage": "{{giverName}} added **{{points}}** points to you in category {{categoryName}.",
           "directMessageSent": "✅ Direct message to **{{userName}}** was sent.",
-          "publicMessage": "**{{userName}}** gained **{{points}}** points with reason {{reasonName}.",
+          "publicMessage": "**{{userName}}** gained **{{points}}** points in category {{categoryName}.",
           "publicMessageCreated": "✅ Public message at channel **{{channelName}}** was created."
         }
       },
@@ -129,7 +129,7 @@
           "failure": "❗ Failed to remove **{{points}}** points from user **{{userName}}**"
         },
         "messages": {
-          "confirmation": "❓ Are you sure you want to remove **{{points}}** points from user **{{userName}}** added at {{acquireDate}} with reason {{reasonName}}?",
+          "confirmation": "❓ Are you sure you want to remove **{{points}}** points from user **{{userName}}** added at {{acquireDate}} in category {{categoryName}}?",
           "success": "✅ Removed points from user **{{userName}}**"
         }
       },
@@ -138,14 +138,14 @@
         "options": {
           "user": "User which points should be changed",
           "recentlyGivenPoints": "$t(commands.removePoints.options.recentlyGivenPoints)",
-          "reason": "$t(commands.addPoints.options.reason)",
+          "pointsCategory": "$t(commands.addPoints.options.pointsCategory)",
           "points": "$t(commands.addPoints.options.points)"
         },
         "errors": {
           "failure": "❗ Failed to change **{{points}}** points from user **{{userName}}**"
         },
         "messages": {
-          "confirmation": "❓ Are you sure you want to change **{{points}}** points from user **{{userName}}** added at {{acquireDate}} with reason {{reasonName}}?",
+          "confirmation": "❓ Are you sure you want to change **{{points}}** points from user **{{userName}}** added at {{acquireDate}} in category {{categoryName}}?",
           "success": "✅ Changed points from user **{{userName}}**"
         }
       },
@@ -162,57 +162,57 @@
           },
           "rankings": {
             "title": "⬇ Ranking positions:",
-            "pointsItem": "- in category *{{reasonName}}* you take **{{rankingPosition}} position** in which you have **$t(common.points, {\"count\": {{points}} })**",
+            "pointsItem": "- in category *{{categoryName}}* you have **{{rankingPosition}} position** in which you have **$t(common.points, {\"count\": {{points}} })**",
             "contestItem": "- in contest **{{contestName}}** you gained **{{rank}} place** for entry **{{entryName}}**, which gained **$t(common.points, {\"count\": {{scores}} })**"
           },
           "recentlyGiven": {
             "title": "⬇ $t(common.recentlyGivenPoints, {\"count\": {{itemsCount}} })",
-            "pointsItem": "- *{{acquireDate}}* added **$t(common.points, {\"count\": {{points}} })** for reason **{{reasonName}}** by *{{giverName}}*",
+            "pointsItem": "- *{{acquireDate}}* added **$t(common.points, {\"count\": {{points}} })** in category **{{categoryName}}** by *{{giverName}}*",
             "votesItem": "- *{{votingEndDate}}* added **$t(common.points, {\"count\": {{scores}} })** for entry **{{entryName}}** in contest **{{contestName}}** submitted *{{submitDate}}*"
           }
         }
       },
-      "addReason": {
-        "description": "Adds points add reason",
+      "addPointsCategory": {
+        "description": "Adds points category",
         "options": {
-          "name": "Name of a points add reason",
-          "min": "Minimal number of points that can be added for this reason",
-          "vmax": "Maximum number of points that can be added for this reason"
+          "name": "Name of a the category",
+          "min": "Minimal number of points that can be added for this category",
+          "vmax": "Maximum number of points that can be added for this category"
         },
         "errors": {
-          "failure": "❗ Failed to add points add reason."
+          "failure": "❗ Failed to add points add category."
         },
         "messages": {
-          "success": "✅ Added new points add reason **{{reasonName}}**"
+          "success": "✅ Added new points category **{{categoryName}}**"
         }
       },
-      "removeReason": {
-        "description": "Removes existing points add reason.",
+      "removePointsCategory": {
+        "description": "Removes existing points category",
         "options": {
-          "reason": "Points add reason"
+          "pointsCategory": "Points add category"
         },
         "errors": {
-          "failure": "❗ Failed to removed points add reason **{{reasonName}}**"
+          "failure": "❗ Failed to removed points category **{{categoryName}}**"
         },
         "messages": {
-          "confirmation": "❓ Are you sure you want to remove points add reason **{{reasonName}}**?",
-          "success": "✅ Removed points add reason **{{reasonName}}**"
+          "confirmation": "❓ Are you sure you want to remove points category **{{categoryName}}**?",
+          "success": "✅ Removed points category **{{categoryName}}**"
         }
       },
-      "changeReason": {
-        "description": "Changes existing points add reason.",
+      "changePointsCategory": {
+        "description": "Changes existing points category",
         "options": {
-          "reason": "$t(commands.removeReason.options.reason)",
-          "name": "$t(commands.addReason.options.name)",
-          "min": "$t(commands.addReason.options.min)",
-          "max": "$t(commands.addReason.options.max)"
+          "pointsCategory": "$t(commands.removePointsCategory.options.pointsCategory)",
+          "name": "$t(commands.addPointsCategory.options.name)",
+          "min": "$t(commands.addPointsCategory.options.min)",
+          "max": "$t(commands.addPointsCategory.options.max)"
         },
         "errors": {
-          "failure": "❗ Failed to change points add reason **{{reasonName}}**"
+          "failure": "❗ Failed to change points category **{{categoryName}}**"
         },
         "messages": {
-          "confirmation": "❓ Are you sure you want to change points add reason **{{reasonName}}**?",
-          "success": "✅ Changed points add reason **{{reasonName}}**"
+          "confirmation": "❓ Are you sure you want to change points category **{{categoryName}}**?",
+          "success": "✅ Changed points category **{{categoryName}}**"
         }
       },
       "showHelp": {

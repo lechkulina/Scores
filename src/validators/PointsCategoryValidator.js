@@ -1,6 +1,6 @@
 const Validator = require('./Validator');
 
-class ContestVoteCategoryValidator extends Validator {
+class PointsCategoryValidator extends Validator {
   constructor(categoryOptionId, dataModel) {
     super();
     this.categoryOptionId = categoryOptionId;
@@ -11,17 +11,17 @@ class ContestVoteCategoryValidator extends Validator {
     const issues = [];
     const categoryId = optionsValues.get(this.categoryOptionId);
     try {
-      const category = await this.dataModel.getContestVoteCategory(categoryId);
+      const category = await this.dataModel.getPointsCategory(categoryId);
       if (category) {
         optionsValues.set(this.categoryOptionId, category);
       } else {
-        issues.push(translate('validators.unknownContestVoteCategory', {
+        issues.push(translate('validators.unknownPointsCategory', {
           categoryId,
         }));
       }
     } catch(error) {
-      console.error(`Failed to fetch contest vote category ${categoryId} data - got error`, error);
-      issues.push(translate('validators.contestVoteCategoryFetchFailure', {
+      console.error(`Failed to fetch points category ${categoryId} data - got error`, error);
+      issues.push(translate('validators.pointsCategoryFetchFailure', {
         categoryId,
       }));
     }
@@ -29,4 +29,4 @@ class ContestVoteCategoryValidator extends Validator {
   }
 }
 
-module.exports = ContestVoteCategoryValidator;
+module.exports = PointsCategoryValidator;

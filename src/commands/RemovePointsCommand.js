@@ -16,7 +16,7 @@ class RemovePointsInteractionHandler extends InteractionHandler {
         userName: this.member.user.username,
         points: this.pointsEntry.points,
         acquireDate: moment(this.pointsEntry.acquireDate).format(dateAndTimeOutputFormat),
-        reasonName: this.pointsEntry.reasonName,
+        categoryName: this.pointsEntry.categoryName,
       }),
       components: this.createConfirmationForm(),
     });

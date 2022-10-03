@@ -15,19 +15,20 @@ class RecentlyGivenPointsOption extends Option {
   }
 
   async getAutoCompeteResults(interaction, optionValue, translate) {
+    const guildId = interaction.guildID;
     const giverId = interaction.member.user.id;
     const userId = interaction.data.options.find(({name}) => name === this.optionUserId)?.value;
     if (!userId) {
       return [];
     }
     const dateAndTimeOutputFormat = this.settings.get(SettingId.DateAndTimeOutputFormat);
-    const points = await this.dataModel.getUserRecentlyGivenPoints(userId, giverId, autoCompeteResultsLimit);
+    const points = await this.dataModel.getUserRecentlyGivenPointsOptions(guildId, userId, giverId, autoCompeteResultsLimit);
     const results = points
-      .map(({id, points, acquireDate, reasonName}) => {
+      .map(({id, points, acquireDate, categoryName}) => {
         const name = translate('autoCompete.recentlyGivenPoints', {
           points,
           acquireDate: moment(acquireDate).format(dateAndTimeOutputFormat),
-          reasonName,
+          categoryName,
         });
         return {
           name: formatAutoCompleteName(id, name),

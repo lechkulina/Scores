@@ -5,8 +5,8 @@ const {SettingId} = require('../Settings');
 const Command = require('./Command');
 
 class ShowMyPointsInteractionHandler extends InteractionHandler {
-  async generateHeaderSection(userId, contestVotesSummary) {
-    const pointsSummary = await this.dataModel.getUserAccumulatedPointsSummary(userId);
+  async generateHeaderSection(guildId, userId, contestVotesSummary) {
+    const pointsSummary = await this.dataModel.getUserAccumulatedPointsSummary(guildId, userId);
     if (!pointsSummary && contestVotesSummary.length === 0) {
       return;
     }
@@ -33,7 +33,7 @@ class ShowMyPointsInteractionHandler extends InteractionHandler {
   }
 
   async generateRankingsSection(guildId, userId) {
-    const pointsSummary = await this.dataModel.getUserPointsRankingsSummary(userId);
+    const pointsSummary = await this.dataModel.getUserPointsRankingsSummary(guildId, userId);
     const contestsSummary = await this.dataModel.getUserContestsRankingsSummary(guildId, userId);
     if (pointsSummary.length === 0 && contestsSummary.length === 0) {
       return;
@@ -42,7 +42,7 @@ class ShowMyPointsInteractionHandler extends InteractionHandler {
     const items = [];
     pointsSummary.forEach(({
       points,
-      reasonName,
+      categoryName,
       rank,
     }) => {
       items.push({
@@ -50,7 +50,7 @@ class ShowMyPointsInteractionHandler extends InteractionHandler {
         translate: () => (
           this.translate(`${key}.pointsItem`, {
             points,
-            reasonName,
+            categoryName,
             rank,
           })
         )
@@ -85,9 +85,9 @@ class ShowMyPointsInteractionHandler extends InteractionHandler {
     return sections.join(Entities.NewLine);
   }
 
-  async generateRecentlyGivenSection(userId, contestVotesSummary) {
+  async generateRecentlyGivenSection(guildId, userId, contestVotesSummary) {
     const limit = this.settings.get(SettingId.RecentlyGivenPointsLimit);
-    const pointsSummary = await this.dataModel.getUserRecentlyGivenPointsSummary(userId, limit);
+    const pointsSummary = await this.dataModel.getUserRecentlyGivenPointsSummary(guildId, userId, limit);
     if (pointsSummary.length === 0 && contestVotesSummary.length === 0) {
       return;
     }
@@ -98,7 +98,7 @@ class ShowMyPointsInteractionHandler extends InteractionHandler {
       points,
       acquireDate,
       giverName,
-      reasonName
+      categoryName
     }) => {
       items.push({
         date: acquireDate,
@@ -107,7 +107,7 @@ class ShowMyPointsInteractionHandler extends InteractionHandler {
             points,
             acquireDate: moment(acquireDate).format(dateAndTimeOutputFormat),
             giverName,
-            reasonName,
+            categoryName,
           })
         )
       });
@@ -155,9 +155,9 @@ class ShowMyPointsInteractionHandler extends InteractionHandler {
       const contestVotesSummary = await this.dataModel.getUserContestsVotesSummary(guildId, userId);
       return this.createLongMessage(interaction,
         joinSections([
-          await this.generateHeaderSection(userId, contestVotesSummary),
+          await this.generateHeaderSection(guildId, userId, contestVotesSummary),
           await this.generateRankingsSection(guildId, userId),
-          await this.generateRecentlyGivenSection(userId, contestVotesSummary),
+          await this.generateRecentlyGivenSection(guildId, userId, contestVotesSummary),
         ], Entities.EmptyLine)
       );
     } catch (error) {

@@ -107,25 +107,25 @@ class ContestsAnnouncementsManager {
     if (!announcement.showVoteCategories) {
       return;
     }
-    const voteCategories = await this.dataModel.getAssignedContestVoteCategories(contest.id);
+    const categories = await this.dataModel.getAssignedContestVoteCategories(contest.id);
     const key = `announcements.contest.voteCategories.${announcement.contestState}`;
     const sections = [
       this.translate(`${key}.title`),
-      this.translate(`${key}.${voteCategories.length === 0 ? 'noItems' : 'description'}`, {
-        voteCategoriesCount: voteCategories.length,
+      this.translate(`${key}.${categories.length === 0 ? 'noItems' : 'description'}`, {
+        categoriesCount: categories.length,
       }),
     ];
-    voteCategories.forEach(({name, description, max}) => {
+    categories.forEach(({name, description, max}) => {
       sections.push(
         this.translate('announcements.contest.voteCategories.item', {
-          voteCategoryName: name,
-          voteCategoryDescription: description,
-          maxPointsPerVoteCategory: max,
+          categoryName: name,
+          categoryDescription: description,
+          maxPointsPerCategory: max,
         })
       );
     });
-    if (voteCategories.length > 0) {
-      const maxPointsPerVoting = voteCategories.reduce((points, voteCategory) => {
+    if (categories.length > 0) {
+      const maxPointsPerVoting = categories.reduce((points, voteCategory) => {
         points += voteCategory.max;
         return points;
       }, 0);

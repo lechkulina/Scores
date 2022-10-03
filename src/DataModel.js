@@ -158,70 +158,73 @@ class DataModel extends EventEmitter {
     return this.database.exec(require('./schema.js'));
   }
 
-  addReason(name, min, max) {
+  addPointsCategory(name, min, max, guildId) {
     return this.database.run(`
-      INSERT INTO Reason(
+      INSERT INTO PointsCategory(
         name,
         min,
-        max
+        max,
+        guildId
       )
       VALUES (
         "${name}",
         ${min},
-        ${max}
+        ${max},
+        "${guildId}"
       );`
     );
   }
 
-  removeReason(reasonId) {
+  removePointsCategory(pointsCategoryId) {
     return this.database.run(`
-      DELETE FROM Reason
-      WHERE id = ${reasonId};`
+      DELETE FROM PointsCategory
+      WHERE id = ${pointsCategoryId};`
     );
   }
 
-  changeReason(reasonId, name, min, max) {
+  changePointsCategory(pointsCategoryId, name, min, max) {
     return this.database.run(`
-      UPDATE Reason
+      UPDATE PointsCategory
       SET name = "${name}",
           min = ${min},
           max = ${max}
-      WHERE id = ${reasonId};`
+      WHERE id = ${pointsCategoryId};`
     );
   }
 
-  getReasons(limit) {
+  getPointsCategories(guildId, limit) {
     return this.database.all(
       joinClauses([`
         SELECT id, name, min, max
-        FROM Reason`,
+        FROM PointsCategory
+        WHERE guildId = "${guildId}"`,
         createLimitClause(limit),
       ])
     );
   }
 
-  getReason(reasonId) {
+  getPointsCategory(pointsCategoryId) {
     return this.database.get(`
-      SELECT id, name, min, max
-      FROM Reason
-      WHERE id = ${reasonId};`
+      SELECT id, name, min, max, guildId
+      FROM PointsCategory
+      WHERE id = ${pointsCategoryId};`
     );
   }
   
-  addPoints(points, userId, giverId, reasonId) {
+  addPoints(points, userId, giverId, pointsCategoryId) {
     return this.database.run(`
       INSERT INTO Points(
         points,
         userId,
         giverId,
-        reasonId,
+        pointsCategoryId,
         acquireDate
       )
       VALUES (
         ${points},
         "${userId}",
         "${giverId}",
-        ${reasonId},
+        "${pointsCategoryId}",
         ${Date.now()}
       );`
     );
@@ -234,67 +237,72 @@ class DataModel extends EventEmitter {
     );
   }
 
-  changePoints(pointsId, points, reasonId) {
+  changePoints(pointsId, points, pointsCategoryId) {
     return this.database.run(`
       UPDATE Points
       SET points = ${points},
-          reasonId = ${reasonId}
+          pointsCategoryId = ${pointsCategoryId}
       WHERE id = ${pointsId};`
     );
   }
 
-  getUserAccumulatedPointsSummary(userId) {
+  getUserAccumulatedPointsSummary(guildId, userId) {
     return this.database.get(`
       SELECT SUM(points) AS points,
              COUNT(1) AS pointsCount,
              MIN(acquireDate) AS minAcquireDate,
              MAX(acquireDate) AS maxAcquireDate
       FROM Points
-      WHERE userId = "${userId}"`
+      INNER JOIN PointsCategory
+        ON PointsCategory.id = Points.pointsCategoryId
+      WHERE PointsCategory.guildId = "${guildId}"
+        AND userId = "${userId}";`
     );
   }
 
-  getUserRecentlyGivenPointsSummary(userId, limit) {
+  getUserRecentlyGivenPointsSummary(guildId, userId, limit) {
     return this.database.all(
       joinClauses([`
         SELECT Points.points AS points,
                Points.acquireDate AS acquireDate,
                Giver.name AS giverName,
-               Reason.name AS reasonName
+               PointsCategory.name AS categoryName
         FROM Points
         INNER JOIN User AS Giver
           ON Giver.id = giverId
-        INNER JOIN Reason
-          ON Reason.id = Points.reasonId
-        WHERE Points.userId = "${userId}"
+        INNER JOIN PointsCategory
+          ON PointsCategory.id = Points.pointsCategoryId
+        WHERE PointsCategory.guildId = "${guildId}"
+          AND Points.userId = "${userId}"
         ORDER BY Points.acquireDate DESC`,
         createLimitClause(limit),
       ])
     );
   }
 
-  getUserPointsRankingsSummary(userId) {
+  getUserPointsRankingsSummary(guildId, userId) {
     return this.database.all(`
       SELECT PointsWithRanks.points,
              PointsWithRanks.rank,
-             Reason.name AS reasonName
+             PointsCategory.name AS categoryName
       FROM (
-        SELECT PointsPerUserReason.*,
+        SELECT PointsPerUserCategory.*,
                ROW_NUMBER() OVER (
-                 PARTITION BY PointsPerUserReason.reasonId
-                 ORDER BY PointsPerUserReason.points DESC
+                 PARTITION BY PointsPerUserCategory.pointsCategoryId
+                 ORDER BY PointsPerUserCategory.points DESC
                ) AS rank
         FROM (
           SELECT userId,
-                 reasonId,
+                 pointsCategoryId,
                  SUM(points) AS points
           FROM Points
-          GROUP BY userId, reasonId
-        ) AS PointsPerUserReason
+          GROUP BY userId, pointsCategoryId
+        ) AS PointsPerUserCategory
       ) AS PointsWithRanks
-      INNER JOIN Reason
-        ON Reason.id = PointsWithRanks.reasonId
-      WHERE PointsWithRanks.userId = "${userId}"`
+      INNER JOIN PointsCategory
+        ON PointsCategory.id = PointsWithRanks.pointsCategoryId
+      WHERE PointsCategory.guildId = "${guildId}"
+        AND  PointsWithRanks.userId = "${userId}"`
     );
   }
 
@@ -353,18 +361,19 @@ class DataModel extends EventEmitter {
     );
   }
 
-  getUserRecentlyGivenPoints(userId, giverId, limit) {
+  getUserRecentlyGivenPointsOptions(guildId, userId, giverId, limit) {
     return this.database.all(
       joinClauses([`
         SELECT Points.id,
                Points.points AS points,
                Points.acquireDate AS acquireDate,
-               Reason.name AS reasonName
+               PointsCategory.name AS categoryName
         FROM Points
-        INNER JOIN Reason
-          ON Reason.id = Points.reasonId
+        INNER JOIN PointsCategory
+          ON PointsCategory.id = Points.pointsCategoryId
         WHERE Points.userId = "${userId}"
-          AND Points.giverId = ${giverId}
+          AND Points.giverId = "${giverId}"
+          AND PointsCategory.guildId = "${guildId}"
         ORDER BY Points.acquireDate DESC`,
         createLimitClause(limit),
       ])
@@ -377,12 +386,12 @@ class DataModel extends EventEmitter {
              Points.points AS points,
              Points.acquireDate AS acquireDate,
              Giver.name AS giverName,
-             Reason.name AS reasonName
+             PointsCategory.name AS categoryName
       FROM Points
       INNER JOIN User AS Giver
         ON Giver.id = giverId
-      INNER JOIN Reason
-        ON Reason.id = Points.reasonId
+      INNER JOIN PointsCategory
+        ON PointsCategory.id = Points.pointsCategoryId
       WHERE Points.id="${pointsId}"`
     );
   }
@@ -710,8 +719,16 @@ class DataModel extends EventEmitter {
   ) {
     await this.database.exec(`
       BEGIN TRANSACTION;
-        INSERT OR REPLACE INTO Channel(id, name, guildId)
-        VALUES ("${channelId}", "${channelName}", "${guildId}");
+        INSERT OR REPLACE INTO Channel(
+          id,
+          name,
+          guildId
+        )
+        VALUES (
+          "${channelId}",
+          "${channelName}",
+          "${guildId}"
+        );
 
         UPDATE ContestAnnouncement
         SET name = "${name}",
@@ -769,7 +786,8 @@ class DataModel extends EventEmitter {
       joinClauses([`
         SELECT ContestAnnouncement.id, ContestAnnouncement.name
         FROM ContestAnnouncement
-        INNER JOIN ContestAnnouncements ON ContestAnnouncements.contestAnnouncementId = ContestAnnouncement.id
+        INNER JOIN ContestAnnouncements
+          ON ContestAnnouncements.contestAnnouncementId = ContestAnnouncement.id
         WHERE ContestAnnouncements.contestId = ${contestId}`,
         createLimitClause(limit),
       ])
@@ -778,8 +796,16 @@ class DataModel extends EventEmitter {
 
   async assignContestAnnouncement(contestId, contestAnnouncementId, guildId) {
     await this.database.run(`
-      INSERT INTO ContestAnnouncements(contestId, contestAnnouncementId, guildId)
-      VALUES (${contestId}, ${contestAnnouncementId}, "${guildId}");`
+      INSERT INTO ContestAnnouncements(
+        contestId,
+        contestAnnouncementId,
+        guildId
+      )
+      VALUES (
+        ${contestId},
+        ${contestAnnouncementId},
+        "${guildId}"
+      );`
     );
     this.emit(DataModelEvents.onContestAnnouncementAssigned, contestId, contestAnnouncementId);
   }
@@ -788,7 +814,8 @@ class DataModel extends EventEmitter {
     await this.database.run(`
       UPDATE ContestAnnouncements
       SET removed = 1
-      WHERE contestId = ${contestId} AND contestAnnouncementId = ${contestAnnouncementId};`
+      WHERE contestId = ${contestId}
+        AND contestAnnouncementId = ${contestAnnouncementId};`
     );
     this.emit(DataModelEvents.onContestAnnouncementUnassigned, contestId, contestAnnouncementId);
   }
@@ -798,7 +825,8 @@ class DataModel extends EventEmitter {
       UPDATE ContestAnnouncements
       SET messageId = "${messageId}",
           published = 1
-      WHERE contestId = ${contestId} AND contestAnnouncementId = ${contestAnnouncementId};`
+      WHERE contestId = ${contestId}
+        AND contestAnnouncementId = ${contestAnnouncementId};`
     );
   }
 
@@ -807,7 +835,8 @@ class DataModel extends EventEmitter {
       UPDATE ContestAnnouncements
       SET messageId = NULL,
           published = 0
-      WHERE contestId = ${contestId} AND contestAnnouncementId = ${contestAnnouncementId};`
+      WHERE contestId = ${contestId}
+        AND contestAnnouncementId = ${contestAnnouncementId};`
     );
   }
 
@@ -855,10 +884,23 @@ class DataModel extends EventEmitter {
       .join(', ');
     await this.database.exec(`
       BEGIN TRANSACTION;
-        INSERT OR REPLACE INTO Message(id, guildId, channelId)
-        VALUES ("${messageId}", "${guildId}", "${channelId}");
+        INSERT OR REPLACE INTO Message(
+          id,
+          guildId,
+          channelId
+        )
+        VALUES (
+          "${messageId}",
+          "${guildId}",
+          "${channelId}"
+        );
 
-        INSERT INTO MessageChunk(id, hash, position, messageId)
+        INSERT INTO MessageChunk(
+          id,
+          hash,
+          position,
+          messageId
+        )
         VALUES ${messageChunksValues};
       COMMIT;`
     );
@@ -968,7 +1010,8 @@ class DataModel extends EventEmitter {
              published,
              removed
       FROM ContestAnnouncements
-      INNER JOIN ContestVoteCategories ON ContestVoteCategories.contestId = ContestAnnouncements.contestId
+      INNER JOIN ContestVoteCategories
+        ON ContestVoteCategories.contestId = ContestAnnouncements.contestId
       WHERE ContestVoteCategories.contestVoteCategoryId = ${contestVoteCategoryId};`
     );
   }
@@ -1031,7 +1074,8 @@ class DataModel extends EventEmitter {
                description,
                max
         FROM ContestVoteCategory
-        INNER JOIN ContestVoteCategories ON ContestVoteCategories.contestVoteCategoryId = ContestVoteCategory.id
+        INNER JOIN ContestVoteCategories
+          ON ContestVoteCategories.contestVoteCategoryId = ContestVoteCategory.id
         WHERE ContestVoteCategories.contestId = ${contestId}`,
         createLimitClause(limit),
       ])
@@ -1085,7 +1129,8 @@ class DataModel extends EventEmitter {
              published,
              removed
       FROM ContestAnnouncements
-      INNER JOIN ContestRules ON ContestRules.contestId = ContestAnnouncements.contestId
+      INNER JOIN ContestRules
+        ON ContestRules.contestId = ContestAnnouncements.contestId
       WHERE ContestRules.contestRuleId = ${contestRuleId};`
     );
   }
@@ -1133,7 +1178,8 @@ class DataModel extends EventEmitter {
   async unassignContestRule(contestId, contestRuleId) {
     await this.database.run(`
       DELETE FROM ContestRules
-      WHERE contestId = ${contestId} AND contestRuleId = ${contestRuleId};`
+      WHERE contestId = ${contestId}
+        AND contestRuleId = ${contestRuleId};`
     );
     this.emit(DataModelEvents.onContestRuleUnassigned, contestId, contestRuleId);
   }
@@ -1143,7 +1189,8 @@ class DataModel extends EventEmitter {
       joinClauses([`
         SELECT ContestRule.id, ContestRule.description
         FROM ContestRule
-        INNER JOIN ContestRules ON ContestRules.contestRuleId = ContestRule.id
+        INNER JOIN ContestRules
+          ON ContestRules.contestRuleId = ContestRule.id
         WHERE ContestRules.contestId = ${contestId}`,
         createLimitClause(limit),
       ])
@@ -1194,7 +1241,8 @@ class DataModel extends EventEmitter {
              published,
              removed
       FROM ContestAnnouncements
-      INNER JOIN ContestRewards ON ContestRewards.contestId = ContestAnnouncements.contestId
+      INNER JOIN ContestRewards
+        ON ContestRewards.contestId = ContestAnnouncements.contestId
       WHERE ContestRewards.contestRewardId = ${contestRewardId};`
     );
   }
@@ -1236,7 +1284,8 @@ class DataModel extends EventEmitter {
   async unassignContestReward(contestId, contestRewardId) {
     await this.database.run(`
       DELETE FROM ContestRewards
-      WHERE contestId = ${contestId} AND contestRewardId = ${contestRewardId};`
+      WHERE contestId = ${contestId}
+        AND contestRewardId = ${contestRewardId};`
     );
     this.emit(DataModelEvents.onContestRewardUnassigned, contestId, contestRewardId);
   }
@@ -1246,7 +1295,8 @@ class DataModel extends EventEmitter {
       joinClauses([`
         SELECT ContestReward.id, ContestReward.description
         FROM ContestReward
-        INNER JOIN ContestRewards ON ContestRewards.contestRewardId = ContestReward.id
+        INNER JOIN ContestRewards
+          ON ContestRewards.contestRewardId = ContestReward.id
         WHERE ContestRewards.contestId = ${contestId}`,
         createLimitClause(limit),
       ])
@@ -1301,7 +1351,9 @@ class DataModel extends EventEmitter {
   async cancelContestEntry(contestEntryId, contestId, authorId) {
     await this.database.run(`
       DELETE FROM ContestEntry
-      WHERE id = ${contestEntryId} AND contestId = ${contestId} AND authorId = ${authorId};`
+      WHERE id = ${contestEntryId}
+        AND contestId = ${contestId}
+        AND authorId = ${authorId};`
     );
     this.emit(DataModelEvents.onContestEntryCanceled, contestId);
   }
@@ -1318,16 +1370,19 @@ class DataModel extends EventEmitter {
       SET name = "${name}",
           description = "${description}",
           url = "${url}"
-      WHERE id = ${contestEntryId} AND contestId = ${contestId};`
+      WHERE id = ${contestEntryId}
+        AND contestId = ${contestId};`
     );
     this.emit(DataModelEvents.onContestEntryChanged, contestId);
   }
 
   getUserWithMostEntries(contestId) {
     return this.database.get(`
-      SELECT User.name AS userName, COUNT(1) AS entriesCount
+      SELECT User.name AS userName,
+             COUNT(1) AS entriesCount
       FROM User
-      INNER JOIN ContestEntry ON ContestEntry.authorId = User.id
+      INNER JOIN ContestEntry
+        ON ContestEntry.authorId = User.id
       WHERE ContestEntry.contestId = ${contestId}
       GROUP BY User.id
       HAVING entriesCount > 1
@@ -1346,7 +1401,8 @@ class DataModel extends EventEmitter {
                ContestEntry.submitDate, 
                User.name AS authorName
         FROM ContestEntry
-        INNER JOIN User ON User.id = ContestEntry.authorId`,
+        INNER JOIN User
+          ON User.id = ContestEntry.authorId`,
         createContestEntriesWhereClause(params),
         'ORDER BY ContestEntry.submitDate ASC',
       ])
@@ -1381,10 +1437,21 @@ class DataModel extends EventEmitter {
   async isContestEntryUnique(name, url, guildId) {
     return (await this.database.all(`
       SELECT
-        (SELECT 1 FROM ContestEntry WHERE ContestEntry.contestId = Contest.id AND name = "${name}") AS hasName,
-        (SELECT 1 FROM ContestEntry WHERE ContestEntry.contestId = Contest.id AND url = "${url}") AS hasUrl 
+        (
+          SELECT 1
+          FROM ContestEntry
+          WHERE ContestEntry.contestId = Contest.id
+            AND name = "${name}"
+        ) AS hasName,
+        (
+          SELECT 1
+          FROM ContestEntry
+          WHERE ContestEntry.contestId = Contest.id
+            AND url = "${url}"
+        ) AS hasUrl 
       FROM Contest
-      WHERE guildId = "${guildId}" AND (hasName = 1 OR hasUrl = 1)
+      WHERE guildId = "${guildId}"
+        AND (hasName = 1 OR hasUrl = 1)
       LIMIT 1`
     )).length === 0;
   }
@@ -1407,7 +1474,9 @@ class DataModel extends EventEmitter {
     await this.database.run(`
       INSERT INTO ContestVote(
         contestEntryId,
-        contestVoteCategoryId, voterId, score
+        contestVoteCategoryId,
+        voterId,
+        score
       )
       VALUES (
         ${contestEntryId},
@@ -1499,11 +1568,21 @@ class DataModel extends EventEmitter {
     return this.database.all(`
       SELECT User.name AS voterName,
              COUNT(ContestVote.id) AS votesCount,
-             (SELECT COUNT(1) FROM ContestVoteCategories WHERE ContestVoteCategories.contestId = ContestEntry.contestId) AS categoriesCount,
-             (SELECT COUNT(1) FROM ContestEntry AS A WHERE A.contestId = ContestEntry.contestId) AS entriesCount
+             (
+               SELECT COUNT(1)
+               FROM ContestVoteCategories
+               WHERE ContestVoteCategories.contestId = ContestEntry.contestId
+             ) AS categoriesCount,
+             (
+               SELECT COUNT(1)
+               FROM ContestEntry AS A
+               WHERE A.contestId = ContestEntry.contestId
+             ) AS entriesCount
       FROM ContestVote
-      INNER JOIN User ON User.id = ContestVote.voterId
-      INNER JOIN ContestEntry on ContestEntry.id = ContestVote.contestEntryId
+      INNER JOIN User
+        ON User.id = ContestVote.voterId
+      INNER JOIN ContestEntry
+        ON ContestEntry.id = ContestVote.contestEntryId
       GROUP BY User.id;
       WHERE ContestEntry.contestId = ${contestId}
       ORDER BY votesCount DESC;`
@@ -1528,9 +1607,13 @@ class DataModel extends EventEmitter {
         CROSS JOIN ContestVoteCategories
         WHERE ContestEntry.contestId = ${contestId}
       )
-      INNER JOIN User ON User.id = authorId
-      INNER JOIN ContestVoteCategory ON ContestVoteCategory.id = categoryId
-      LEFT OUTER JOIN ContestVote ON ContestVote.contestEntryId = entryId AND ContestVote.contestVoteCategoryId = categoryId
+      INNER JOIN User
+        ON User.id = authorId
+      INNER JOIN ContestVoteCategory
+        ON ContestVoteCategory.id = categoryId
+      LEFT OUTER JOIN ContestVote
+        ON ContestVote.contestEntryId = entryId
+        AND ContestVote.contestVoteCategoryId = categoryId
       GROUP BY entryId, categoryId;`
     );
   }
@@ -1542,8 +1625,10 @@ class DataModel extends EventEmitter {
              User.name AS authorName,
              SUM(ContestVote.score) AS scores
       FROM ContestEntry
-      INNER JOIN User ON User.id = ContestEntry.authorId
-      LEFT JOIN ContestVote ON ContestVote.contestEntryId = ContestEntry.id
+      INNER JOIN User
+        ON User.id = ContestEntry.authorId
+      LEFT JOIN ContestVote
+        ON ContestVote.contestEntryId = ContestEntry.id
       WHERE ContestEntry.contestId = ${contestId}
       GROUP BY ContestEntry.id
       ORDER BY scores DESC;`
@@ -1557,14 +1642,17 @@ class DataModel extends EventEmitter {
              User.name AS authorName,
              SUM(ContestVote.score) AS scores
       FROM ContestEntry
-      INNER JOIN User ON User.id = ContestEntry.authorId
-      LEFT JOIN ContestVote ON ContestVote.contestEntryId = ContestEntry.id
+      INNER JOIN User
+        ON User.id = ContestEntry.authorId
+      LEFT JOIN ContestVote
+        ON ContestVote.contestEntryId = ContestEntry.id
       WHERE ContestEntry.contestId = ${contestId}
       GROUP BY ContestEntry.id
       HAVING scores = (
         SELECT SUM(BContestVote.score) AS topScores
         FROM ContestEntry AS BContestEntry
-        INNER JOIN ContestVote AS BContestVote ON BContestEntry.id = BContestVote.contestEntryId
+        INNER JOIN ContestVote AS BContestVote
+          ON BContestEntry.id = BContestVote.contestEntryId
         WHERE BContestEntry.contestId = ContestEntry.contestId
         GROUP BY BContestEntry.id
         LIMIT 1

@@ -1,10 +1,15 @@
 const {OptionId, StringOption, NumberOption} = require('../options/CommonOptions');
-const {StringsLengthsValidator, FirstLetterValidator, NumbersValuesValidator, NumbersRangesValidator} = require('../validators/validators');
+const {
+  StringsLengthsValidator,
+  FirstLetterValidator,
+  NumbersValuesValidator,
+  NumbersRangesValidator
+} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {SettingId} = require('../Settings');
 const Command = require('./Command');
 
-class AddReasonInteractionHandler extends InteractionHandler {
+class AddPointsCategoryHandler extends InteractionHandler {
   initialize(interaction) {
     this.name = this.getOptionValue(OptionId.Name);
     this.min = this.getOptionValue(OptionId.Min);
@@ -15,29 +20,30 @@ class AddReasonInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     this.markAsDone();
     try {
-      await this.dataModel.addReason(this.name, this.min, this.max);
+      const guildId = interaction.guildID;
+      await this.dataModel.addPointsCategory(this.name, this.min, this.max, guildId);
       return interaction.createMessage({
-        content: this.translate('commands.addReason.messages.success', {
-          reasonName: this.name,
+        content: this.translate('commands.addPointsCategory.messages.success', {
+          categoryName: this.name,
         })
       });
     } catch (error) {
-      return interaction.createMessage(this.translate('commands.addReason.errors.failure'));
+      return interaction.createMessage(this.translate('commands.addPointsCategory.errors.failure'));
     }
   }
 }
 
-class AddReasonCommand extends Command {
+class AddPointsCategoryCommand extends Command {
   constructor(...props) {
-    super('add-reason', ...props);
+    super('add-points-category', ...props);
   }
 
   initialize() {
-    this.setDescription(this.translate('commands.addReason.description'));
+    this.setDescription(this.translate('commands.addPointsCategory.description'));
     this.addOptions([
-      new StringOption(OptionId.Name, this.translate('commands.addReason.options.name')),
-      new NumberOption(OptionId.Min, this.translate('commands.addReason.options.min')),
-      new NumberOption(OptionId.Max, this.translate('commands.addReason.options.max')),
+      new StringOption(OptionId.Name, this.translate('commands.addPointsCategory.options.name')),
+      new NumberOption(OptionId.Min, this.translate('commands.addPointsCategory.options.min')),
+      new NumberOption(OptionId.Max, this.translate('commands.addPointsCategory.options.max')),
     ]);
     const minNameLength = this.settings.get(SettingId.MinNameLength);
     const maxNameLength = this.settings.get(SettingId.MaxNameLength);
@@ -53,8 +59,8 @@ class AddReasonCommand extends Command {
   }
 
   createInteractionHandler(...props) {
-    return new AddReasonInteractionHandler(...props);
+    return new AddPointsCategoryHandler(...props);
   }
 }
 
-module.exports = AddReasonCommand;
+module.exports = AddPointsCategoryCommand;
