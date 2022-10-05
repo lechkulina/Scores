@@ -13,7 +13,7 @@ class ContestVoteOption extends Option {
 
   async getAutoCompeteResults(interaction, optionValue, translate) {
     const voterId = this.owned ? interaction.member.user.id : undefined;
-    const contestEntryId = interaction.data.options.find(({name}) => name === this.entryOptionId)?.value;
+    const contestEntryId = this.findOptionValue(interaction, this.entryOptionId);
     if (!contestEntryId) {
       return [];
     }

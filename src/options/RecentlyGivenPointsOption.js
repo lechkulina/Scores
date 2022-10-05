@@ -17,7 +17,7 @@ class RecentlyGivenPointsOption extends Option {
   async getAutoCompeteResults(interaction, optionValue, translate) {
     const guildId = interaction.guildID;
     const giverId = interaction.member.user.id;
-    const userId = interaction.data.options.find(({name}) => name === this.optionUserId)?.value;
+    const userId = this.findOptionValue(interaction, this.optionUserId);
     if (!userId) {
       return [];
     }

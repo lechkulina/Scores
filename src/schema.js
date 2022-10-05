@@ -77,11 +77,11 @@ CREATE TABLE IF NOT EXISTS ContestRule(
   guildId TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS ContestRules(
-  id INTEGER PRIMARY KEY,
   contestId INTEGER REFERENCES Contest(id)
     ON DELETE CASCADE,
   contestRuleId INTEGER REFERENCES ContestRule(id)
-    ON DELETE CASCADE
+    ON DELETE CASCADE,
+  PRIMARY KEY(contestId, contestRuleId)
 );
 CREATE TABLE IF NOT EXISTS ContestReward(
   id INTEGER PRIMARY KEY,
@@ -90,11 +90,11 @@ CREATE TABLE IF NOT EXISTS ContestReward(
   guildId TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS ContestRewards(
-  id INTEGER PRIMARY KEY,
   contestId INTEGER NOT NULL REFERENCES Contest(id)
     ON DELETE CASCADE,
   contestRewardId INTEGER NOT NULL REFERENCES ContestReward(id)
-    ON DELETE CASCADE
+    ON DELETE CASCADE,
+  PRIMARY KEY(contestId, contestRewardId)
 );
 CREATE TABLE IF NOT EXISTS ContestVoteCategory(
   id INTEGER PRIMARY KEY,
@@ -105,11 +105,11 @@ CREATE TABLE IF NOT EXISTS ContestVoteCategory(
   guildId TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS ContestVoteCategories(
-  id INTEGER PRIMARY KEY,
   contestId INTEGER REFERENCES Contest(id)
     ON DELETE CASCADE,
   contestVoteCategoryId INTEGER REFERENCES ContestVoteCategory(id)
-    ON DELETE CASCADE
+    ON DELETE CASCADE,
+  PRIMARY KEY(contestId, contestVoteCategoryId)
 );
 CREATE TABLE IF NOT EXISTS ContestEntry(
   id INTEGER PRIMARY KEY,
@@ -129,7 +129,8 @@ CREATE TABLE IF NOT EXISTS ContestVote(
     ON DELETE CASCADE,
   contestVoteCategoryId INTEGER NOT NULL REFERENCES ContestVoteCategory(id)
     ON DELETE CASCADE,
-  voterId TEXT NOT NULL REFERENCES User(id)
+  voterId TEXT NOT NULL REFERENCES User(id),
+  UNIQUE(contestEntryId, contestVoteCategoryId, voterId)
 );
 CREATE TABLE IF NOT EXISTS ContestAnnouncement(
   id INTEGER PRIMARY KEY,

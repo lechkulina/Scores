@@ -38,6 +38,12 @@ class Option {
     });
   }
 
+  findOptionValue(interaction, optionId) {
+    return interaction.data.options.find(
+      ({name}) => name === optionId
+    )?.value;
+  }
+
   async getAutoCompeteResults(interaction, optionValue, translate) {
     return interaction.result([]);
   }

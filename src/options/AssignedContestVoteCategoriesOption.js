@@ -12,7 +12,7 @@ class AssignedContestVoteCategoriesOption extends Option {
   }
 
   async getAutoCompeteResults(interaction, optionValue, translate) {
-    const contestId = interaction.data.options.find(({name}) => name === this.contestOptionId)?.value;
+    const contestId = this.findOptionValue(interaction, this.contestOptionId);
     if (!contestId) {
       return [];
     }
