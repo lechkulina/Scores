@@ -4,7 +4,7 @@ const {Entities, joinSections} = require('../Formatters');
 const {SettingId} = require('../Settings');
 const Command = require('./Command');
 
-class ShowMyPointsInteractionHandler extends InteractionHandler {
+class ShowMyPointsHandler extends InteractionHandler {
   async generateHeaderSection(guildId, userId, contestVotesSummary) {
     const pointsSummary = await this.dataModel.getUserAccumulatedPointsSummary(guildId, userId);
     if (!pointsSummary && contestVotesSummary.length === 0) {
@@ -42,16 +42,16 @@ class ShowMyPointsInteractionHandler extends InteractionHandler {
     const items = [];
     pointsSummary.forEach(({
       points,
-      categoryName,
       rank,
+      categoryName,
     }) => {
       items.push({
         rank,
         translate: () => (
           this.translate(`${key}.pointsItem`, {
             points,
-            categoryName,
             rank,
+            categoryName,
           })
         )
       });
@@ -178,7 +178,7 @@ class ShowMyPointsCommand extends Command {
   }
 
   createInteractionHandler(...props) {
-    return new ShowMyPointsInteractionHandler(...props);
+    return new ShowMyPointsHandler(...props);
   }
 }
 

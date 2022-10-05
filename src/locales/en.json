@@ -165,7 +165,7 @@
           "rankings": {
             "title": "⬇ Ranking positions:",
             "pointsItem": "- in category *{{categoryName}}* you have **{{rankingPosition}} position** in which you have **$t(common.points, {\"count\": {{points}} })**",
-            "contestItem": "- in contest **{{contestName}}** you gained **{{rank}} place** for entry **{{entryName}}**, which gained **$t(common.points, {\"count\": {{scores}} })**"
+            "contestItem": "- in contest **{{contestName}}** you gained **{{rank}} place** for entry **{{entryName}}**, which has **$t(common.points, {\"count\": {{scores}} })**"
           },
           "recentlyGiven": {
             "title": "⬇ $t(common.recentlyGivenPoints, {\"count\": {{itemsCount}} })",
@@ -671,6 +671,23 @@
               "withScore": "$t(commands.showMyContestVotes.messages.votes.item.withScore)",
               "withoutScore": "$t(commands.showMyContestVotes.messages.votes.item.withoutScore)"
             }
+          }
+        }
+      },
+      "showRankings": {
+        "description": "Shows rankings",
+        "errors": {
+          "failure": "❗ Failed to fetch rankings data."
+        },
+        "messages": {
+          "rankings": {
+            "rank_one": "🏆 {{count}} place",
+            "rank_other": "{{count}} place",
+            "personTake_one": "has earned {{count}} person",
+            "personTake_other": "have earned {{count}} persons",
+            "title": "**$t(commands.showRankings.messages.rankings.rank, {\"count\": {{rank}} })** $t(commands.showRankings.messages.rankings.personTake, {\"count\": {{itemsCount}} }):",
+            "pointsItem": "- in category *{{categoryName}}* user **{{userName}}** has **$t(common.points, {\"count\": {{points}} })**",
+            "contestItem": "- in contest *{{contestName}}* user **{{authorName}}** for entry **{{entryName}}** which has **$t(common.points, {\"count\": {{scores}} })**"
           }
         }
       },

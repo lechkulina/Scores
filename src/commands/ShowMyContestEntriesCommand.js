@@ -12,8 +12,8 @@ class ShowMyContestEntriesHandler extends InteractionHandler {
   generateHeaderSection(contest, entries) {
     const key = `commands.showMyContestEntries.messages.header.${
       entries.length > 0
-      ? 'withEntries'
-      : 'withoutEntries'
+        ? 'withEntries'
+        : 'withoutEntries'
     }`;
     return this.translate(key, {
       contestName: contest.name,
@@ -21,7 +21,7 @@ class ShowMyContestEntriesHandler extends InteractionHandler {
     });
   }
 
-  groupEntries(entriesSummary) {
+  groupEntriesSummaryPerEntries(entriesSummary) {
     const entries = new Map();
     entriesSummary.forEach(({
       entryId,
@@ -90,7 +90,7 @@ class ShowMyContestEntriesHandler extends InteractionHandler {
       const userId = interaction.member.user.id;
       const contest = this.getOptionValue(OptionId.Contest);
       const entriesSummary = await this.dataModel.getUserContestEntriesSummary(contest.id, userId);
-      const entries = this.groupEntries(entriesSummary);
+      const entries = this.groupEntriesSummaryPerEntries(entriesSummary);
       return this.createLongMessage(interaction,
         joinSections([
           this.generateHeaderSection(contest, entries),
@@ -112,8 +112,7 @@ class ShowMyContestEntriesCommand extends Command {
   initialize() {
     this.setDescription(this.translate('commands.showMyContestEntries.description'));
     this.addOptions([
-      new ContestOption(
-        ContestState.OpenForSubmittingEntries, OptionId.Contest, this.translate('commands.showMyContestEntries.options.contest'), this.dataModel),
+      new ContestOption(ContestState.Any, OptionId.Contest, this.translate('commands.showMyContestEntries.options.contest'), this.dataModel),
     ]);
     this.addValidators([
       new ContestValidator(OptionId.Contest, this.dataModel),

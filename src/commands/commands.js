@@ -38,6 +38,7 @@ module.exports = [
   require('./ShowMyContestVotesCommand'),
   require('./ShowMyContestEntriesCommand'),
   require('./ShowContestVotesCommand'),
+  require('./ShowRankingsCommand'),
   require('./AddContestAnnouncementCommand'),
   require('./RemoveContestAnnouncementCommand'),
   require('./ChangeContestAnnouncementCommand'),

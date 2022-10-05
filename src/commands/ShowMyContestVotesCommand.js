@@ -24,8 +24,8 @@ class ShowMyContestVotesHandler extends InteractionHandler {
       : 0;
     const key = `commands.showMyContestVotes.messages.header.${
       addedVotesCount > 0
-      ? 'withVotes'
-      : 'withoutVotes'
+        ? 'withVotes'
+        : 'withoutVotes'
     }`;
     return this.translate(key, {
       contestName: contest.name,
@@ -34,7 +34,7 @@ class ShowMyContestVotesHandler extends InteractionHandler {
     });
   }
 
-  groupVotesEntries(votesSummary) {
+  groupVotesSummaryPerEntries(votesSummary) {
     const votesEntries = new Map();
     votesSummary.forEach(({
       entryId,
@@ -64,7 +64,7 @@ class ShowMyContestVotesHandler extends InteractionHandler {
     if (addedVotesCount === 0) {
       return sections;
     }
-    const votesEntries = this.groupVotesEntries(votesSummary);
+    const votesEntries = this.groupVotesSummaryPerEntries(votesSummary);
     if (votesEntries.length === 0) {
       return sections;
     }

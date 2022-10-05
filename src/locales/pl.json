@@ -852,7 +852,7 @@
           "votes": {
             "title": "⬇ Głosy oddane na pracę **{{entryName}}** autorstwa {{authorName}}:",
             "item": {
-              "withScore": "- w kategorii *{{categoryName}}* oddano **$t(common.points, {\"count\": {{score}} })**",
+              "withScore": "- w kategorii *{{categoryName}}* przyznano **$t(common.points, {\"count\": {{score}} })**",
               "withoutScore": "- w kategorii *{{categoryName}}* **nie oddano** jeszcze głosów"
             }
           }
@@ -894,15 +894,34 @@
         },
         "messages": {
           "header": {
-            "withEntries": "➡ $t(common.contestEntriesHave, {\"count\": {{entriesCount}} }) zgłoszonych przez ciebie do konkursu **{{contestName}}**. Głosy jakie zostały oddane to:",
+            "withEntries": "➡ $t(common.contestEntriesHave, {\"count\": {{entriesCount}} }) zgłoszonych przez ciebie do konkursu **{{contestName}}**",
             "withoutEntries": "😮 Nie ma masz zadnej pracy zgłoszonej do konkursu **{{contestName}}**"
           },
           "entries": {
             "title": "⬇ Głosy oddane na pracę **{{entryName}}** zgłoszoną dnia {{submitDate}}:",
             "item": {
-              "withScore": "$t(commands.showMyContestVotes.messages.votes.item.withScore)",
+              "withScore": "- w kategorii *{{categoryName}}* przyznano łącznie **$t(common.points, {\"count\": {{scores}} })**",
               "withoutScore": "$t(commands.showMyContestVotes.messages.votes.item.withoutScore)"
             }
+          }
+        }
+      },
+      "showRankings": {
+        "description": "Pokazuje rankingi",
+        "errors": {
+          "failure": "❗ Nie udało się pobrać informacji o rankingach"
+        },
+        "messages": {
+          "rankings": {
+            "rank_one": "🏆 {{count}} miejsce",
+            "rank_few": "{{count}} miejsce",
+            "rank_many": "{{count}} miejsce",
+            "personTake_one": "zajmuje {{count}} osoba",
+            "personTake_few": "zajmują {{count}} osoby",
+            "personTake_many": "zajmuje {{count}} osoób",
+            "title": "**$t(commands.showRankings.messages.rankings.rank, {\"count\": {{rank}} })** $t(commands.showRankings.messages.rankings.personTake, {\"count\": {{itemsCount}} }):",
+            "pointsItem": "- w kategorii *{{categoryName}}* uzytkownik **{{userName}}**, w której ma **$t(common.points, {\"count\": {{points}} })**",
+            "contestItem": "- w konkursie *{{contestName}}* uzytkownik **{{authorName}}** za pracę **{{entryName}}**, której przyznano **$t(common.points, {\"count\": {{scores}} })**"
           }
         }
       },

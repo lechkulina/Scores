@@ -6,7 +6,7 @@ const {Entities, joinSections} = require('../Formatters');
 const {ContestState} = require('../DataModel');
 const Command = require('./Command');
 
-class ShowContestVotesSummaryHandler extends InteractionHandler {
+class ShowContestVotesHandler extends InteractionHandler {
   calculateCompletedVotingsCount(votersSummary) {
     return votersSummary.reduce((count, {votesCount, entriesCount, categoriesCount}) => {
       const requiredVotesCount = entriesCount * categoriesCount;
@@ -32,7 +32,7 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
     });
   }
 
-  groupVotersEntries(votersSummary) {
+  groupVotersSummaryPerEntries(votersSummary) {
     return votersSummary.map(({
       voterName,
       votesCount,
@@ -50,7 +50,7 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
   }
 
   generateVotersSection(votersSummary) {
-    const votersEntries = this.groupVotersEntries(votersSummary);
+    const votersEntries = this.groupVotersSummaryPerEntries(votersSummary);
     if (votersEntries.length === 0) {
       return;
     }
@@ -76,7 +76,7 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
     return sections.join(Entities.NewLine);
   }
 
-  groupVotesEntries(votesSummary) {
+  groupVotesSummaryPerEntries(votesSummary) {
     const votesEntries = new Map();
     votesSummary.forEach(({
       entryId,
@@ -109,7 +109,7 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
       return sections;
     }
     const votesSummary = await this.dataModel.getContestVotesSummary(contest.id);
-    const votesEntries = this.groupVotesEntries(votesSummary);
+    const votesEntries = this.groupVotesSummaryPerEntries(votesSummary);
     if (votesEntries.length === 0) {
       return sections;
     }
@@ -169,7 +169,7 @@ class ShowContestVotesSummaryHandler extends InteractionHandler {
   }
 }
 
-class ShowContestVotesSummaryCommand extends Command {
+class ShowContestVotesCommand extends Command {
   constructor(...props) {
     super('show-contest-votes', ...props);
   }
@@ -186,8 +186,8 @@ class ShowContestVotesSummaryCommand extends Command {
   }
 
   createInteractionHandler(...props) {
-    return new ShowContestVotesSummaryHandler(...props);
+    return new ShowContestVotesHandler(...props);
   }
 }
 
-module.exports = ShowContestVotesSummaryCommand;
+module.exports = ShowContestVotesCommand;

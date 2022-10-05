@@ -380,6 +380,71 @@ class DataModel extends EventEmitter {
     );
   }
 
+  getPointsRankingsSummary(guildId, rankLimit) {
+    return this.database.all(`
+      SELECT PointsWithRanks.points,
+             PointsWithRanks.rank,
+             User.name AS userName,
+             PointsCategory.name AS categoryName
+      FROM (
+        SELECT PointsPerUserCategory.*,
+               ROW_NUMBER() OVER (
+                 PARTITION BY PointsPerUserCategory.pointsCategoryId
+                 ORDER BY PointsPerUserCategory.points DESC
+               ) AS rank
+        FROM (
+          SELECT userId,
+                 pointsCategoryId,
+                 SUM(points) AS points
+          FROM Points
+          GROUP BY userId, pointsCategoryId
+        ) AS PointsPerUserCategory
+      ) AS PointsWithRanks
+      INNER JOIN PointsCategory
+        ON PointsCategory.id = PointsWithRanks.pointsCategoryId
+      INNER JOIN USER
+        ON User.id = PointsWithRanks.userId
+      WHERE PointsCategory.guildId = "${guildId}"
+        AND PointsWithRanks.rank <= ${rankLimit}`
+    );
+  }
+
+  getContestsRankingsSummary(guildId, rankLimit) {
+    return this.database.all(`
+      SELECT EntriesScoresWithRanks.entryName,
+             EntriesScoresWithRanks.contestName,
+             User.name AS authorName,
+             EntriesScoresWithRanks.scores,
+             EntriesScoresWithRanks.rank
+      FROM (
+        SELECT EntriesScores.*,
+               ROW_NUMBER() OVER (
+                 PARTITION BY EntriesScores.contestId
+                 ORDER BY EntriesScores.scores DESC
+               ) AS rank
+        FROM (
+          SELECT ContestEntry.name as entryName,
+                 ContestEntry.authorId AS authorId,
+                 Contest.id AS contestId,
+                 Contest.name as contestName,
+                 SUM(ContestVote.score) scores
+          FROM ContestEntry
+          INNER JOIN Contest
+            ON Contest.id = ContestEntry.contestId
+          LEFT JOIN ContestVote
+            ON ContestVote.contestEntryId = ContestEntry.id
+          WHERE unixepoch() * 1000 >= Contest.votingEndDate
+            AND ContestVote.score IS NOT NULL
+            AND Contest.guildId = "${guildId}"
+          GROUP BY ContestEntry.id
+        ) AS EntriesScores
+      ) AS EntriesScoresWithRanks
+      INNER JOIN User
+        ON User.id = EntriesScoresWithRanks.authorId
+      WHERE EntriesScoresWithRanks.rank <= ${rankLimit};`
+    );
+  }
+
   getPoints(pointsId) {
     return this.database.get(`
       SELECT Points.id AS id,
@@ -1588,7 +1653,6 @@ class DataModel extends EventEmitter {
         ON User.id = ContestVote.voterId
       INNER JOIN ContestEntry
         ON ContestEntry.id = ContestVote.contestEntryId
-      GROUP BY User.id;
       WHERE ContestEntry.contestId = ${contestId}
         AND ContestVote.score IS NOT NULL
       ORDER BY votesCount DESC;`
