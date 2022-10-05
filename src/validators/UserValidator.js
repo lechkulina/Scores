@@ -1,6 +1,6 @@
 const Validator = require('./Validator');
 
-class MemberValidator extends Validator {
+class UserValidator extends Validator {
   constructor(userOptionId, clientHandler) {
     super();
     this.userOptionId = userOptionId;
@@ -9,11 +9,12 @@ class MemberValidator extends Validator {
 
   async validate(translate, optionsValues, interaction) {
     const issues = [];
+    const guildId = interaction.guildID;
     const userId = optionsValues.get(this.userOptionId);
     try {
-      const member = await this.clientHandler.findMember(interaction.guildID, userId);
-      if (member) {
-        optionsValues.set(this.userOptionId, member);
+      const user = await this.clientHandler.findUser(guildId, userId);
+      if (user) {
+        optionsValues.set(this.userOptionId, user);
       } else {
         issues.push(translate('validators.unknownUser', {
           userId,
@@ -29,6 +30,6 @@ class MemberValidator extends Validator {
   }
 }
 
-module.exports = MemberValidator;
+module.exports = UserValidator;
 
 

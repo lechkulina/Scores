@@ -3,7 +3,7 @@ const {OptionId, UserOption, NumberOption} = require('../options/CommonOptions')
 const {
   PointsValueValidator,
   PointsCategoryValidator,
-  MemberValidator,
+  UserValidator,
   PointsGiverValidator,
 } = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
@@ -14,25 +14,33 @@ const Command = require('./Command');
 
 class AddPointsInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
-    this.giver = await this.clientHandler.findMember(interaction.guildID, interaction.member.user.id);  // TODO handle errors here
-    this.member = this.getOptionValue(OptionId.User);
+    this.user = this.getOptionValue(OptionId.User);
     this.category = this.getOptionValue(OptionId.PointsCategory);
     this.points = this.getOptionValue(OptionId.Points);
     try {
-      await this.dataModel.addUser(this.member.user.id, this.member.user.username, this.member.user.discriminator, this.member.guild.id);
-      await this.dataModel.addUser(this.giver.user.id, this.giver.user.username, this.giver.user.discriminator, this.giver.guild.id);
-      await this.dataModel.addPoints(this.points, this.member.user.id, this.giver.user.id, this.category.id);
+      const guildId = interaction.guildID;
+      const giverId = interaction.member.user.id;
+      this.giver = await this.clientHandler.findUser(guildId, giverId);
+      await this.dataModel.addPoints(
+        this.points,
+        this.category.id,
+        this.user.id,
+        this.user.username,
+        this.giver.id,
+        this.giver.username,
+        guildId
+      );
     } catch (error) {
       this.markAsDone();
       return interaction.createMessage(this.translate('commands.addPoints.errors.failure', {
         points: this.points,
-        userName: this.member.user.username,
+        userName: this.user.username,
       }));
     }
     return interaction.createMessage({
       content: this.translate('commands.addPoints.messages.success', {
         points: this.points,
-        userName: this.member.user.username,
+        userName: this.user.username,
         categoryName: this.category.name,
       }),
       components: [
@@ -48,14 +56,14 @@ class AddPointsInteractionHandler extends InteractionHandler {
 
   // TODO move this to clientHandler
   async sendDirectMessage(interaction) {
-    const channel = await this.clientHandler.createDirectMessagesChannel(interaction.guildID, this.member.user.id);
+    const channel = await this.clientHandler.createDirectMessagesChannel(interaction.guildID, this.user.id);
     await channel.createMessage(this.translate('commands.addPoints.messages.directMessage', {
-      giverName: this.giver.user.username,
+      giverName: this.giver.username,
       points: this.points,
       categoryName: this.category.name,
     }));
     return this.translate('commands.addPoints.messages.directMessageSent', {
-      userName: this.member.user.username,
+      userName: this.user.username,
     });
   }
 
@@ -68,7 +76,7 @@ class AddPointsInteractionHandler extends InteractionHandler {
       return;
     }
     await channel.createMessage(this.translate('commands.addPoints.messages.publicMessage', {
-      userName: this.member.user.username,
+      userName: this.user.username,
       points: this.points,
       categoryName: this.category.name,
     }));
@@ -113,7 +121,7 @@ class AddPointsCommand extends Command {
     ]);
     this.addValidators([
       new PointsCategoryValidator(OptionId.PointsCategory, this.dataModel),
-      new MemberValidator(OptionId.User, this.clientHandler),
+      new UserValidator(OptionId.User, this.clientHandler),
       new PointsValueValidator(OptionId.Points, OptionId.PointsCategory, this.options),
       new PointsGiverValidator(OptionId.User),
     ])

@@ -20,7 +20,7 @@ class RevokeRolePermissionInteractionHandler extends InteractionHandler {
   async handleComponentInteraction(interaction) {
     return this.handleConfirmationForm(interaction, async () => {
       try {
-        await this.dataModel.revokeRolePermission(this.role.id, this.command.id);
+        await this.dataModel.revokeRolePermission(this.command.id, this.role.id);
         return this.translate('commands.revokeRolePermission.messages.success', {
           commandId: this.command.id,
         });

@@ -1,17 +1,17 @@
 const CommandOption = require('../options/CommandOption');
 const {OptionId, UserOption} = require('../options/CommonOptions');
-const {CommandValidator, MemberValidator} = require('../validators/validators');
+const {CommandValidator, UserValidator} = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const Command = require('./Command');
 
 class RevokeRolePermissionInteractionHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
-    this.member = this.getOptionValue(OptionId.User);
+    this.user = this.getOptionValue(OptionId.User);
     this.command = this.getOptionValue(OptionId.Command);
     return interaction.createMessage({
       content: this.translate('commands.revokeUserPermission.messages.confirmation', {
         commandId: this.command.id,
-        userName: this.member.user.username,
+        userName: this.user.username,
       }),
       components: this.createConfirmationForm(),
     });
@@ -20,7 +20,7 @@ class RevokeRolePermissionInteractionHandler extends InteractionHandler {
   async handleComponentInteraction(interaction) {
     return this.handleConfirmationForm(interaction, async () => {
       try {
-        await this.dataModel.revokeUserPermission(this.member.user.id, this.command.id);
+        await this.dataModel.revokeUserPermission(this.command.id, this.user.id);
         return this.translate('commands.revokeUserPermission.messages.success', {
           commandId: this.command.id,
         });
@@ -46,7 +46,7 @@ class RevokeUserPermissionCommand extends Command {
     ]);
     this.addValidators([
       new CommandValidator(OptionId.Command, this.dataModel),
-      new MemberValidator(OptionId.User, this.clientHandler),
+      new UserValidator(OptionId.User, this.clientHandler),
     ]);
     return Promise.resolve();
   }

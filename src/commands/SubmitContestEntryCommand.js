@@ -16,15 +16,23 @@ const Command = require('./Command');
 class SubmitContestEntryHandler extends InteractionHandler {
   async handleCommandInteraction(interaction) {
     this.markAsDone();
-    const authorId = interaction.member.user.id;
     const contest = this.getOptionValue(OptionId.Contest);
     const name = this.getOptionValue(OptionId.Name);
     const description = this.getOptionValue(OptionId.Description);
     const url = this.getOptionValue(OptionId.Url);
     try {
-      const authorMember = await this.clientHandler.findMember(interaction.guildID, authorId);
-      await this.dataModel.addUser(authorMember.user.id, authorMember.username, authorMember.user.discriminator, authorMember.guild.id);
-      await this.dataModel.submitContestEntry(name, description, url, contest.id, authorMember.user.id);
+      const guildId = interaction.guildID;
+      const authorId = interaction.member.user.id;
+      const author = await this.clientHandler.findUser(guildId, authorId);
+      await this.dataModel.submitContestEntry(
+        name,
+        description,
+        url,
+        contest.id,
+        author.id,
+        author.username,
+        guildId
+      );
       return interaction.createMessage({
         content: this.translate('commands.submitContestEntry.messages.success', {
           entryName: name,

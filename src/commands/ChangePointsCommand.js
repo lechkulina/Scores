@@ -6,7 +6,7 @@ const {
   PointsValueValidator,
   PointsCategoryValidator, 
   PointsValidator,
-  MemberValidator,
+  UserValidator,
  } = require('../validators/validators');
 const InteractionHandler = require('../InteractionHandler');
 const {SettingId} = require('../Settings');
@@ -14,12 +14,12 @@ const Command = require('./Command');
 
 class ChangePointsInteractionHandler extends InteractionHandler {
   handleCommandInteraction(interaction) {
-    this.member = this.getOptionValue(OptionId.User);
+    this.user = this.getOptionValue(OptionId.User);
     this.pointsEntry = this.getOptionValue(OptionId.RecentlyGivenPoints);
     const dateAndTimeOutputFormat = this.settings.get(SettingId.DateAndTimeOutputFormat);
     return interaction.createMessage({
       content: this.translate('commands.changePoints.messages.confirmation', {
-        userName: this.member.user.username,
+        userName: this.user.username,
         points: this.pointsEntry.points,
         acquireDate: moment(this.pointsEntry.acquireDate).format(dateAndTimeOutputFormat),
         categoryName: this.pointsEntry.categoryName,
@@ -35,11 +35,11 @@ class ChangePointsInteractionHandler extends InteractionHandler {
       try {
         await this.dataModel.changePoints(this.pointsEntry.id, pointsValue, category.id);
         return this.translate('commands.changePoints.messages.success', {
-          userName: this.member.user.username
+          userName: this.user.username
         });
       } catch (error) {
         return this.translate('commands.changePoints.errors.failure', {
-          userName: this.member.user.username
+          userName: this.user.username
         });
       }
     });
@@ -62,7 +62,7 @@ class ChangePointsCommand extends Command {
     this.addValidators([
       new PointsCategoryValidator(OptionId.PointsCategory, this.dataModel),
       new PointsValidator(OptionId.RecentlyGivenPoints, this.dataModel),
-      new MemberValidator(OptionId.User, this.clientHandler),
+      new UserValidator(OptionId.User, this.clientHandler),
       new PointsValueValidator(OptionId.Points, OptionId.PointsCategory, this.options),
     ]);
     return Promise.resolve();

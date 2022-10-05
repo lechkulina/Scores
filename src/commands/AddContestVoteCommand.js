@@ -23,9 +23,18 @@ class AddContestVoteHandler extends InteractionHandler {
     const category = this.getOptionValue(OptionId.AssignedContestVoteCategory);
     const score = this.getOptionValue(OptionId.Score);
     try {
-      const voter = await this.clientHandler.findMember(interaction.guildID, interaction.member.user.id);
-      await this.dataModel.addUser(voter.user.id, voter.user.username, voter.user.discriminator, voter.guild.id);
-      await this.dataModel.addContestVote(contest.id, entry.id, category.id, voter.id, score);
+      const guildId = interaction.guildID;
+      const voterId = interaction.member.user.id;
+      const voter = await this.clientHandler.findUser(guildId, voterId);
+      await this.dataModel.addContestVote(
+        contest.id,
+        entry.id,
+        category.id,
+        score,
+        voter.id,
+        voter.username,
+        guildId
+      );
       return interaction.createMessage(
         this.translate('commands.addContestVote.messages.success', {
           entryName: entry.name,

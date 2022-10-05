@@ -195,7 +195,10 @@ class DataModel extends EventEmitter {
   getPointsCategories(guildId, limit) {
     return this.database.all(
       joinClauses([`
-        SELECT id, name, min, max
+        SELECT id,
+               name,
+               min,
+               max
         FROM PointsCategory
         WHERE guildId = "${guildId}"`,
         createLimitClause(limit),
@@ -205,28 +208,48 @@ class DataModel extends EventEmitter {
 
   getPointsCategory(pointsCategoryId) {
     return this.database.get(`
-      SELECT id, name, min, max, guildId
+      SELECT id,
+             name,
+             min,
+             max,
+             guildId
       FROM PointsCategory
       WHERE id = ${pointsCategoryId};`
     );
   }
   
-  addPoints(points, userId, giverId, pointsCategoryId) {
-    return this.database.run(`
-      INSERT INTO Points(
-        points,
-        userId,
-        giverId,
-        pointsCategoryId,
-        acquireDate
-      )
-      VALUES (
-        ${points},
-        "${userId}",
-        "${giverId}",
-        "${pointsCategoryId}",
-        ${Date.now()}
-      );`
+  addPoints(
+    points,
+    pointsCategoryId,
+    userId,
+    userName,
+    giverId,
+    giverName,
+    guildId
+  ) {
+    return this.database.exec(`
+      BEGIN TRANSACTION;
+        INSERT OR REPLACE INTO User(id, name, guildId)
+        VALUES ("${userId}", "${userName}", "${guildId}");
+  
+        INSERT OR REPLACE INTO User(id, name, guildId)
+        VALUES ("${giverId}", "${giverName}", "${guildId}");
+
+        INSERT INTO Points(
+          points,
+          userId,
+          giverId,
+          pointsCategoryId,
+          acquireDate
+        )
+        VALUES (
+          ${points},
+          "${userId}",
+          "${giverId}",
+          "${pointsCategoryId}",
+          ${Date.now()}
+        );
+      COMMIT;`
     );
   }
 
@@ -506,45 +529,43 @@ class DataModel extends EventEmitter {
     );
   }
 
-  // TODO Remove this !
-  addRole(id, name, guildId) {
-    return this.database.run(`
-      INSERT OR REPLACE INTO Role(id, name, guildId)
-      VALUES ("${id}", "${name}", "${guildId}");`);
-  }
-
-  grantRolePermission(roleId, commandId) {
-    return this.database.run(`
-      INSERT OR REPLACE INTO RolePermission(roleId, commandId)
-      VALUES ("${roleId}", "${commandId}");`
+  grantRolePermission(commandId, roleId, roleName, guildId) {
+    return this.database.exec(`
+      BEGIN TRANSACTION;
+        INSERT OR REPLACE INTO Role(id, name, guildId)
+        VALUES ("${roleId}", "${roleName}", "${guildId}");
+  
+        INSERT OR REPLACE INTO RolePermission(roleId, commandId)
+        VALUES ("${roleId}", "${commandId}");
+      COMMIT;`
     );
   }
 
-  revokeRolePermission(roleId, commandId) {
+  revokeRolePermission(commandId, roleId) {
     return this.database.run(`
       DELETE FROM RolePermission
-      WHERE roleId = "${roleId}" AND commandId = "${commandId}";`
+      WHERE roleId = "${roleId}"
+        AND commandId = "${commandId}";`
     );
   }
 
-  addUser(id, name, discriminator, guildId) {
-    return this.database.run(`
-      INSERT OR REPLACE INTO User(id, name, discriminator, guildId)
-      VALUES ("${id}", "${name}", "${discriminator}", "${guildId}");`
+  grantUserPermission(commandId, userId, userName, guildId) {
+    return this.database.exec(`
+      BEGIN TRANSACTION;
+        INSERT OR REPLACE INTO User(id, name, guildId)
+        VALUES ("${userId}", "${userName}", "${guildId}");
+  
+        INSERT OR REPLACE INTO UserPermission(userId, commandId)
+        VALUES ("${userId}", "${commandId}");
+      COMMIT;`
     );
   }
 
-  grantUserPermission(userId, commandId) {
-    return this.database.run(`
-      INSERT OR REPLACE INTO UserPermission(userId, commandId)
-      VALUES ("${userId}", "${commandId}");`
-    );
-  }
-
-  revokeUserPermission(userId, commandId) {
+  revokeUserPermission(commandId, userId) {
     return this.database.run(`
       DELETE FROM UserPermission
-      WHERE userId = "${userId}" AND commandId = "${commandId}";`
+      WHERE userId = "${userId}"
+        AND commandId = "${commandId}";`
     );
   }
 
@@ -784,16 +805,8 @@ class DataModel extends EventEmitter {
   ) {
     await this.database.exec(`
       BEGIN TRANSACTION;
-        INSERT OR REPLACE INTO Channel(
-          id,
-          name,
-          guildId
-        )
-        VALUES (
-          "${channelId}",
-          "${channelName}",
-          "${guildId}"
-        );
+        INSERT OR REPLACE INTO Channel(id, name, guildId)
+        VALUES ("${channelId}", "${channelName}", "${guildId}");
 
         UPDATE ContestAnnouncement
         SET name = "${name}",
@@ -949,16 +962,8 @@ class DataModel extends EventEmitter {
       .join(', ');
     await this.database.exec(`
       BEGIN TRANSACTION;
-        INSERT OR REPLACE INTO Message(
-          id,
-          guildId,
-          channelId
-        )
-        VALUES (
-          "${messageId}",
-          "${guildId}",
-          "${channelId}"
-        );
+        INSERT OR REPLACE INTO Message(id, guildId, channelId)
+        VALUES ("${messageId}", "${guildId}", "${channelId}");
 
         INSERT INTO MessageChunk(
           id,
@@ -1392,25 +1397,32 @@ class DataModel extends EventEmitter {
     description,
     url,
     contestId,
-    authorId
+    authorId,
+    authorName,
+    guildId
   ) {
-    await this.database.run(`
-      INSERT INTO ContestEntry(
-        name,
-        description,
-        url,
-        authorId,
-        contestId,
-        submitDate
-      )
-      VALUES (
-        "${name}",
-        "${description}",
-        "${url}",
-        "${authorId}",
-        ${contestId},
-        ${Date.now()}
-      );`
+    await this.database.exec(`
+      BEGIN TRANSACTION;
+        INSERT OR REPLACE INTO User(id, name, guildId)
+        VALUES ("${authorId}", "${authorName}", "${guildId}");
+  
+        INSERT INTO ContestEntry(
+          name,
+          description,
+          url,
+          authorId,
+          contestId,
+          submitDate
+        )
+        VALUES (
+          "${name}",
+          "${description}",
+          "${url}",
+          "${authorId}",
+          ${contestId},
+          ${Date.now()}
+        );
+      COMMIT;`
     );
     this.emit(DataModelEvents.onContestEntrySubmitted, contestId);
   }
@@ -1535,24 +1547,31 @@ class DataModel extends EventEmitter {
     contestId,
     contestEntryId,
     contestVoteCategoryId,
+    score,
     voterId,
-    score
+    voterName,
+    guildId
   ) {
-    await this.database.run(`
-      INSERT INTO ContestVote(
-        contestEntryId,
-        contestVoteCategoryId,
-        voterId,
-        score,
-        voteDate
-      )
-      VALUES (
-        ${contestEntryId},
-        ${contestVoteCategoryId},
-        "${voterId}",
-        ${score},
-        ${Date.now()}
-      );`
+    await this.database.exec(`
+      BEGIN TRANSACTION;
+        INSERT OR REPLACE INTO User(id, name, guildId)
+        VALUES ("${voterId}", "${voterName}", "${guildId}");
+  
+        INSERT INTO ContestVote(
+          contestEntryId,
+          contestVoteCategoryId,
+          voterId,
+          score,
+          voteDate
+        )
+        VALUES (
+          ${contestEntryId},
+          ${contestVoteCategoryId},
+          "${voterId}",
+          ${score},
+          ${Date.now()}
+        );
+      COMMIT;`
     );
     this.emit(DataModelEvents.onContestVoteAdded, contestId);
   }
