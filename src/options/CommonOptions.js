@@ -44,6 +44,7 @@ const OptionId = {
   ShowUsersAnswers: 'show-users-answers',
   ShowCorrectAnswers: 'show-correct-answers',
   Poll: 'poll',
+  PollQuestion: 'poll-question',
 };
 
 class NumberOption extends Option {

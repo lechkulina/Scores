@@ -820,6 +820,48 @@
           "confirmation": "❓ Are you sure you want to change poll **{{pollName}}** on channel **{{channelName}}**?",
           "success": "✅ Changed poll **{{pollName}}** on channel **{{channelName}}**"
         }
+      },
+      "addPollQuestion": {
+        "description": "Adds poll question",
+        "options": {
+          "poll": "$t(commands.removePoll.options.poll)",
+          "description": "Question text"
+        },
+        "errors": {
+          "failure": "❗ Failed to add question to poll **{{pollName}}**"
+        },
+        "messages": {
+          "success": "✅ Added new question to poll **{{pollName}}**"
+        }
+      },
+      "removePollQuestion": {
+        "description": "Removes poll question",
+        "options": {
+          "poll": "$t(commands.removePoll.options.poll)",
+          "pollQuestion": "Poll question"
+        },
+        "errors": {
+          "failure": "❗ Failed to remove question **{{questionDescription}}** from poll **{{pollName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to remove question **{{questionDescription}}** from poll **{{pollName}}**?",
+          "success": "✅ Remove question **{{questionDescription}}** from poll **{{pollName}}**"
+        }
+      },
+      "changePollQuestion": {
+        "description": "Changes poll question",
+        "options": {
+          "poll": "$t(commands.removePoll.options.poll)",
+          "pollQuestion": "$t(commands.removePollQuestion.options.pollQuestion)",
+          "description": "$t(commands.addPollQuestion.options.description)"
+        },
+        "errors": {
+          "failure": "❗ Failed to change question **{{questionDescription}}** from poll **{{pollName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to change question **{{questionDescription}}** from poll **{{pollName}}**?",
+          "success": "✅ Changed question **{{questionDescription}}** from poll **{{pollName}}**"
+        }
       }
     }
   }

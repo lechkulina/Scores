@@ -47,4 +47,7 @@ module.exports = [
   require('./AddPollCommand'),
   require('./RemovePollCommand'),
   require('./ChangePollCommand'),
+  require('./AddPollQuestionCommand'),
+  require('./RemovePollQuestionCommand'),
+  require('./ChangePollQuestionCommand'),
 ];

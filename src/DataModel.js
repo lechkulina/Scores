@@ -37,6 +37,9 @@ const DataModelEvents = {
   onPollAdded: 'onPollAdded',
   onPollChanged: 'onPollChanged',
   onPollRemoved: 'onPollRemoved',
+  onPollQuestionAdded: 'onPollQuestionAdded',
+  onPollQuestionChanged: 'onPollQuestionChanged',
+  onPollQuestionRemoved: 'onPollQuestionRemoved',
 }
 
 const ContestState = {
@@ -1891,6 +1894,53 @@ class DataModel extends EventEmitter {
       FROM Poll
       INNER JOIN Channel ON Channel.id = Poll.channelId
       WHERE Poll.id = ${pollId};`
+    );
+  }
+
+  async addPollQuestion(description, pollId) {
+    await this.database.run(`
+      INSERT INTO PollQuestion(description, pollId)
+      VALUES ("${description}", ${pollId});`
+    );
+    this.emit(DataModelEvents.onPollQuestionAdded, pollId);
+  }
+
+  async changePollQuestion(pollQuestionId, description) {
+    await this.database.run(`
+      UPDATE PollQuestion
+      SET description = "${description}"
+      WHERE id = ${pollQuestionId};`
+    );
+    this.emit(DataModelEvents.onPollQuestionChanged, pollQuestionId);
+  }
+
+  async removePollQuestion(pollQuestionId) {
+    await this.database.run(`
+      DELETE FROM PollQuestion
+      WHERE id = ${pollQuestionId};`
+    );
+    this.emit(DataModelEvents.onPollQuestionRemoved, pollQuestionId);
+  }
+
+  getPollQuestion(pollQuestionId) {
+    return this.database.get(`
+      SELECT id,
+             description
+      FROM PollQuestion
+      WHERE id = ${pollQuestionId};`
+    );
+  }
+
+  getPollQuestions(pollId, limit) {
+    return this.database.all(
+      joinClauses([`
+        SELECT PollQuestion.id, PollQuestion.description
+        FROM PollQuestion
+        INNER JOIN Poll
+          ON PollQuestion.pollId = Poll.id
+        WHERE Poll.id = ${pollId}`,
+        createLimitClause(limit),
+      ])
     );
   }
 

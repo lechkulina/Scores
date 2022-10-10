@@ -122,7 +122,9 @@
       "unknownContestAnnouncement": "❗ Wybrane ogłoszenie konkursu {{announcementId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
       "contestAnnouncementFetchFailure": "❗ Nie udało się pobrać danych o ogłoszeniu konkursu {{announcementId}}! $t(validators.reportIssue)",
       "pollFetchFailure": "❗ Nie udało się pobrać danych ankiety {{pollId}}! $t(validators.reportIssue)",
-      "unknownPoll": "❗ Wybrana ankieta {{pollId}} nie istnieje! $t(validators.chooseFromAutocompleteList)"
+      "unknownPoll": "❗ Wybrana ankieta {{pollId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
+      "pollQuestionFetchFailure": "❗ Nie udało się pobrać danych pytania ankiety {{pollQuestionId}}! $t(validators.reportIssue)",
+      "unknownPollQuestion": "❗ Wybrane pytanie ankieta {{pollQuestionId}} nie istnieje! $t(validators.chooseFromAutocompleteList)"
     },
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} punkty przyznane dnia {{acquireDate}} w kategorii {{categoryName}}",
@@ -1056,6 +1058,48 @@
         "messages": {
           "confirmation": "❓ Czy na pewno chcesz zmienić ankietę **{{pollName}}** na kanale **{{channelName}}**?",
           "success": "✅ Zmieniono ankietę **{{pollName}}** na kanale **{{channelName}}**"
+        }
+      },
+      "addPollQuestion": {
+        "description": "Dodaje nowe pytanie do ankiety",
+        "options": {
+          "poll": "$t(commands.removePoll.options.poll)",
+          "description": "Treść pytania"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się dodać pytania do ankiety **{{pollName}}**"
+        },
+        "messages": {
+          "success": "✅ Dodano pytanie do ankiety **{{pollName}}**"
+        }
+      },
+      "removePollQuestion": {
+        "description": "Usuwa pytanie z ankiety",
+        "options": {
+          "poll": "$t(commands.removePoll.options.poll)",
+          "pollQuestion": "Pytanie ankiety"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się usunąć pytania **{{questionDescription}}** z ankiety **{{pollName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz usunąć pytanie **{{questionDescription}}** z ankiety **{{pollName}}**?",
+          "success": "✅ Usunięto pytanie **{{questionDescription}}** z ankiety **{{pollName}}**"
+        }
+      },
+      "changePollQuestion": {
+        "description": "Zmienia pytanie ankiety",
+        "options": {
+          "poll": "$t(commands.removePoll.options.poll)",
+          "pollQuestion": "$t(commands.removePollQuestion.options.pollQuestion)",
+          "description": "$t(commands.addPollQuestion.options.description)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się zmienić pytania **{{questionDescription}}** z ankiety **{{pollName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz zmienić pytanie **{{questionDescription}}** z ankiety **{{pollName}}**?",
+          "success": "✅ Zmieniono pytanie **{{questionDescription}}** z ankiety **{{pollName}}**"
         }
       }
     }
