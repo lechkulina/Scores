@@ -120,7 +120,9 @@
       "unknownChannel": "❗ Wybrany kanał {{channelId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
       "channelFetchFailure": "❗ Nie udało się pobrać danych kanału {{channelId}}! $t(validators.reportIssue)",
       "unknownContestAnnouncement": "❗ Wybrane ogłoszenie konkursu {{announcementId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
-      "contestAnnouncementFetchFailure": "❗ Nie udało się pobrać danych o ogłoszeniu konkursu {{announcementId}}! $t(validators.reportIssue)"
+      "contestAnnouncementFetchFailure": "❗ Nie udało się pobrać danych o ogłoszeniu konkursu {{announcementId}}! $t(validators.reportIssue)",
+      "pollFetchFailure": "❗ Nie udało się pobrać danych ankiety {{pollId}}! $t(validators.reportIssue)",
+      "unknownPoll": "❗ Wybrana ankieta {{pollId}} nie istnieje! $t(validators.chooseFromAutocompleteList)"
     },
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} punkty przyznane dnia {{acquireDate}} w kategorii {{categoryName}}",
@@ -1005,6 +1007,55 @@
         "messages": {
           "confirmation": "❓ Czy na pewno chcesz cofnać przypisanie ogłoszenia konkursu **{{announcementName}}** z konkursu **{{contestName}}**?",
           "success": "✅ Cofnięto przypisanie ogłoszenia konkursu **{{announcementName}}** z konkursu **{{contestName}}**"
+        }
+      },
+      "addPoll": {
+        "description": "Dodaje nową ankietę",
+        "options": {
+          "name": "Nazwa ankiety",
+          "description": "Opis ankiety",
+          "activeBeginDate": "Data rozpoczęcia ankiety",
+          "activeEndDate": "Data zakończenia ankiety",
+          "showUsersAnswers": "Pokaz inforamcję o osobach, które odpowiedziały",
+          "showCorrectAnswers": "Pokaz liczbę prawidłowych odpowiedzi"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się dodać nowej ankiety **{{pollName}}** na kanale **{{channelName}}**"
+        },
+        "messages": {
+          "success": "✅ Dodano nową ankietę **{{pollName}}** na kanale **{{channelName}}**"
+        }
+      },
+      "removePoll": {
+        "description": "Usuwa ankietę",
+        "options": {
+          "poll": "Ankieta"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się usunąć ankiety **{{pollName}}** z kanału **{{channelName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz usunąć ankietę **{{pollName}}** z kanału **{{channelName}}**?",
+          "success": "✅ Usunięto ankietę **{{pollName}}** z kanału **{{channelName}}**"
+        }
+      },
+      "changePoll": {
+        "description": "Zmienia ankietę",
+        "options": {
+          "poll": "$t(commands.removePoll.options.poll)",
+          "name": "$t(commands.addPoll.options.name)",
+          "description": "$t(commands.addPoll.options.description)",
+          "activeBeginDate": "$t(commands.addPoll.options.activeBeginDate)",
+          "activeEndDate": "$t(commands.addPoll.options.activeEndDate)",
+          "showUsersAnswers": "$t(commands.addPoll.options.showUsersAnswers)",
+          "showCorrectAnswers": "$t(commands.addPoll.options.showCorrectAnswers)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się zmienić ankiety **{{pollName}}** na kanale **{{channelName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz zmienić ankietę **{{pollName}}** na kanale **{{channelName}}**?",
+          "success": "✅ Zmieniono ankietę **{{pollName}}** na kanale **{{channelName}}**"
         }
       }
     }

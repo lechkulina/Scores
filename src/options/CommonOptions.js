@@ -39,6 +39,11 @@ const OptionId = {
   ShowEntries: 'show-entries',
   ShowWinners: 'show-winners',
   ShowVotingResults: 'show-voting-results',
+  ActiveBeginDate: 'active-begin-date',
+  ActiveEndDate: 'active-end-date',
+  ShowUsersAnswers: 'show-users-answers',
+  ShowCorrectAnswers: 'show-correct-answers',
+  Poll: 'poll',
 };
 
 class NumberOption extends Option {

@@ -34,6 +34,9 @@ const DataModelEvents = {
   onContestVoteAdded: 'onContestVoteAdded',
   onContestVoteChanged: 'onContestVoteChanged',
   onContestVoteRemoved: 'onContestVoteRemoved',
+  onPollAdded: 'onPollAdded',
+  onPollChanged: 'onPollChanged',
+  onPollRemoved: 'onPollRemoved',
 }
 
 const ContestState = {
@@ -1779,6 +1782,115 @@ class DataModel extends EventEmitter {
         LIMIT 1
       )
       ORDER BY ContestEntry.submitDate ASC;`
+    );
+  }
+
+  async addPoll(
+    name,
+    description,
+    activeBeginDate,
+    activeEndDate,
+    showUsersAnswers,
+    showCorrectAnswers,
+    channelId,
+    channelName,
+    guildId
+  ) {
+    await this.database.exec(`
+      BEGIN TRANSACTION;
+        INSERT OR REPLACE INTO Channel(id, name, guildId)
+        VALUES ("${channelId}", "${channelName}", "${guildId}");
+
+        INSERT INTO Poll(
+          name,
+          description,
+          activeBeginDate,
+          activeEndDate,
+          showUsersAnswers,
+          showCorrectAnswers,
+          channelId,
+          guildId
+        )
+        VALUES (
+          "${name}",
+          "${description}",
+          ${activeBeginDate},
+          ${activeEndDate},
+          ${showUsersAnswers},
+          ${showCorrectAnswers},
+          "${channelId}",
+          "${guildId}"
+        );
+      COMMIT;`
+    );
+    this.emit(DataModelEvents.onPollAdded, guildId);
+  }
+
+  async changePoll(
+    pollId,
+    name,
+    description,
+    activeBeginDate,
+    activeEndDate,
+    showUsersAnswers,
+    showCorrectAnswers,
+    channelId,
+    channelName,
+    guildId
+  ) {
+    await this.database.exec(`
+      BEGIN TRANSACTION;
+        INSERT OR REPLACE INTO Channel(id, name, guildId)
+        VALUES ("${channelId}", "${channelName}", "${guildId}");
+
+        UPDATE Poll
+        SET name = "${name}",
+            description = "${description}",
+            activeBeginDate = ${activeBeginDate},
+            activeEndDate = ${activeEndDate},
+            showUsersAnswers = ${showUsersAnswers},
+            showCorrectAnswers = ${showCorrectAnswers},
+            channelId = "${channelId}"
+        WHERE id = ${pollId};
+      COMMIT;`
+    );
+    this.emit(DataModelEvents.onPollChanged, pollId);
+  }
+
+  async removePoll(pollId) {
+    await this.database.run(`
+      DELETE FROM Poll
+      WHERE id = ${pollId};`
+    );
+    this.emit(DataModelEvents.onPollRemoved, pollId);
+  }
+
+  getPollsNames(guildId, limit) {
+    return this.database.all(
+      joinClauses([`
+        SELECT id, name
+        FROM Poll
+        WHERE guildId = "${guildId}"`,
+        createLimitClause(limit),
+      ])
+    );
+  }
+
+  getPoll(pollId) {
+    return this.database.get(`
+      SELECT Poll.id,
+             Poll.name,
+             description,
+             activeBeginDate,
+             activeEndDate,
+             showUsersAnswers,
+             showCorrectAnswers,
+             channelId,
+             Channel.name AS channelName,
+             Poll.guildId
+      FROM Poll
+      INNER JOIN Channel ON Channel.id = Poll.channelId
+      WHERE Poll.id = ${pollId};`
     );
   }
 

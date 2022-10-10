@@ -692,7 +692,7 @@
         }
       },
       "addContestAnnouncement": {
-        "description": "Add contest announcement",
+        "description": "Adds contest announcement",
         "options": {
           "name": "Announcement name",
           "hoursBefore": "Number of hours the announcement should be Announcemented before contest will change it's state",
@@ -770,6 +770,55 @@
         "messages": {
           "confirmation": "❓ Are you sure you want to unassign contest announcement **{{announcementName}}** ffrom contest **{{contestName}}**?",
           "success": "✅ Unassigned contest contest announcement **{{announcementName}}** from contest **{{contestName}}**"
+        }
+      },
+      "addPoll": {
+        "description": "Adds poll",
+        "options": {
+          "name": "Poll name",
+          "description": "Poll description",
+          "activeBeginDate": "Active begin date",
+          "activeEndDate": "Active end date",
+          "showUsersAnswers": "Show information about the users that answered",
+          "showCorrectAnswers": "Show number of correct answers given by the users"
+        },
+        "errors": {
+          "failure": "❗ Failed to add new poll **{{pollName}}** on channel **{{channelName}}**"
+        },
+        "messages": {
+          "success": "✅ Added new poll **{{pollName}}** on channel **{{channelName}}**"
+        }
+      },
+      "removePoll": {
+        "description": "Removes poll",
+        "options": {
+          "poll": "Poll"
+        },
+        "errors": {
+          "failure": "❗ Failed to remove poll **{{pollName}}** from channel **{{channelName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to remove poll **{{pollName}}** from channel **{{channelName}}**?",
+          "success": "✅ Removed poll **{{pollName}}** from channel **{{channelName}}**"
+        }
+      },
+      "changePoll": {
+        "description": "Changes existing poll",
+        "options": {
+          "poll": "$t(commands.removePoll.options.poll)",
+          "name": "$t(commands.addPoll.options.name)",
+          "description": "$t(commands.addPoll.options.description)",
+          "votingBeginDate": "$t(commands.addPoll.options.votingBeginDate)",
+          "votingEndDate": "$t(commands.addPoll.options.votingEndDate)",
+          "showUsersAnswers": "$t(commands.addPoll.options.showUsersAnswers)",
+          "showCorrectAnswers": "$t(commands.addPoll.options.showCorrectAnswers)"
+        },
+        "errors": {
+          "failure": "❗ Failed to change poll **{{pollName}}** on channel **{{channelName}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to change poll **{{pollName}}** on channel **{{channelName}}**?",
+          "success": "✅ Changed poll **{{pollName}}** on channel **{{channelName}}**"
         }
       }
     }
