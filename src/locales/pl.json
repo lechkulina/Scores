@@ -124,7 +124,9 @@
       "pollFetchFailure": "❗ Nie udało się pobrać danych ankiety {{pollId}}! $t(validators.reportIssue)",
       "unknownPoll": "❗ Wybrana ankieta {{pollId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
       "pollQuestionFetchFailure": "❗ Nie udało się pobrać danych pytania ankiety {{pollQuestionId}}! $t(validators.reportIssue)",
-      "unknownPollQuestion": "❗ Wybrane pytanie ankieta {{pollQuestionId}} nie istnieje! $t(validators.chooseFromAutocompleteList)"
+      "unknownPollQuestion": "❗ Wybrane pytanie ankieta {{pollQuestionId}} nie istnieje! $t(validators.chooseFromAutocompleteList)",
+      "pollAnswerFetchFailure": "❗ Nie udało się pobrać danych odpowiedzi na pytanie do ankiety {{pollQuestionId}}! $t(validators.reportIssue)",
+      "unknownPollAnswer": "❗ Wybrana odpowiedź na pytanie do ankiety {{pollQuestionId}} nie istnieje! $t(validators.chooseFromAutocompleteList)"
     },
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} punkty przyznane dnia {{acquireDate}} w kategorii {{categoryName}}",
@@ -1018,8 +1020,8 @@
           "description": "Opis ankiety",
           "activeBeginDate": "Data rozpoczęcia ankiety",
           "activeEndDate": "Data zakończenia ankiety",
-          "showUsersAnswers": "Pokaz inforamcję o osobach, które odpowiedziały",
-          "showCorrectAnswers": "Pokaz liczbę prawidłowych odpowiedzi"
+          "showAnswersCount": "Pokaz liczbę udzielonych odpowiedzi",
+          "showUsersThatAnswered": "Pokaz listę osób, które udzieliły odpowiedzi"
         },
         "errors": {
           "failure": "❗ Nie udało się dodać nowej ankiety **{{pollName}}** na kanale **{{channelName}}**"
@@ -1049,8 +1051,8 @@
           "description": "$t(commands.addPoll.options.description)",
           "activeBeginDate": "$t(commands.addPoll.options.activeBeginDate)",
           "activeEndDate": "$t(commands.addPoll.options.activeEndDate)",
-          "showUsersAnswers": "$t(commands.addPoll.options.showUsersAnswers)",
-          "showCorrectAnswers": "$t(commands.addPoll.options.showCorrectAnswers)"
+          "showAnswersCount": "$t(commands.addPoll.options.showAnswersCount)",
+          "showUsersThatAnswered": "$t(commands.addPoll.options.showUsersThatAnswered)"
         },
         "errors": {
           "failure": "❗ Nie udało się zmienić ankiety **{{pollName}}** na kanale **{{channelName}}**"
@@ -1100,6 +1102,51 @@
         "messages": {
           "confirmation": "❓ Czy na pewno chcesz zmienić pytanie **{{questionDescription}}** z ankiety **{{pollName}}**?",
           "success": "✅ Zmieniono pytanie **{{questionDescription}}** z ankiety **{{pollName}}**"
+        }
+      },
+      "addPollAnswer": {
+        "description": "Dodaje nową odpowiedź na pytanie do ankiety",
+        "options": {
+          "poll": "$t(commands.removePoll.options.poll)",
+          "pollQuestion": "$t(commands.removePollQuestion.options.pollQuestion)",
+          "description": "Treść odpowiedzi"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się dodać odpowiedzi na pytanie **{{questionDescription}}**"
+        },
+        "messages": {
+          "success": "✅ Dodano odpowiedź na pytanie **{{questionDescription}}**"
+        }
+      },
+      "removePollAnswer": {
+        "description": "Usuwa odpowiedz na pytanie do ankiety",
+        "options": {
+          "poll": "$t(commands.removePoll.options.poll)",
+          "pollQuestion": "$t(commands.removePollQuestion.options.pollQuestion)",
+          "pollAnswer": "Odpowiedz na pytanie"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się usunąć odpowiedzi **{{answerDescription}}** na pytanie **{{questionDescription}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz usunąć odpowiedź **{{answerDescription}}** na pytanie **{{questionDescription}}**?",
+          "success": "✅ Usunięto odpowiedź **{{answerDescription}}** na pytanie **{{questionDescription}}**"
+        }
+      },
+      "changePollAnswer": {
+        "description": "Zmienia odpowiedź na pytanie do ankiety",
+        "options": {
+          "poll": "$t(commands.removePoll.options.poll)",
+          "pollQuestion": "$t(commands.removePollQuestion.options.pollQuestion)",
+          "pollAnswer": "$t(commands.removePollAnswer.options.pollQuestion)",
+          "description": "$t(commands.addPollAnswer.options.description)"
+        },
+        "errors": {
+          "failure": "❗ Nie udało się zmienić odpowiedzi **{{answerDescription}}** na pytanie **{{questionDescription}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Czy na pewno chcesz zmienić odpowiedź **{{answerDescription}}** na pytanie **{{questionDescription}}**?",
+          "success": "✅ Zmieniono odpowiedź **{{answerDescription}}** na pytanie **{{questionDescription}}**"
         }
       }
     }

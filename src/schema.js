@@ -186,8 +186,8 @@ CREATE TABLE IF NOT EXISTS Poll(
   description TEXT NOT NULL,
   activeBeginDate INTEGER NOT NULL,
   activeEndDate INTEGER NOT NULL,
-  showUsersAnswers INTEGER DEFAULT 0,
-  showCorrectAnswers INTEGER DEFAULT 0,
+  showAnswersCount INTEGER DEFAULT 0,
+  showUsersThatAnswered INTEGER DEFAULT 0,
   channelId TEXT NOT NULL REFERENCES Channel(id),
   guildId TEXT NOT NULL
 );
@@ -211,9 +211,7 @@ CREATE TABLE IF NOT EXISTS PollQuestions(
 
 CREATE TABLE IF NOT EXISTS PollAnswer(
   id INTEGER PRIMARY KEY,
-  name TEXT NOT NULL UNIQUE,
-  icon TEXT NOT NULL,
-  correct INTEGER NOT NULL DEFAULT 0,
+  description TEXT NOT NULL UNIQUE,
   pollQuestionId INTEGER REFERENCES PollQuestion(id)
     ON DELETE CASCADE
 );

@@ -30,7 +30,7 @@ class RemovePollQuestionHandler extends InteractionHandler {
           questionDescription: this.questionDescription,
         });
       } catch (error) {
-        console.error(`Failed to remove poll question from poll ${this.poll.name} - got error`, error);
+        console.error(`Failed to remove poll question - got error`, error);
         return this.translate('commands.removePollQuestion.errors.failure', {
           pollName: this.poll.name,
           questionDescription: this.questionDescription,

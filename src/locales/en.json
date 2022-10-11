@@ -92,7 +92,13 @@
       "unknownChannel": "❗ Selected channel {{channelId}} does not exist! $t(validators.chooseFromAutocompleteList)",
       "channelFetchFailure": "❗ Failed to fetch channel {{channelId}} data! $t(validators.reportIssue)",
       "unknownContestAnnouncement": "❗ Selected contest announcement {{announcementId}} does not exist! $t(validators.chooseFromAutocompleteList)",
-      "contestAnnouncementFetchFailure": "❗ Failed to fetch contest announcement {{announcementId}} data! $t(validators.reportIssue)"
+      "contestAnnouncementFetchFailure": "❗ Failed to fetch contest announcement {{announcementId}} data! $t(validators.reportIssue)",
+      "pollFetchFailure": "❗ Failed to fetch poll {{pollId}} data! $t(validators.reportIssue)",
+      "unknownPoll": "❗ Selected poll {{pollId}}does not exist! $t(validators.chooseFromAutocompleteList)",
+      "pollQuestionFetchFailure": "❗ Failed to fetch poll question {{pollQuestionId}} data! $t(validators.reportIssue)",
+      "unknownPollQuestion": "❗ Selected poll question {{pollQuestionId}} does not exist! $t(validators.chooseFromAutocompleteList)",
+      "pollAnswerFetchFailure": "❗ Failed to fetch poll's question answer {{pollQuestionId}} data! $t(validators.reportIssue)",
+      "unknownPollAnswer": "❗Selected poll's question answer {{pollQuestionId}} does not exist! $t(validators.chooseFromAutocompleteList)"
     },
     "autoCompete": {
       "recentlyGivenPoints": "{{points}} points added at {{acquireDate}} in category {{categoryName}}",
@@ -779,8 +785,8 @@
           "description": "Poll description",
           "activeBeginDate": "Active begin date",
           "activeEndDate": "Active end date",
-          "showUsersAnswers": "Show information about the users that answered",
-          "showCorrectAnswers": "Show number of correct answers given by the users"
+          "showAnswersCount": "Show number of answers",
+          "showUsersThatAnswered": "Show users that answered"
         },
         "errors": {
           "failure": "❗ Failed to add new poll **{{pollName}}** on channel **{{channelName}}**"
@@ -810,8 +816,8 @@
           "description": "$t(commands.addPoll.options.description)",
           "votingBeginDate": "$t(commands.addPoll.options.votingBeginDate)",
           "votingEndDate": "$t(commands.addPoll.options.votingEndDate)",
-          "showUsersAnswers": "$t(commands.addPoll.options.showUsersAnswers)",
-          "showCorrectAnswers": "$t(commands.addPoll.options.showCorrectAnswers)"
+          "showAnswersCount": "$t(commands.addPoll.options.showAnswersCount)",
+          "showUsersThatAnswered": "$t(commands.addPoll.options.showUsersThatAnswered)"
         },
         "errors": {
           "failure": "❗ Failed to change poll **{{pollName}}** on channel **{{channelName}}**"
@@ -861,6 +867,51 @@
         "messages": {
           "confirmation": "❓ Are you sure you want to change question **{{questionDescription}}** from poll **{{pollName}}**?",
           "success": "✅ Changed question **{{questionDescription}}** from poll **{{pollName}}**"
+        }
+      },
+      "addPollAnswer": {
+        "description": "Adds poll's question answer",
+        "options": {
+          "poll": "$t(commands.removePoll.options.poll)",
+          "pollQuestion": "$t(commands.removePollQuestion.options.pollQuestion)",
+          "description": "Answer text"
+        },
+        "errors": {
+          "failure": "❗ Failed to add new answer to question **{{questionDescription}}**"
+        },
+        "messages": {
+          "success": "✅ Added new answer to question **{{questionDescription}}**"
+        }
+      },
+      "removePollAnswer": {
+        "description": "Removes poll's question answer",
+        "options": {
+          "poll": "$t(commands.removePoll.options.poll)",
+          "pollQuestion": "$t(commands.removePollQuestion.options.pollQuestion)",
+          "pollAnswer": "Question answer"
+        },
+        "errors": {
+          "failure": "❗ Failed to remove answer **{{answerDescription}}** to question **{{questionDescription}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to remove answer **{{answerDescription}}** to question **{{questionDescription}}**?",
+          "success": "✅ Removed answer **{{answerDescription}}** to question **{{questionDescription}}**"
+        }
+      },
+      "changePollAnswer": {
+        "description": "Changes poll's question answer",
+        "options": {
+          "poll": "$t(commands.removePoll.options.poll)",
+          "pollQuestion": "$t(commands.removePollQuestion.options.pollQuestion)",
+          "pollAnswer": "$t(commands.removePollAnswer.options.pollQuestion)",
+          "description": "$t(commands.addPollAnswer.options.description)"
+        },
+        "errors": {
+          "failure": "❗Failed to change answer **{{answerDescription}}** to question **{{questionDescription}}**"
+        },
+        "messages": {
+          "confirmation": "❓ Are you sure you want to change answer **{{answerDescription}}** to question **{{questionDescription}}**?",
+          "success": "✅ Changed answer **{{answerDescription}}** to question **{{questionDescription}}**"
         }
       }
     }

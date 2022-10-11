@@ -23,10 +23,17 @@ class ShowRankingsHandler extends InteractionHandler {
     return Array.from(ranks.values());
   }
 
-  async generateRankingsSections(guildId) {
+  generateHeaderSection(pointsSummary, contestsSummary) {
+    const key = `commands.showRankings.messages.header.${
+      pointsSummary.length > 0 || contestsSummary.length > 0
+        ? 'withEntries'
+        : 'withoutEntries'
+    }`;
+    return this.translate(key);
+  }
+
+  generateRankingsSections(pointsSummary, contestsSummary) {
     const sections = [];
-    const pointsSummary = await this.dataModel.getPointsRankingsSummary(guildId, 3);
-    const contestsSummary = await this.dataModel.getContestsRankingsSummary(guildId, 3);
     if (pointsSummary.length === 0 && contestsSummary.length === 0) {
       return sections;
     }
@@ -94,8 +101,13 @@ class ShowRankingsHandler extends InteractionHandler {
     this.markAsDone();
     try {
       const guildId = interaction.guildID;
+      const pointsSummary = await this.dataModel.getPointsRankingsSummary(guildId, 3);
+      const contestsSummary = await this.dataModel.getContestsRankingsSummary(guildId, 3);
       return this.createLongMessage(interaction,
-        joinSections(await this.generateRankingsSections(guildId), Entities.EmptyLine)
+        joinSections([
+          this.generateHeaderSection(pointsSummary, contestsSummary),
+          ...this.generateRankingsSections(pointsSummary, contestsSummary),
+        ], Entities.EmptyLine)
       );
     } catch (error) {
       console.error(`Failed to show rankings - got error`, error);

@@ -34,6 +34,7 @@ class MessagePublisher {
     try {
       for (const contentChunk of contentChunks) {
         const message = await this.clientHandler.createMessage(channelId, contentChunk.content);
+        await message.addReaction('1⃣');
         messageChunks.push({
           id: message.id,
           hash: contentChunk.hash,

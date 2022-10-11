@@ -40,6 +40,9 @@ const DataModelEvents = {
   onPollQuestionAdded: 'onPollQuestionAdded',
   onPollQuestionChanged: 'onPollQuestionChanged',
   onPollQuestionRemoved: 'onPollQuestionRemoved',
+  onPollAnswerAdded: 'onPollAnswerAdded',
+  onPollAnswerChanged: 'onPollAnswerChanged',
+  onPollAnswerRemoved: 'onPollAnswerRemoved',
 }
 
 const ContestState = {
@@ -1793,8 +1796,8 @@ class DataModel extends EventEmitter {
     description,
     activeBeginDate,
     activeEndDate,
-    showUsersAnswers,
-    showCorrectAnswers,
+    showAnswersCount,
+    showUsersThatAnswered,
     channelId,
     channelName,
     guildId
@@ -1809,8 +1812,8 @@ class DataModel extends EventEmitter {
           description,
           activeBeginDate,
           activeEndDate,
-          showUsersAnswers,
-          showCorrectAnswers,
+          showAnswersCount,
+          showUsersThatAnswered,
           channelId,
           guildId
         )
@@ -1819,8 +1822,8 @@ class DataModel extends EventEmitter {
           "${description}",
           ${activeBeginDate},
           ${activeEndDate},
-          ${showUsersAnswers},
-          ${showCorrectAnswers},
+          ${showAnswersCount},
+          ${showUsersThatAnswered},
           "${channelId}",
           "${guildId}"
         );
@@ -1835,8 +1838,8 @@ class DataModel extends EventEmitter {
     description,
     activeBeginDate,
     activeEndDate,
-    showUsersAnswers,
-    showCorrectAnswers,
+    showAnswersCount,
+    showUsersThatAnswered,
     channelId,
     channelName,
     guildId
@@ -1851,8 +1854,8 @@ class DataModel extends EventEmitter {
             description = "${description}",
             activeBeginDate = ${activeBeginDate},
             activeEndDate = ${activeEndDate},
-            showUsersAnswers = ${showUsersAnswers},
-            showCorrectAnswers = ${showCorrectAnswers},
+            showAnswersCount = ${showAnswersCount},
+            showUsersThatAnswered = ${showUsersThatAnswered},
             channelId = "${channelId}"
         WHERE id = ${pollId};
       COMMIT;`
@@ -1886,8 +1889,8 @@ class DataModel extends EventEmitter {
              description,
              activeBeginDate,
              activeEndDate,
-             showUsersAnswers,
-             showCorrectAnswers,
+             showAnswersCount,
+             showUsersThatAnswered,
              channelId,
              Channel.name AS channelName,
              Poll.guildId
@@ -1924,8 +1927,7 @@ class DataModel extends EventEmitter {
 
   getPollQuestion(pollQuestionId) {
     return this.database.get(`
-      SELECT id,
-             description
+      SELECT id, description
       FROM PollQuestion
       WHERE id = ${pollQuestionId};`
     );
@@ -1934,11 +1936,53 @@ class DataModel extends EventEmitter {
   getPollQuestions(pollId, limit) {
     return this.database.all(
       joinClauses([`
-        SELECT PollQuestion.id, PollQuestion.description
+        SELECT id, description
         FROM PollQuestion
-        INNER JOIN Poll
-          ON PollQuestion.pollId = Poll.id
-        WHERE Poll.id = ${pollId}`,
+        WHERE pollId = ${pollId}`,
+        createLimitClause(limit),
+      ])
+    );
+  }
+
+  async addPollAnswer(description, pollQuestionId) {
+    await this.database.run(`
+      INSERT INTO PollAnswer(description, pollQuestionId)
+      VALUES ("${description}",${pollQuestionId});`
+    );
+    this.emit(DataModelEvents.onPollAnswerAdded, pollQuestionId);
+  }
+
+  async changePollAnswer(pollAnswerId, description) {
+    await this.database.run(`
+      UPDATE PollAnswer
+      SET description = "${description}"
+      WHERE id = ${pollAnswerId};`
+    );
+    this.emit(DataModelEvents.onPollAnswerChanged, pollAnswerId);
+  }
+
+  async removePollAnswer(pollAnswerId) {
+    await this.database.run(`
+      DELETE FROM PollAnswer
+      WHERE id = ${pollAnswerId};`
+    );
+    this.emit(DataModelEvents.onPollAnswerRemoved, pollAnswerId);
+  }
+
+  getPollAnswer(pollAnswerId) {
+    return this.database.get(`
+      SELECT id, description
+      FROM PollAnswer
+      WHERE id = ${pollAnswerId};`
+    );
+  }
+
+  getPollAnswers(pollQuestionId, limit) {
+    return this.database.all(
+      joinClauses([`
+        SELECT id, description
+        FROM PollAnswer
+        WHERE pollQuestionId = ${pollQuestionId}`,
         createLimitClause(limit),
       ])
     );

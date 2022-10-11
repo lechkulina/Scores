@@ -34,8 +34,8 @@ class ChangePollHandler extends InteractionHandler {
     const description = this.getOptionValue(OptionId.Description);
     const activeBeginDate = this.getOptionValue(OptionId.ActiveBeginDate);
     const activeEndDate = this.getOptionValue(OptionId.ActiveEndDate);
-    const showUsersAnswers = this.getOptionValue(OptionId.ShowUsersAnswers);
-    const showCorrectAnswers = this.getOptionValue(OptionId.ShowCorrectAnswers);
+    const showAnswersCount = this.getOptionValue(OptionId.ShowAnswersCount);
+    const showUsersThatAnswered = this.getOptionValue(OptionId.ShowUsersThatAnswered);
     const channel = this.getOptionValue(OptionId.Channel);
     return this.handleConfirmationForm(interaction, async () => {
       try {
@@ -45,8 +45,8 @@ class ChangePollHandler extends InteractionHandler {
           description,
           activeBeginDate.valueOf(),
           activeEndDate.valueOf(),
-          showUsersAnswers,
-          showCorrectAnswers,
+          showAnswersCount,
+          showUsersThatAnswered,
           channel.id,
           channel.name,
           interaction.guildID
@@ -79,8 +79,8 @@ class ChangePollCommand extends Command {
       new StringOption(OptionId.Description, this.translate('commands.changePoll.options.description')),
       new StringOption(OptionId.ActiveBeginDate, this.translate('commands.changePoll.options.activeBeginDate')),
       new StringOption(OptionId.ActiveEndDate, this.translate('commands.changePoll.options.activeEndDate')),
-      new BooleanOption(OptionId.ShowUsersAnswers, this.translate('commands.changePoll.options.showUsersAnswers')),
-      new BooleanOption(OptionId.ShowCorrectAnswers, this.translate('commands.changePoll.options.showCorrectAnswers')),
+      new BooleanOption(OptionId.ShowAnswersCount, this.translate('commands.changePoll.options.showAnswersCount')),
+      new BooleanOption(OptionId.ShowUsersThatAnswered, this.translate('commands.changePoll.options.showUsersThatAnswered')),
       new ChannelOption(OptionId.Channel, this.translate('common.channel')),
     ]);
     const minNameLength = this.settings.get(SettingId.MinNameLength);

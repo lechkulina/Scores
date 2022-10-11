@@ -37,7 +37,7 @@ class ChangePollHandler extends InteractionHandler {
           questionDescription: this.questionDescription,
         });
       } catch (error) {
-        console.error(`Failed to change poll ${this.poll.name} from channel ${this.poll.channelName} - got error`, error);
+        console.error(`Failed to change poll question - got error`, error);
         return this.translate('commands.changePollQuestion.errors.failure', {
           pollName: this.poll.name,
           questionDescription: this.questionDescription,

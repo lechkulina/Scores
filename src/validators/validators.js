@@ -27,4 +27,5 @@ module.exports = {
   ContestAnnouncementValidator: require('./ContestAnnouncementValidator'),
   PollValidator: require('./PollValidator'),
   PollQuestionValidator: require('./PollQuestionValidator'),
+  PollAnswerValidator: require('./PollAnswerValidator'),
 }

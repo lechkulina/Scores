@@ -18,7 +18,7 @@ class AddPollQuestionHandler extends InteractionHandler {
         })
       });
     } catch (error) {
-      console.error(`Failed to add question to poll ${poll.name} - got error`, error);
+      console.error(`Failed to add poll question - got error`, error);
       return interaction.createMessage(this.translate('commands.addPollQuestion.errors.failure', {
         pollName: poll.name,
       }));
